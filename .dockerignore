@@ -1,0 +1,11 @@
+# Base
+.*/
+Dockerfile
+docker-compose.yml
+
+# Concourse CI
+cache/
+image/
+
+# Haskell
+dist/

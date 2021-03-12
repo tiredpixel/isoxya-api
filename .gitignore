@@ -1,0 +1,13 @@
+# Base
+/*.env
+/docker-compose.*.yml
+
+# Project
+/sqlite3.db
+/test/log/
+
+# Haskell
+/dist/
+
+# Tigrosa
+/.tigrosa/

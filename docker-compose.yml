@@ -1,0 +1,27 @@
+version: "2.4"
+services:
+  #-----------------------------------------------------------------------------
+  api:
+    image: docker.package.tiredpixel.com/isoxya/isoxya-ce-build:head
+    init: true
+    volumes:
+      - ./lib:/home/x/repo/lib
+      - ./src:/home/x/repo/src
+      - ./test:/home/x/repo/test
+      #
+      - ./isx-ce.cabal:/home/x/repo/isx-ce.cabal
+      - ./sqlite3.db:/home/x/repo/sqlite3.db
+    networks:
+      - ce
+      #
+      - plug
+    ports:
+      - 0.0.0.0:8000:8000
+    restart: on-failure
+  #-----------------------------------------------------------------------------
+networks:
+  ce: {}
+  #
+  plug:
+    external: true
+    name: isoxya_plug
