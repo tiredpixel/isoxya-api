@@ -1,0 +1,149 @@
+cabal-version:          3.0
+name:                   isx-ce
+version:                0.0.0
+synopsis:               Isoxya CE
+license:                NONE
+author:                 Nic Williams <tp@tiredpixel.com>
+maintainer:             Nic Williams <tp@tiredpixel.com>
+build-type:             Simple
+--------------------------------------------------------------------------------
+common common-properties
+    build-depends:
+        base                            ==  4.13.*,
+        relude,
+    mixins:
+        base                            hiding (Prelude),
+        relude                          (Relude as Prelude)
+    default-language:   Haskell2010
+    default-extensions:
+        OverloadedStrings
+    ghc-options:
+        -Wall
+        -ddump-minimal-imports
+--------------------------------------------------------------------------------
+library lib-common-ce
+    import:             common-properties
+    exposed-modules:
+    build-depends:
+        aeson,
+        base64-bytestring,
+        bytestring,
+        conduit,
+        conduit-extra,
+        cryptonite,
+        direct-sqlite,
+        http-conduit,
+        http-types,
+        memory,
+        network-uri,
+        regex-compat,
+        resourcet,
+        safe,
+        snap-core,
+        snap-extras,
+        snap-server,
+        sqlite-simple,
+        time,
+        tinylog,
+        unix,
+        unordered-containers,
+        uuid,
+    hs-source-dirs:
+        lib/common-ce/src
+--------------------------------------------------------------------------------
+library lib-isx-ce-api
+    import:             common-properties
+    exposed-modules:
+    other-modules:
+        Paths_isx_ce
+        --
+    build-depends:
+        lib-common-ce,
+        --
+        aeson,
+        base64-bytestring,
+        bytestring,
+        case-insensitive,
+        containers,
+        cryptonite,
+        direct-sqlite,
+        http-conduit,
+        http-types,
+        lens,
+        lens-aeson,
+        network-uri,
+        regex-compat,
+        snap,
+        snap-core,
+        snap-extras,
+        sqlite-simple,
+        text,
+        time,
+        uuid,
+    hs-source-dirs:
+        src
+--------------------------------------------------------------------------------
+executable isx-ce-api
+    import:             common-properties
+    main-is:            API.hs
+    other-modules:
+        Paths_isx_ce
+    build-depends:
+        lib-common-ce,
+        lib-isx-ce-api,
+        --
+        lens,
+        snap,
+    hs-source-dirs:
+        src/ISX/CE/Bin
+    ghc-options:
+        -threaded
+--------------------------------------------------------------------------------
+library lib-common-ce-test
+    import:             common-properties
+    exposed-modules:
+    other-modules:
+    build-depends:
+        aeson,
+        base64-bytestring,
+        bytestring,
+        containers,
+        directory,
+        filepath,
+        hspec                           ==  2.*,
+        hspec-core,
+        hspec-snap,
+        http-link-header,
+        lens,
+        lens-aeson,
+        mtl,
+        network-uri,
+        process,
+        snap-core,
+        text,
+        unordered-containers,
+        vector,
+    hs-source-dirs:
+        lib/common-ce/test
+--------------------------------------------------------------------------------
+test-suite test-isx-ce-api
+    import:             common-properties
+    type:               exitcode-stdio-1.0
+    main-is:            Spec.hs
+    other-modules:
+    build-depends:
+        lib-common-ce,
+        lib-common-ce-test,
+        lib-isx-ce-api,
+        --
+        hspec                           ==  2.*,
+        snap,
+    default-extensions:
+        NoImplicitPrelude
+    hs-source-dirs:
+        test
+    build-tool-depends:
+        hspec-discover:hspec-discover   ==  2.*
+    ghc-options:
+        -threaded
+--------------------------------------------------------------------------------
