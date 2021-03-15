@@ -1,4 +1,7 @@
 module ISX.CE.DB.Types (
+    PlugProc(..),
+    PlugProcId(..),
+    PlugProcURL(..),
     Site(..),
     SiteId(..),
     SiteURL(..),
@@ -6,13 +9,42 @@ module ISX.CE.DB.Types (
 
 
 import           Data.Time.Clock
+import           Data.UUID                      hiding (toString, toText)
 import           Database.SQLite.Simple.FromRow
 import           Database.SQLite.Simple.ToField
 import           Network.URI
 import           TPX.Com.SQLite.Ext.Hash        ()
 import           TPX.Com.SQLite.Ext.URI         ()
+import           TPX.Com.SQLite.Ext.UUID        ()
 import qualified Crypto.Hash                    as Hash
 
+
+data PlugProc = PlugProc {
+    plugProcId   :: PlugProcId,
+    plugProcURL  :: PlugProcURL,
+    plugProcTag  :: Text,
+    plugProcTIns :: UTCTime
+    } deriving (Show)
+instance FromRow PlugProc where
+    fromRow = PlugProc <$>
+        (PlugProcId <$> field) <*>
+        (PlugProcURL <$> field) <*>
+        field <*>
+        field
+
+newtype PlugProcId = PlugProcId { unPlugProcId :: UUID
+    } deriving (Show)
+instance FromRow PlugProcId where
+    fromRow = PlugProcId <$> field
+instance ToField PlugProcId where
+    toField = toField . unPlugProcId
+
+newtype PlugProcURL = PlugProcURL { unPlugProcURL :: URI
+    } deriving (Show)
+instance FromRow PlugProcURL where
+    fromRow = PlugProcURL <$> field
+instance ToField PlugProcURL where
+    toField = toField . unPlugProcURL
 
 data Site = Site {
     siteId   :: SiteId,

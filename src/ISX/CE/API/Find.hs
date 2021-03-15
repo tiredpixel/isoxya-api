@@ -1,15 +1,36 @@
 module ISX.CE.API.Find (
+    fPlugProc,
+    fPlugProcHref,
+    fPlugProcs,
     fSite,
     fSites,
     ) where
 
 
 import           ISX.CE.API.Auth
-import           ISX.CE.API.Href        ()
+import           ISX.CE.API.Href
 import           Snap.Core              hiding (pass)
 import           TPX.Com.Snap.CoreUtils
 import qualified ISX.CE.DB              as D
 
+
+fPlugProc :: MonadSnap m => APerm -> D.Conn ->
+    MaybeT m (D.PlugProc, D.PlugProcId)
+fPlugProc _ d = do
+    Just pId_ <- lift $ getParam "plug_proc_id"
+    Just pId  <- return $ toRouteId pId_
+    Just p <- D.rPlugProc pId d
+    return (p, D.plugProcId p)
+
+fPlugProcHref :: MonadSnap m => Maybe PlugProcHref -> APerm ->
+    D.Conn -> MaybeT m (D.PlugProc, D.PlugProcId)
+fPlugProcHref pH _ d = do
+    Just pId <- return $ fromRouteHref =<< pH
+    Just p <- D.rPlugProc pId d
+    return (p, D.plugProcId p)
+
+fPlugProcs :: MonadSnap m => APerm -> D.Conn -> MaybeT m ()
+fPlugProcs _ _ = pass
 
 fSite :: MonadSnap m => APerm -> D.Conn -> MaybeT m (D.Site, D.SiteId)
 fSite AR d = do

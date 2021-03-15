@@ -4,6 +4,8 @@
 
 
 module ISX.CE.API.Href (
+    PlugProcHref(..),
+    PlugProcsHref(..),
     SiteHref(..),
     SitesHref(..),
     ) where
@@ -14,9 +16,32 @@ import           Network.URI
 import           TPX.Com.Snap.CoreUtils
 import qualified Data.ByteString.Base64.URL as B64
 import qualified Data.ByteString.Char8      as C8
+import qualified Data.UUID                  as UUID
 import qualified ISX.CE.DB                  as D
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
+newtype PlugProcHref = PlugProcHref { unPlugProcHref :: ByteString
+    } deriving (Show)
+instance RouteHref PlugProcHref D.PlugProcId where
+    toRouteHref p = PlugProcHref $ plugProcs <> "/" <> fromRouteId p
+    fromRouteHref h = do
+        ["", "plug_proc", p] <- return $ C8.split '/' $ unPlugProcHref h
+        toRouteId p
+instance FromJSON PlugProcHref where
+    parseJSON = withText "plug_proc.href" $ pure . PlugProcHref . encodeUtf8
+instance ToJSON PlugProcHref where
+    toJSON o = toJSON (decodeUtf8 $ unPlugProcHref o :: Text)
+
+newtype PlugProcsHref = PlugProcsHref { unPlugProcsHref :: ByteString
+    } deriving (Show)
+instance RouteHref PlugProcsHref () where
+    toRouteHref _ = PlugProcsHref plugProcs
+    fromRouteHref h = do
+        ["", "plug_proc"] <- return $ C8.split '/' $ unPlugProcsHref h
+        pass
+instance ToJSON PlugProcsHref where
+    toJSON o = toJSON (decodeUtf8 $ unPlugProcsHref o :: Text)
+
 newtype SiteHref = SiteHref { unSiteHref :: ByteString
     } deriving (Show)
 instance RouteHref SiteHref D.SiteURL where
@@ -38,10 +63,17 @@ instance ToJSON SitesHref where
     toJSON o = toJSON (decodeUtf8 $ unSitesHref o :: Text)
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
+plugProcs :: ByteString
+plugProcs = "/plug_proc"
+
 sites :: ByteString
 sites = "/site"
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
+instance RouteId D.PlugProcId where
+    toRouteId b = D.PlugProcId <$> UUID.fromASCIIBytes b
+    fromRouteId = show . D.unPlugProcId
+
 instance RouteId D.SiteURL where
     toRouteId b = D.SiteURL <$>
         parseAbsoluteURI (decodeUtf8 $ B64.decodeLenient b)

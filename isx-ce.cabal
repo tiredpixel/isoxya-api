@@ -24,17 +24,18 @@ common common-properties
 library lib-common-ce
     import:             common-properties
     exposed-modules:
+        TPX.Com.Cursor
         TPX.Com.Log
         TPX.Com.SQLite.Conn
         TPX.Com.SQLite.Ext.Hash
         TPX.Com.SQLite.Ext.URI
+        TPX.Com.SQLite.Ext.UUID
         TPX.Com.SQLite.Meta
         TPX.Com.SQLite.Query
         TPX.Com.Snap.CoreUtils
         TPX.Com.Snap.Main
         TPX.Com.URI
-    other-modules:
-        TPX.Com.Cursor
+        TPX.Com.UUID
     build-depends:
         aeson,
         base64-bytestring,
@@ -78,6 +79,7 @@ library lib-isx-ce-api
         ISX.CE.API.Resource
         ISX.CE.API.Types
         ISX.CE.API.Zone.Apex
+        ISX.CE.API.Zone.PlugProc
         ISX.CE.API.Zone.Site
         ISX.CE.DB
         ISX.CE.DB.Query
