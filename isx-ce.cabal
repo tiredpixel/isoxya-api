@@ -24,6 +24,10 @@ common common-properties
 library lib-common-ce
     import:             common-properties
     exposed-modules:
+        TPX.Com.Log
+        TPX.Com.SQLite.Conn
+        TPX.Com.SQLite.Meta
+        TPX.Com.SQLite.Query
     build-depends:
         aeson,
         base64-bytestring,
@@ -54,6 +58,7 @@ library lib-common-ce
 library lib-isx-ce-api
     import:             common-properties
     exposed-modules:
+        ISX.CE.DB.Migration
     other-modules:
         Paths_isx_ce
         --
