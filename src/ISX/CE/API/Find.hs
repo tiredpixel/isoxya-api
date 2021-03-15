@@ -20,12 +20,13 @@ import qualified ISX.CE.DB              as D
 
 
 fCrwl :: MonadSnap m => APerm -> D.Conn -> MaybeT m ((D.Site, D.Crwl), D.CrwlId)
-fCrwl _ d = do
+fCrwl AR d = do
     (s, sId) <- fSite AR d
     Just sV_ <- lift $ getParam "site_v"
     Just sV  <- return $ toRouteId sV_
     Just c <- D.rCrwl (sId, sV) d
     return ((s, c), (D.crwlSiteId c, D.crwlSiteV c))
+fCrwl AW _ = fail "fCrwl/AW not allowed"
 
 fCrwls :: MonadSnap m => APerm -> D.Conn -> MaybeT m (D.Site, D.SiteId)
 fCrwls _ = fSite AR
