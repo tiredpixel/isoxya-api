@@ -1,10 +1,12 @@
 module ISX.CE.DB (
     module ISX.CE.DB.Query,
     module ISX.CE.DB.Types,
+    module ISX.CE.DB.URLPage,
     module TPX.Com.SQLite.Conn,
     ) where
 
 
 import ISX.CE.DB.Query
 import ISX.CE.DB.Types
+import ISX.CE.DB.URLPage
 import TPX.Com.SQLite.Conn (Conn)

@@ -1,4 +1,6 @@
 module ISX.CE.API.Find (
+    fCrwl,
+    fCrwls,
     fPlugProc,
     fPlugProcHref,
     fPlugProcs,
@@ -16,6 +18,17 @@ import           Snap.Core              hiding (pass)
 import           TPX.Com.Snap.CoreUtils
 import qualified ISX.CE.DB              as D
 
+
+fCrwl :: MonadSnap m => APerm -> D.Conn -> MaybeT m ((D.Site, D.Crwl), D.CrwlId)
+fCrwl _ d = do
+    (s, sId) <- fSite AR d
+    Just sV_ <- lift $ getParam "site_v"
+    Just sV  <- return $ toRouteId sV_
+    Just c <- D.rCrwl (sId, sV) d
+    return ((s, c), (D.crwlSiteId c, D.crwlSiteV c))
+
+fCrwls :: MonadSnap m => APerm -> D.Conn -> MaybeT m (D.Site, D.SiteId)
+fCrwls _ = fSite AR
 
 fPlugProc :: MonadSnap m => APerm -> D.Conn ->
     MaybeT m (D.PlugProc, D.PlugProcId)

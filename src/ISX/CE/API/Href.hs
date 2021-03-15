@@ -4,12 +4,13 @@
 
 
 module ISX.CE.API.Href (
+    CrwlHref(..),
+    CrwlsHref(..),
     PlugProcHref(..),
     PlugProcsHref(..),
     PlugStrmHref(..),
     PlugStrmsHref(..),
     SiteHref(..),
-    SitesHref(..),
     ) where
 
 
@@ -18,10 +19,34 @@ import           Network.URI
 import           TPX.Com.Snap.CoreUtils
 import qualified Data.ByteString.Base64.URL as B64
 import qualified Data.ByteString.Char8      as C8
+import qualified Data.Time.Format           as Time
 import qualified Data.UUID                  as UUID
 import qualified ISX.CE.DB                  as D
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
+newtype CrwlHref = CrwlHref { unCrwlHref :: ByteString
+    } deriving (Show)
+instance RouteHref CrwlHref (D.SiteURL, D.SiteV) where
+    toRouteHref (s, c) = CrwlHref $
+        unSiteHref (toRouteHref s) <> crwls <> "/" <> fromRouteId c
+    fromRouteHref h = do
+        ["", "site", s, "crwl", c] <- return $ C8.split '/' $ unCrwlHref h
+        s' <- toRouteId s
+        c' <- toRouteId c
+        return (s', c')
+instance ToJSON CrwlHref where
+    toJSON o = toJSON (decodeUtf8 $ unCrwlHref o :: Text)
+
+newtype CrwlsHref = CrwlsHref { unCrwlsHref :: ByteString
+    } deriving (Show)
+instance RouteHref CrwlsHref D.SiteURL where
+    toRouteHref s = CrwlsHref $ unSiteHref (toRouteHref s) <> crwls
+    fromRouteHref h = do
+        ["", "site", s, "crwl"] <- return $ C8.split '/' $ unCrwlsHref h
+        toRouteId s
+instance ToJSON CrwlsHref where
+    toJSON o = toJSON (decodeUtf8 $ unCrwlsHref o :: Text)
+
 newtype PlugProcHref = PlugProcHref { unPlugProcHref :: ByteString
     } deriving (Show)
 instance RouteHref PlugProcHref D.PlugProcId where
@@ -75,18 +100,11 @@ instance RouteHref SiteHref D.SiteURL where
         toRouteId s
 instance ToJSON SiteHref where
     toJSON o = toJSON (decodeUtf8 $ unSiteHref o :: Text)
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+crwls :: ByteString
+crwls = "/crwl"
 
-newtype SitesHref = SitesHref { unSitesHref :: ByteString
-    } deriving (Show)
-instance RouteHref SitesHref () where
-    toRouteHref _ = SitesHref sites
-    fromRouteHref h = do
-        ["", "site"] <- return $ C8.split '/' $ unSitesHref h
-        pass
-instance ToJSON SitesHref where
-    toJSON o = toJSON (decodeUtf8 $ unSitesHref o :: Text)
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
 plugProcs :: ByteString
 plugProcs = "/plug_proc"
 
@@ -96,6 +114,8 @@ plugStrms = "/plug_strm"
 sites :: ByteString
 sites = "/site"
 --------------------------------------------------------------------------------
+timeF :: String
+timeF = Time.iso8601DateFormat (Just "%T%QZ")
 --------------------------------------------------------------------------------
 instance RouteId D.PlugProcId where
     toRouteId b = D.PlugProcId <$> UUID.fromASCIIBytes b
@@ -109,3 +129,9 @@ instance RouteId D.SiteURL where
     toRouteId b = D.SiteURL <$>
         parseAbsoluteURI (decodeUtf8 $ B64.decodeLenient b)
     fromRouteId = B64.encodeUnpadded . show . D.unSiteURL
+
+instance RouteId D.SiteV where
+    toRouteId b = D.SiteV <$>
+        Time.parseTimeM False Time.defaultTimeLocale timeF (decodeUtf8 b)
+    fromRouteId = encodeUtf8 .
+        Time.formatTime Time.defaultTimeLocale timeF . D.unSiteV

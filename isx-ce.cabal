@@ -79,12 +79,14 @@ library lib-isx-ce-api
         ISX.CE.API.Resource
         ISX.CE.API.Types
         ISX.CE.API.Zone.Apex
+        ISX.CE.API.Zone.Crwl
         ISX.CE.API.Zone.PlugProc
         ISX.CE.API.Zone.PlugStrm
         ISX.CE.API.Zone.Site
         ISX.CE.DB
         ISX.CE.DB.Query
         ISX.CE.DB.Types
+        ISX.CE.DB.URLPage
         ISX.CE.URI
     build-depends:
         lib-common-ce,

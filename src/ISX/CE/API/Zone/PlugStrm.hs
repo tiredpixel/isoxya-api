@@ -2,7 +2,7 @@ module ISX.CE.API.Zone.PlugStrm (
     create,
     list,
     read,
-    delete
+    delete,
     ) where
 
 

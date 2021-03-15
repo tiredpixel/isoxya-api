@@ -1,14 +1,19 @@
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 
 module ISX.CE.API.Resource (
     Apex(..),
+    Crwl(..),
+    CrwlC(..),
     PlugProc(..),
     PlugProcC(..),
     PlugStrm(..),
     PlugStrmC(..),
     Site(..),
     SiteC(..),
+    crwl,
     plugProc,
     plugStrm,
     site,
@@ -33,6 +38,46 @@ instance ToJSON Apex where
     toJSON Apex{..} = object [
         "t_now"   .= apexTNow,
         "version" .= apexVersion]
+
+data Crwl = Crwl {
+    crwlHref          :: CrwlHref,
+    crwlStatus        :: D.CrwlStatus,
+    crwlPages         :: Maybe Integer,
+    crwlProgress      :: Maybe Integer,
+    crwlTBegin        :: UTCTime,
+    crwlTEnd          :: Maybe UTCTime,
+    crwlSite          :: Site,
+    crwlPlugProcConf  :: Value,
+    crwlPlugProcHrefs :: [PlugProcHref],
+    crwlPlugStrmHrefs :: [PlugStrmHref]
+    } deriving (Show)
+instance ToJSON Crwl where
+    toJSON Crwl{..} = object [
+        "href"           .= crwlHref,
+        "status"         .= crwlStatus,
+        "pages"          .= crwlPages,
+        "progress"       .= crwlProgress,
+        "t_begin"        .= crwlTBegin,
+        "t_end"          .= crwlTEnd,
+        "site"           .= crwlSite,
+        "plug_proc_conf" .= crwlPlugProcConf,
+        "plug_proc"      .= map (objHref . Just) crwlPlugProcHrefs,
+        "plug_strm"      .= map (objHref . Just) crwlPlugStrmHrefs]
+
+data CrwlC = CrwlC {
+    crwlCPlugProcConf  :: Value,
+    crwlCPlugProcHrefs :: [PlugProcHref],
+    crwlCPlugStrmHrefs :: [PlugStrmHref]
+    } deriving (Show)
+instance FromJSON CrwlC where
+    parseJSON = withObject "crwl" $ \j -> do
+        crwlCPlugProcConf <- j .:? "plug_proc_conf" .!= Null
+        fPlugProcs <- j .: "plug_proc"
+        crwlCPlugProcHrefs <- mapM (.: "href") fPlugProcs
+        fPlugStrms <- j .: "plug_strm"
+        crwlCPlugStrmHrefs <- mapM (.: "href") fPlugStrms
+        return $ CrwlC{..}
+instance ValidateJSON CrwlC
 
 data PlugProc = PlugProc {
     plugProcHref :: PlugProcHref,
@@ -93,6 +138,19 @@ instance FromJSON SiteC where
         j .: "url"
 instance ValidateJSON SiteC
 
+crwl :: D.Site -> D.Crwl -> Crwl
+crwl s c = Crwl {
+    crwlHref          = toRouteHref (D.siteURL s, D.crwlSiteV c),
+    crwlStatus        = D.crwlStatus c,
+    crwlPages         = D.crwlPages c,
+    crwlProgress      = D.crwlProgress c,
+    crwlTBegin        = D.unSiteV $ D.crwlSiteV c,
+    crwlTEnd          = D.crwlTEnd c,
+    crwlSite          = site s,
+    crwlPlugProcConf  = D.crwlPlugProcConf c,
+    crwlPlugProcHrefs = map toRouteHref $ D.crwlPlugProcIds c,
+    crwlPlugStrmHrefs = map toRouteHref $ D.crwlPlugStrmIds c}
+
 plugProc :: D.PlugProc -> PlugProc
 plugProc pp = PlugProc {
     plugProcHref = toRouteHref $ D.plugProcId pp,
@@ -109,3 +167,22 @@ site :: D.Site -> Site
 site s = Site {
     siteHref = toRouteHref $ D.siteURL s,
     siteURL  = D.unSiteURL $ D.siteURL s}
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+objHref :: ToJSON v => Maybe v -> Value
+objHref (Just v) = object ["href" .= v]
+objHref Nothing  = Null
+--------------------------------------------------------------------------------
+instance FromJSON D.CrwlStatus where
+    parseJSON = withText "CrwlStatus" $ \case
+        "pending"   -> pure D.CrwlStatusPending
+        "completed" -> pure D.CrwlStatusCompleted
+        "limited"   -> pure D.CrwlStatusLimited
+        "canceled"  -> pure D.CrwlStatusCanceled
+        _ -> fail "Invalid CrwlStatus"
+instance ToJSON D.CrwlStatus where
+    toJSON v = toJSON ((case v of
+        D.CrwlStatusPending   -> "pending"
+        D.CrwlStatusCompleted -> "completed"
+        D.CrwlStatusLimited   -> "limited"
+        D.CrwlStatusCanceled  -> "canceled") :: Text)

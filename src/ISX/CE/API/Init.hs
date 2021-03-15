@@ -9,6 +9,7 @@ import           Snap.Core
 import           Snap.Snaplet
 import           TPX.Com.Snap.CoreUtils
 import qualified ISX.CE.API.Zone.Apex     as ZA
+import qualified ISX.CE.API.Zone.Crwl     as ZC
 import qualified ISX.CE.API.Zone.PlugProc as ZPP
 import qualified ISX.CE.API.Zone.PlugStrm as ZPS
 import qualified ISX.CE.API.Zone.Site     as ZS
@@ -40,5 +41,10 @@ routesAPI = [
     ("site/:_",                                             notFound),
     ("site/:site_id",                       method GET      ZS.read),
     ("site/:site_id/:_",                                    notFound),
+    ("site/:site_id/crwl",                  method GET      ZC.siteList),
+    ("site/:site_id/crwl",                  method POST     ZC.siteCreate),
+    ("site/:site_id/crwl/:_",                               notFound),
+    ("site/:site_id/crwl/:site_v",          method GET      ZC.siteRead),
+    ("site/:site_id/crwl/:site_v/:_",                       notFound),
     --
     ("",                                                    notFound)]
