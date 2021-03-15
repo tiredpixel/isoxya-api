@@ -7,11 +7,12 @@ module ISX.CE.API.Zone.Crwl (
 
 import           ISX.CE.API.Core
 import qualified ISX.CE.DB       as D
+import qualified ISX.CE.Msg      as M
 
 
 siteCreate :: Handler b API ()
 siteCreate = do
-    --mChCrwl <- gets _msgCrwl
+    mChCrwl <- gets _msgCrwl
     d <- gets _db
     Just (s, sId) <- run notFound $ fCrwls AW d
     req_     <- getJSON' >>= validateJSON
@@ -24,8 +25,8 @@ siteCreate = do
         (snd <$> pps) (snd <$> pss) d
     Just c <- D.rCrwl (sId, sV) d
     _ <- D.cEntryURLs s c d
-    --pIds <- D.lCrwlPagePageIdEntry (sId, sV) d
-    --M.txCrwlPageIds sId c pIds mChCrwl
+    pIds <- D.lCrwlPagePageIdEntry (sId, sV) d
+    M.txCrwlPageIds sId c pIds mChCrwl
     let r = crwl s c
     created (unCrwlHref $ crwlHref r) r
 

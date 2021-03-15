@@ -9,9 +9,11 @@ module ISX.CE.API.Types (
 
 import           Control.Lens (makeLenses)
 import qualified ISX.CE.DB    as D
+import qualified ISX.CE.Msg   as M
 
 
-newtype API = API {
-    _db :: D.Conn}
+data API = API {
+    _msgCrwl :: M.ChanCrwl,
+    _db      :: D.Conn}
 
 makeLenses ''API

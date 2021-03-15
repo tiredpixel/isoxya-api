@@ -10,6 +10,7 @@ module ISX.CE.DB.Query (
     cSite,
     --
     lCrwl,
+    lCrwlPagePageIdEntry,
     lPlugProc,
     lPlugStrm,
     --
@@ -160,6 +161,26 @@ cSite url d = do
 --------------------------------------------------------------------------------
 lCrwl :: MonadIO m => SiteId -> Cursor -> D.Conn -> m [Crwl]
 lCrwl sId = curse (lCrwlF sId) (lCrwlN sId) (lCrwlP sId)
+
+lCrwlPagePageIdEntry :: MonadIO m => CrwlId -> D.Conn -> m [PageId]
+lCrwlPagePageIdEntry cId = queryR q p
+    where
+        q = " \
+        \   /* lCrwlPagePageIdEntry */ \
+        \   SELECT DISTINCT \
+        \       page_id \
+        \   FROM \
+        \       crwl_page \
+        \   WHERE \
+        \       (site_id, site_v) = (?, ?) \
+        \       AND \
+        \       p_page_id IS NULL \
+        \       AND \
+        \       p_page_v IS NULL \
+        \       AND \
+        \       page_v IS NULL \
+        \ "
+        p = cId
 
 lPlugProc :: MonadIO m => Cursor -> D.Conn -> m [PlugProc]
 lPlugProc = curse lPlugProcF lPlugProcN lPlugProcP

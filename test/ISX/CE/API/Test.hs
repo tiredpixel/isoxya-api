@@ -6,6 +6,7 @@ module ISX.CE.API.Test (
     ) where
 
 
+import           Control.Concurrent.Chan
 import           ISX.CE.API
 import           ISX.CE.API.Core         hiding (addHeader, setContentType, setHeader, (.=))
 import           ISX.CE.DB.Migration
@@ -24,5 +25,6 @@ initAPITest = makeSnaplet "API" "" Nothing $ do
     d <- liftIO D.openConnS
     liftIO $ D.setForeignKeys True d
     liftIO $ D.migrate migrations d
+    mChCrwl <- liftIO newChan
     addRoutes routesAPI
-    return $ API d
+    return $ API mChCrwl d

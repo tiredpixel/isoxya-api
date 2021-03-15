@@ -69,6 +69,7 @@ library lib-isx-ce-api
         ISX.CE.API
         ISX.CE.API.Core
         ISX.CE.DB.Migration
+        ISX.CE.Msg
     other-modules:
         Paths_isx_ce
         --
@@ -87,6 +88,8 @@ library lib-isx-ce-api
         ISX.CE.DB.Query
         ISX.CE.DB.Types
         ISX.CE.DB.URLPage
+        ISX.CE.Msg.Query
+        ISX.CE.Msg.Types
         ISX.CE.URI
     build-depends:
         lib-common-ce,

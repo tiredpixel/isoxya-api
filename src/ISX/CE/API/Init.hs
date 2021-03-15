@@ -13,13 +13,14 @@ import qualified ISX.CE.API.Zone.Crwl     as ZC
 import qualified ISX.CE.API.Zone.PlugProc as ZPP
 import qualified ISX.CE.API.Zone.PlugStrm as ZPS
 import qualified ISX.CE.API.Zone.Site     as ZS
+import qualified ISX.CE.Msg               as M
 import qualified TPX.Com.SQLite.Conn      as D
 
 
-initAPI :: D.Conn -> SnapletInit b API
-initAPI d = makeSnaplet "API" "" Nothing $ do
+initAPI :: M.ChanCrwl -> D.Conn -> SnapletInit b API
+initAPI mChCrwl d = makeSnaplet "API" "" Nothing $ do
     addRoutes routesAPI
-    return $ API d
+    return $ API mChCrwl d
 
 routesAPI :: [(ByteString, Handler b API ())]
 routesAPI = [
