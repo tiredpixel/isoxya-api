@@ -1,15 +1,19 @@
 module ISX.CE.DB.Query (
     cPlugProc,
+    cPlugStrm,
     cSite,
     --
     lPlugProc,
+    lPlugStrm,
     --
     rPlugProc,
+    rPlugStrm,
     rSite,
     rSiteId,
     --
     --
     dPlugProc,
+    dPlugStrm,
     ) where
 
 
@@ -42,6 +46,26 @@ cPlugProc url tag d = do
         \       tag = tag \
         \ "
 
+cPlugStrm :: MonadIO m => URI -> Text -> D.Conn -> m (Maybe PlugStrmId)
+cPlugStrm url tag d = do
+    psId <- generateUUID
+    let p = (psId, url, tag)
+    executeW q p d
+    r <- rPlugStrmURL url d
+    return $ plugStrmId <$> r
+    where
+        q = " \
+        \   /* cPlugStrm */ \
+        \   INSERT INTO plug_strm ( \
+        \       plug_strm_id, \
+        \       url, \
+        \       tag \
+        \   ) \
+        \   VALUES (?, ?, ?) \
+        \   ON CONFLICT (url) DO UPDATE SET \
+        \       tag = tag \
+        \ "
+
 cSite :: MonadIO m => URI -> D.Conn -> m (Maybe SiteURL)
 cSite url d = do
     executeW q p d
@@ -63,6 +87,9 @@ cSite url d = do
 --------------------------------------------------------------------------------
 lPlugProc :: MonadIO m => Cursor -> D.Conn -> m [PlugProc]
 lPlugProc = curse lPlugProcF lPlugProcN lPlugProcP
+
+lPlugStrm :: MonadIO m => Cursor -> D.Conn -> m [PlugStrm]
+lPlugStrm = curse lPlugStrmF lPlugStrmN lPlugStrmP
 --------------------------------------------------------------------------------
 rPlugProc :: MonadIO m => PlugProcId -> D.Conn -> m (Maybe PlugProc)
 rPlugProc ppId d = listToMaybe <$> queryR q p d
@@ -75,6 +102,18 @@ rPlugProc ppId d = listToMaybe <$> queryR q p d
         \   LIMIT 1 \
         \ "
         p = [ppId]
+
+rPlugStrm :: MonadIO m => PlugStrmId -> D.Conn -> m (Maybe PlugStrm)
+rPlugStrm psId d = listToMaybe <$> queryR q p d
+    where
+        q = " \
+        \   /* rPlugStrm */ \
+        \   SELECT * FROM d_plug_strm_0 \
+        \   WHERE \
+        \       plug_strm_id = ? \
+        \   LIMIT 1 \
+        \ "
+        p = [psId]
 
 rSite :: MonadIO m => SiteURL -> D.Conn -> m (Maybe Site)
 rSite sURL d = listToMaybe <$> queryR q p d
@@ -111,6 +150,17 @@ dPlugProc ppId = executeW q p
         \       plug_proc_id = ? \
         \ "
         p = [ppId]
+
+dPlugStrm :: MonadIO m => PlugStrmId -> D.Conn -> m ()
+dPlugStrm psId = executeW q p
+    where
+        q = " \
+        \   /* dPlugStrm */ \
+        \   DELETE FROM plug_strm \
+        \   WHERE \
+        \       plug_strm_id = ? \
+        \ "
+        p = [psId]
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 lPlugProcF :: MonadIO m => Integer -> D.Conn -> m [PlugProc]
@@ -162,12 +212,73 @@ lPlugProcP curLim curPosP d = do
         \ "
         p = (curPosP, curLim)
 --------------------------------------------------------------------------------
+lPlugStrmF :: MonadIO m => Integer -> D.Conn -> m [PlugStrm]
+lPlugStrmF curLim d = do
+    psIds <- queryR q p d
+    catMaybes <$> forM psIds (`rPlugStrm` d)
+    where
+        q = " \
+        \   /* lPlugStrmF */ \
+        \   SELECT plug_strm_id FROM plug_strm \
+        \   ORDER BY \
+        \       t_ins DESC, \
+        \       plug_strm_id DESC \
+        \   LIMIT ? \
+        \ "
+        p = [curLim]
+
+lPlugStrmN :: MonadIO m => Integer -> ByteString -> D.Conn -> m [PlugStrm]
+lPlugStrmN curLim curPosN d = do
+    psIds <- queryR q p d
+    catMaybes <$> forM psIds (`rPlugStrm` d)
+    where
+        q = " \
+        \   /* lPlugStrmN */ \
+        \   SELECT plug_strm_id FROM plug_strm \
+        \   WHERE \
+        \       t_ins < ? \
+        \   ORDER BY \
+        \       t_ins DESC, \
+        \       plug_strm_id DESC \
+        \   LIMIT ? \
+        \ "
+        p = (curPosN, curLim)
+
+lPlugStrmP :: MonadIO m => Integer -> ByteString -> D.Conn -> m [PlugStrm]
+lPlugStrmP curLim curPosP d = do
+    psIds <- queryR q p d
+    reverse . catMaybes <$> forM psIds (`rPlugStrm` d)
+    where
+        q = " \
+        \   /* lPlugStrmP */ \
+        \   SELECT plug_strm_id FROM plug_strm \
+        \   WHERE \
+        \       t_ins > ? \
+        \   ORDER BY \
+        \       t_ins ASC, \
+        \       plug_strm_id ASC \
+        \   LIMIT ? \
+        \ "
+        p = (curPosP, curLim)
+--------------------------------------------------------------------------------
 rPlugProcURL :: MonadIO m => URI -> D.Conn -> m (Maybe PlugProc)
 rPlugProcURL url d = listToMaybe <$> queryR q p d
     where
         q = " \
         \   /* rPlugProcURL */ \
         \   SELECT * FROM d_plug_proc_0 \
+        \   WHERE \
+        \       url = ? \
+        \   LIMIT 1 \
+        \ "
+        p = [url]
+
+rPlugStrmURL :: MonadIO m => URI -> D.Conn -> m (Maybe PlugStrm)
+rPlugStrmURL url d = listToMaybe <$> queryR q p d
+    where
+        q = " \
+        \   /* rPlugStrmURL */ \
+        \   SELECT * FROM d_plug_strm_0 \
         \   WHERE \
         \       url = ? \
         \   LIMIT 1 \

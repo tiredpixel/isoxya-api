@@ -80,6 +80,7 @@ library lib-isx-ce-api
         ISX.CE.API.Types
         ISX.CE.API.Zone.Apex
         ISX.CE.API.Zone.PlugProc
+        ISX.CE.API.Zone.PlugStrm
         ISX.CE.API.Zone.Site
         ISX.CE.DB
         ISX.CE.DB.Query

@@ -6,6 +6,8 @@
 module ISX.CE.API.Href (
     PlugProcHref(..),
     PlugProcsHref(..),
+    PlugStrmHref(..),
+    PlugStrmsHref(..),
     SiteHref(..),
     SitesHref(..),
     ) where
@@ -42,6 +44,28 @@ instance RouteHref PlugProcsHref () where
 instance ToJSON PlugProcsHref where
     toJSON o = toJSON (decodeUtf8 $ unPlugProcsHref o :: Text)
 
+newtype PlugStrmHref = PlugStrmHref { unPlugStrmHref :: ByteString
+    } deriving (Show)
+instance RouteHref PlugStrmHref D.PlugStrmId where
+    toRouteHref p = PlugStrmHref $ plugStrms <> "/" <> fromRouteId p
+    fromRouteHref h = do
+        ["", "plug_strm", p] <- return $ C8.split '/' $ unPlugStrmHref h
+        toRouteId p
+instance FromJSON PlugStrmHref where
+    parseJSON = withText "plug_strm.href" $ pure . PlugStrmHref . encodeUtf8
+instance ToJSON PlugStrmHref where
+    toJSON o = toJSON (decodeUtf8 $ unPlugStrmHref o :: Text)
+
+newtype PlugStrmsHref = PlugStrmsHref { unPlugStrmsHref :: ByteString
+    } deriving (Show)
+instance RouteHref PlugStrmsHref () where
+    toRouteHref _ = PlugStrmsHref plugStrms
+    fromRouteHref h = do
+        ["", "plug_strm"] <- return $ C8.split '/' $ unPlugStrmsHref h
+        pass
+instance ToJSON PlugStrmsHref where
+    toJSON o = toJSON (decodeUtf8 $ unPlugStrmsHref o :: Text)
+
 newtype SiteHref = SiteHref { unSiteHref :: ByteString
     } deriving (Show)
 instance RouteHref SiteHref D.SiteURL where
@@ -66,6 +90,9 @@ instance ToJSON SitesHref where
 plugProcs :: ByteString
 plugProcs = "/plug_proc"
 
+plugStrms :: ByteString
+plugStrms = "/plug_strm"
+
 sites :: ByteString
 sites = "/site"
 --------------------------------------------------------------------------------
@@ -73,6 +100,10 @@ sites = "/site"
 instance RouteId D.PlugProcId where
     toRouteId b = D.PlugProcId <$> UUID.fromASCIIBytes b
     fromRouteId = show . D.unPlugProcId
+
+instance RouteId D.PlugStrmId where
+    toRouteId b = D.PlugStrmId <$> UUID.fromASCIIBytes b
+    fromRouteId = show . D.unPlugStrmId
 
 instance RouteId D.SiteURL where
     toRouteId b = D.SiteURL <$>

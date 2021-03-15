@@ -5,9 +5,12 @@ module ISX.CE.API.Resource (
     Apex(..),
     PlugProc(..),
     PlugProcC(..),
+    PlugStrm(..),
+    PlugStrmC(..),
     Site(..),
     SiteC(..),
     plugProc,
+    plugStrm,
     site,
     ) where
 
@@ -52,6 +55,27 @@ instance FromJSON PlugProcC where
         j .: "tag"
 instance ValidateJSON PlugProcC
 
+data PlugStrm = PlugStrm {
+    plugStrmHref :: PlugStrmHref,
+    plugStrmURL  :: URI,
+    plugStrmTag  :: Text
+    } deriving (Show)
+instance ToJSON PlugStrm where
+    toJSON PlugStrm{..} = object [
+        "href" .= plugStrmHref,
+        "url"  .= plugStrmURL,
+        "tag"  .= plugStrmTag]
+
+data PlugStrmC = PlugStrmC {
+    plugStrmCURL :: URIAbsolute,
+    plugStrmCTag :: Text
+    } deriving (Show)
+instance FromJSON PlugStrmC where
+    parseJSON = withObject "plug_strm" $ \j -> PlugStrmC <$>
+        j .: "url" <*>
+        j .: "tag"
+instance ValidateJSON PlugStrmC
+
 data Site = Site {
     siteHref :: SiteHref,
     siteURL  :: URI
@@ -74,6 +98,12 @@ plugProc pp = PlugProc {
     plugProcHref = toRouteHref $ D.plugProcId pp,
     plugProcURL  = D.unPlugProcURL $ D.plugProcURL pp,
     plugProcTag  = D.plugProcTag pp}
+
+plugStrm :: D.PlugStrm -> PlugStrm
+plugStrm ps = PlugStrm {
+    plugStrmHref = toRouteHref $ D.plugStrmId ps,
+    plugStrmURL  = D.unPlugStrmURL $ D.plugStrmURL ps,
+    plugStrmTag  = D.plugStrmTag ps}
 
 site :: D.Site -> Site
 site s = Site {

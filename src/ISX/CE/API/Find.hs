@@ -2,6 +2,9 @@ module ISX.CE.API.Find (
     fPlugProc,
     fPlugProcHref,
     fPlugProcs,
+    fPlugStrm,
+    fPlugStrmHref,
+    fPlugStrms,
     fSite,
     fSites,
     ) where
@@ -31,6 +34,24 @@ fPlugProcHref pH _ d = do
 
 fPlugProcs :: MonadSnap m => APerm -> D.Conn -> MaybeT m ()
 fPlugProcs _ _ = pass
+
+fPlugStrm :: MonadSnap m => APerm -> D.Conn ->
+    MaybeT m (D.PlugStrm, D.PlugStrmId)
+fPlugStrm _ d = do
+    Just pId_ <- lift $ getParam "plug_strm_id"
+    Just pId  <- return $ toRouteId pId_
+    Just p <- D.rPlugStrm pId d
+    return (p, D.plugStrmId p)
+
+fPlugStrmHref :: MonadSnap m => Maybe PlugStrmHref -> APerm ->
+    D.Conn -> MaybeT m (D.PlugStrm, D.PlugStrmId)
+fPlugStrmHref pH _ d = do
+    Just pId <- return $ fromRouteHref =<< pH
+    Just p <- D.rPlugStrm pId d
+    return (p, D.plugStrmId p)
+
+fPlugStrms :: MonadSnap m => APerm -> D.Conn -> MaybeT m ()
+fPlugStrms _ _ = pass
 
 fSite :: MonadSnap m => APerm -> D.Conn -> MaybeT m (D.Site, D.SiteId)
 fSite AR d = do

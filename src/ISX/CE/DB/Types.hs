@@ -2,6 +2,9 @@ module ISX.CE.DB.Types (
     PlugProc(..),
     PlugProcId(..),
     PlugProcURL(..),
+    PlugStrm(..),
+    PlugStrmId(..),
+    PlugStrmURL(..),
     Site(..),
     SiteId(..),
     SiteURL(..),
@@ -45,6 +48,33 @@ instance FromRow PlugProcURL where
     fromRow = PlugProcURL <$> field
 instance ToField PlugProcURL where
     toField = toField . unPlugProcURL
+
+data PlugStrm = PlugStrm {
+    plugStrmId   :: PlugStrmId,
+    plugStrmURL  :: PlugStrmURL,
+    plugStrmTag  :: Text,
+    plugStrmTIns :: UTCTime
+    } deriving (Show)
+instance FromRow PlugStrm where
+    fromRow = PlugStrm <$>
+        (PlugStrmId <$> field) <*>
+        (PlugStrmURL <$> field) <*>
+        field <*>
+        field
+
+newtype PlugStrmId = PlugStrmId { unPlugStrmId :: UUID
+    } deriving (Show)
+instance FromRow PlugStrmId where
+    fromRow = PlugStrmId <$> field
+instance ToField PlugStrmId where
+    toField = toField . unPlugStrmId
+
+newtype PlugStrmURL = PlugStrmURL { unPlugStrmURL :: URI
+    } deriving (Show)
+instance FromRow PlugStrmURL where
+    fromRow = PlugStrmURL <$> field
+instance ToField PlugStrmURL where
+    toField = toField . unPlugStrmURL
 
 data Site = Site {
     siteId   :: SiteId,

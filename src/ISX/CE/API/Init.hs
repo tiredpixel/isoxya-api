@@ -10,6 +10,7 @@ import           Snap.Snaplet
 import           TPX.Com.Snap.CoreUtils
 import qualified ISX.CE.API.Zone.Apex     as ZA
 import qualified ISX.CE.API.Zone.PlugProc as ZPP
+import qualified ISX.CE.API.Zone.PlugStrm as ZPS
 import qualified ISX.CE.API.Zone.Site     as ZS
 import qualified TPX.Com.SQLite.Conn      as D
 
@@ -29,6 +30,12 @@ routesAPI = [
     ("plug_proc/:plug_proc_id",             method DELETE   ZPP.delete),
     ("plug_proc/:plug_proc_id",             method GET      ZPP.read),
     ("plug_proc/:plug_proc_id/:_",                          notFound),
+    ("plug_strm",                           method GET      ZPS.list),
+    ("plug_strm",                           method POST     ZPS.create),
+    ("plug_strm/:_",                                        notFound),
+    ("plug_strm/:plug_strm_id",             method DELETE   ZPS.delete),
+    ("plug_strm/:plug_strm_id",             method GET      ZPS.read),
+    ("plug_strm/:plug_strm_id/:_",                          notFound),
     ("site",                                method POST     ZS.create),
     ("site/:_",                                             notFound),
     ("site/:site_id",                       method GET      ZS.read),
