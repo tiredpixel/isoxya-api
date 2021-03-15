@@ -28,6 +28,10 @@ library lib-common-ce
         TPX.Com.SQLite.Conn
         TPX.Com.SQLite.Meta
         TPX.Com.SQLite.Query
+        TPX.Com.Snap.CoreUtils
+        TPX.Com.Snap.Main
+    other-modules:
+        TPX.Com.Cursor
     build-depends:
         aeson,
         base64-bytestring,
@@ -58,10 +62,17 @@ library lib-common-ce
 library lib-isx-ce-api
     import:             common-properties
     exposed-modules:
+        ISX.CE.API
+        ISX.CE.API.Core
         ISX.CE.DB.Migration
     other-modules:
         Paths_isx_ce
         --
+        ISX.CE.API.Init
+        ISX.CE.API.Resource
+        ISX.CE.API.Types
+        ISX.CE.API.Zone.Apex
+        ISX.CE.DB
     build-depends:
         lib-common-ce,
         --
@@ -107,7 +118,9 @@ executable isx-ce-api
 library lib-common-ce-test
     import:             common-properties
     exposed-modules:
+        TPX.Com.Snap.Test
     other-modules:
+        TPX.Com.Snap.TestUtils
     build-depends:
         aeson,
         base64-bytestring,
@@ -136,6 +149,8 @@ test-suite test-isx-ce-api
     type:               exitcode-stdio-1.0
     main-is:            Spec.hs
     other-modules:
+        ISX.CE.API.Test
+        ISX.CE.API.Zone.ApexSpec
     build-depends:
         lib-common-ce,
         lib-common-ce-test,
