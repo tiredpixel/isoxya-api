@@ -9,6 +9,7 @@ import           Snap.Core
 import           Snap.Snaplet
 import           TPX.Com.Snap.CoreUtils
 import qualified ISX.CE.API.Zone.Apex   as ZA
+import qualified ISX.CE.API.Zone.Site   as ZS
 import qualified TPX.Com.SQLite.Conn    as D
 
 
@@ -21,5 +22,9 @@ routesAPI :: [(ByteString, Handler b API ())]
 routesAPI = [
     ("",                                    ifTop           ZA.apex),
     --
+    ("site",                                method POST     ZS.create),
+    ("site/:_",                                             notFound),
+    ("site/:site_id",                       method GET      ZS.read),
+    ("site/:site_id/:_",                                    notFound),
     --
     ("",                                                    notFound)]

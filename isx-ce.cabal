@@ -26,10 +26,13 @@ library lib-common-ce
     exposed-modules:
         TPX.Com.Log
         TPX.Com.SQLite.Conn
+        TPX.Com.SQLite.Ext.Hash
+        TPX.Com.SQLite.Ext.URI
         TPX.Com.SQLite.Meta
         TPX.Com.SQLite.Query
         TPX.Com.Snap.CoreUtils
         TPX.Com.Snap.Main
+        TPX.Com.URI
     other-modules:
         TPX.Com.Cursor
     build-depends:
@@ -68,11 +71,18 @@ library lib-isx-ce-api
     other-modules:
         Paths_isx_ce
         --
+        ISX.CE.API.Auth
+        ISX.CE.API.Find
+        ISX.CE.API.Href
         ISX.CE.API.Init
         ISX.CE.API.Resource
         ISX.CE.API.Types
         ISX.CE.API.Zone.Apex
+        ISX.CE.API.Zone.Site
         ISX.CE.DB
+        ISX.CE.DB.Query
+        ISX.CE.DB.Types
+        ISX.CE.URI
     build-depends:
         lib-common-ce,
         --

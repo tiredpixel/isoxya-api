@@ -1,5 +1,8 @@
 module ISX.CE.API.Core (
     module Data.Aeson,
+    module ISX.CE.API.Auth,
+    module ISX.CE.API.Find,
+    module ISX.CE.API.Href,
     module ISX.CE.API.Resource,
     module ISX.CE.API.Types,
     module Snap.Core,
@@ -10,6 +13,9 @@ module ISX.CE.API.Core (
 
 
 import Data.Aeson
+import ISX.CE.API.Auth
+import ISX.CE.API.Find
+import ISX.CE.API.Href
 import ISX.CE.API.Resource
 import ISX.CE.API.Types
 import Snap.Core              hiding (pass)
