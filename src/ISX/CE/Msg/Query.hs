@@ -19,20 +19,20 @@ import qualified Network.HTTP.Conduit      as HTTP
 import qualified Network.HTTP.Types.Status as HTTP
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-genCrwlPageId :: D.CrwlId -> D.PageId -> CrwlPageId
-genCrwlPageId (sId, sV) = CrwlPageId sId sV
+genCrwlPageId :: D.Crwl -> D.PageId -> CrwlPageId
+genCrwlPageId c = CrwlPageId (D.crwlSiteId c) (D.crwlSiteV c)
 
-genCrwlPageErr :: D.CrwlId -> D.PageId -> HTTP.Request ->
+genCrwlPageErr :: D.Crwl -> D.PageId -> HTTP.Request ->
     CrwlPageResErr -> UTCTime -> CrwlPage
-genCrwlPageErr (sId, sV) pId req resErr t = CrwlPage
-        sId sV pId (D.PageV t) req' (Left resErr) Nothing
+genCrwlPageErr c pId req resErr t = CrwlPage (D.crwlSiteId c) (D.crwlSiteV c)
+        pId (D.PageV t) req' (Left resErr) Nothing
     where
         req' = CrwlPageReq (HTTP.method req) (HTTP.requestVersion req)
 
-genCrwlPageRes :: D.CrwlId -> D.PageId -> HTTP.Request ->
+genCrwlPageRes :: D.Crwl -> D.PageId -> HTTP.Request ->
     HTTP.Response LByteString -> UTCTime -> UTCTime -> CrwlPage
-genCrwlPageRes (sId, sV) pId req res t t' = CrwlPage
-        sId sV pId (D.PageV t) req' (Right res') (Just blob)
+genCrwlPageRes c pId req res t t' = CrwlPage (D.crwlSiteId c) (D.crwlSiteV c)
+        pId (D.PageV t) req' (Right res') (Just blob)
     where
         req' = CrwlPageReq (HTTP.method req) (HTTP.requestVersion req)
         res' = CrwlPageRes (HTTP.statusCode $ HTTP.responseStatus res)
@@ -45,11 +45,10 @@ txCrwlPage c cp mCh = liftIO $ writeList2Chan mCh msgs
     where
         msgs = [(ppId, cp) | ppId <- D.crwlPlugProcIds c]
 
-txCrwlPageIds :: MonadIO m => D.SiteId -> D.CrwlId -> [D.PageId] -> ChanCrwl ->
-    m ()
-txCrwlPageIds sId cId pIds mCh = liftIO $ writeList2Chan mCh msgs
+txCrwlPageIds :: MonadIO m => D.Site -> D.Crwl -> [D.PageId] -> ChanCrwl -> m ()
+txCrwlPageIds s c pIds mCh = liftIO $ writeList2Chan mCh msgs
     where
-        msgs = [(sId, genCrwlPageId cId pId) | pId <- pIds]
+        msgs = [(D.siteId s, genCrwlPageId c pId) | pId <- pIds]
 --------------------------------------------------------------------------------
 rx :: Chan a -> (a -> IO ()) -> IO ()
 rx mCh f = getChanContents mCh >>= mapM_ f

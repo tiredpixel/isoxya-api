@@ -27,10 +27,10 @@ process l ver mCh n d (sId, msg) = do
             N.makeReq "GET" (D.unSiteURL reqURL) ""
     L.debug l $ show req
     t <- getCurrentTime
-    cp <- handle (httpH l (D.crwlId c) (D.pageId p) req t) $ do
+    cp <- handle (httpH l c (D.pageId p) req t) $ do
         res <- N.makeResLim reqLim req n
         L.debug l $ show res
-        M.genCrwlPageRes (D.crwlId c) (D.pageId p) req res t <$> getCurrentTime
+        M.genCrwlPageRes c (D.pageId p) req res t <$> getCurrentTime
     L.debug l $ show cp
     _ <- M.txCrwlPage c cp mCh
     L.info l $ decodeUtf8 (unCrwlHref $
@@ -46,11 +46,11 @@ process l ver mCh n d (sId, msg) = do
         rateLim = 10000000 -- 10 s
 
 
-httpH :: L.Logger -> D.CrwlId -> D.PageId -> HTTP.Request -> UTCTime ->
+httpH :: L.Logger -> D.Crwl -> D.PageId -> HTTP.Request -> UTCTime ->
     HTTP.HttpException -> IO M.CrwlPage
-httpH l cId pId req t ex = do
+httpH l c pId req t ex = do
     L.err l $ show ex
-    return $ M.genCrwlPageErr cId pId req (M.httpExResErr ex) t
+    return $ M.genCrwlPageErr c pId req (M.httpExResErr ex) t
 
 userAgentStr :: Text -> Text
 userAgentStr ver = toText $ R.subRegex r str (toString ver)
