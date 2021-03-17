@@ -26,7 +26,7 @@ siteCreate = do
     Just c <- D.rCrwl (sId, sV) d
     _ <- D.cEntryURLs s c d
     pIds <- D.lCrwlPagePageIdEntry (sId, sV) d
-    M.txCrwlPageIds sId c pIds mChCrwl
+    M.txCrwlPageIds sId (D.crwlId c) pIds mChCrwl
     let r = crwl s c
     created (unCrwlHref $ crwlHref r) r
 
