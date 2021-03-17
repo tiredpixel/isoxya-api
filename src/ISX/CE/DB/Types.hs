@@ -6,6 +6,7 @@ module ISX.CE.DB.Types (
     Page(..),
     PageId(..),
     PageURL(..),
+    PageV(..),
     PlugProc(..),
     PlugProcId(..),
     PlugProcURL(..),
@@ -114,6 +115,11 @@ instance FromRow PageURL where
     fromRow = PageURL <$> field
 instance ToField PageURL where
     toField = toField . unPageURL
+
+newtype PageV = PageV { unPageV :: UTCTime
+    } deriving (Show)
+instance ToField PageV where
+    toField = toField . unPageV
 
 data PlugProc = PlugProc {
     plugProcId   :: PlugProcId,

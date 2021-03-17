@@ -1,5 +1,6 @@
 module ISX.CE.DB.URLPage (
     cEntryURLs,
+    pageURLAbs,
     ) where
 
 
@@ -21,6 +22,9 @@ cEntryURLs s c d = do
         urls = unSiteURL . pageURLAbs (siteURL s) . PageURL <$>
             catMaybes [parseURIReference "/"]
 
+pageURLAbs :: SiteURL -> PageURL -> SiteURL
+pageURLAbs s p = SiteURL $ relativeTo (unPageURL p) (unSiteURL s)
+
 
 decomposeURL :: (MonadFail m, MonadIO m) => URI -> D.Conn -> m (Maybe Page)
 decomposeURL url d = do
@@ -40,9 +44,6 @@ handleInvalidURL :: MonadIO m => HTTP.HttpException -> m (Maybe a)
 handleInvalidURL ex = case ex of
     HTTP.InvalidUrlException _ _ -> return Nothing
     _                            -> bug ex
-
-pageURLAbs :: SiteURL -> PageURL -> SiteURL
-pageURLAbs s p = SiteURL $ relativeTo (unPageURL p) (unSiteURL s)
 
 storeReq :: (MonadFail m, MonadIO m) => HTTP.Request -> D.Conn -> m Page
 storeReq req d = do

@@ -14,8 +14,10 @@ import           Paths_isx_ce            (version)
 import           Snap.Snaplet
 import           System.IO
 import           TPX.Com.Snap.Main       as S
+import qualified ISX.CE.Crwl             as Crwl
 import qualified ISX.CE.Msg              as M
 import qualified TPX.Com.Log             as L
+import qualified TPX.Com.Net             as N
 import qualified TPX.Com.SQLite.Conn     as D
 import qualified TPX.Com.SQLite.Meta     as D
 import qualified TPX.Com.SQLite.Query    as D
@@ -31,11 +33,14 @@ main = do
     let ver = toText $ showVersion version
     hPutStrLn stderr $ "Isoxya CE API " <> toString ver
     done <- S.init
-    tId <- forkIO $ L.withLog $ \_ -> do
+    tId <- forkIO $ L.withLog $ \l -> do
+        n <- N.openConn
         mChCrwl <- newChan
+        mChProc <- newChan
         D.withConnS $ \d -> do
             D.setForeignKeys True d
             D.migrate migrations d
+            _ <- forkIO $ M.rx mChCrwl $ Crwl.process l ver mChProc n d
             serveSnaplet S.config $ initApp mChCrwl d
     S.wait done tId
 

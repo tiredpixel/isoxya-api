@@ -26,6 +26,7 @@ library lib-common-ce
     exposed-modules:
         TPX.Com.Cursor
         TPX.Com.Log
+        TPX.Com.Net
         TPX.Com.SQLite.Conn
         TPX.Com.SQLite.Ext.Hash
         TPX.Com.SQLite.Ext.URI
@@ -68,6 +69,7 @@ library lib-isx-ce-api
     exposed-modules:
         ISX.CE.API
         ISX.CE.API.Core
+        ISX.CE.Crwl
         ISX.CE.DB.Migration
         ISX.CE.Msg
     other-modules:
@@ -84,6 +86,7 @@ library lib-isx-ce-api
         ISX.CE.API.Zone.PlugProc
         ISX.CE.API.Zone.PlugStrm
         ISX.CE.API.Zone.Site
+        ISX.CE.Crwl.Processor
         ISX.CE.DB
         ISX.CE.DB.Query
         ISX.CE.DB.Types

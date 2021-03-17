@@ -15,6 +15,7 @@ module ISX.CE.DB.Query (
     lPlugStrm,
     --
     rCrwl,
+    rPageId,
     rPageIns,
     rPlugProc,
     rPlugStrm,
@@ -199,6 +200,18 @@ rCrwl cId d = listToMaybe <$> queryR q p d
         \   LIMIT 1 \
         \ "
         p = cId
+
+rPageId :: MonadIO m => (SiteId, PageId) -> D.Conn -> m (Maybe Page)
+rPageId (sId, pId) d = listToMaybe <$> queryR q p d
+    where
+        q = " \
+        \   /* rPageId */ \
+        \   SELECT * FROM d_page_0 \
+        \   WHERE \
+        \       (site_id, page_id) = (?, ?) \
+        \   LIMIT 1 \
+        \ "
+        p = (sId, pId)
 
 rPageIns :: MonadIO m => (Site, PageURL) -> D.Conn -> m (Maybe Page)
 rPageIns (s, pURL) d = rPage (siteId s, pURL) d >>= \case
