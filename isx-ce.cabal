@@ -25,6 +25,7 @@ library lib-common-ce
     import:             common-properties
     exposed-modules:
         TPX.Com.Cursor
+        TPX.Com.Isoxya.PlugProc
         TPX.Com.Log
         TPX.Com.Net
         TPX.Com.SQLite.Conn
@@ -72,6 +73,7 @@ library lib-isx-ce-api
         ISX.CE.Crwl
         ISX.CE.DB.Migration
         ISX.CE.Msg
+        ISX.CE.Proc
     other-modules:
         Paths_isx_ce
         --
@@ -93,6 +95,7 @@ library lib-isx-ce-api
         ISX.CE.DB.URLPage
         ISX.CE.Msg.Query
         ISX.CE.Msg.Types
+        ISX.CE.Proc.Processor
         ISX.CE.URI
     build-depends:
         lib-common-ce,

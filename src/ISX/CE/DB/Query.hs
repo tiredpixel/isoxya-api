@@ -10,6 +10,7 @@ module ISX.CE.DB.Query (
     cSite,
     --
     lCrwl,
+    lCrwlPagePageId,
     lCrwlPagePageIdEntry,
     lPlugProc,
     lPlugStrm,
@@ -23,6 +24,7 @@ module ISX.CE.DB.Query (
     rSiteId,
     rSiteIns,
     --
+    uCrwlPage,
     --
     dPlugProc,
     dPlugStrm,
@@ -163,6 +165,25 @@ cSite url d = do
 lCrwl :: MonadIO m => SiteId -> Cursor -> D.Conn -> m [Crwl]
 lCrwl sId = curse (lCrwlF sId) (lCrwlN sId) (lCrwlP sId)
 
+lCrwlPagePageId :: MonadIO m => CrwlId -> PageId -> PageV -> PlugProcId ->
+    D.Conn -> m [PageId]
+lCrwlPagePageId (sId, sV) ppId ppV pppId = queryR q p
+    where
+        q = " \
+        \   /* lCrwlPagePageId */ \
+        \   SELECT DISTINCT \
+        \       page_id \
+        \   FROM \
+        \       crwl_page \
+        \   WHERE \
+        \       (site_id, site_v) = (?, ?) \
+        \       AND \
+        \       (p_page_id, p_page_v, p_plug_proc_id) = (?, ?, ?) \
+        \       AND \
+        \       page_v IS NULL \
+        \ "
+        p = (sId, sV, ppId, ppV, pppId)
+
 lCrwlPagePageIdEntry :: MonadIO m => CrwlId -> D.Conn -> m [PageId]
 lCrwlPagePageIdEntry cId = queryR q p
     where
@@ -271,6 +292,40 @@ rSiteIns sURL d = rSite sURL d >>= \case
     Just s  -> return $ Just s
     Nothing -> cSiteAuto (unSiteURL sURL) d >> rSite sURL d
 --------------------------------------------------------------------------------
+uCrwlPage :: (MonadFail m, MonadIO m) => Crwl -> PageId -> PageV ->
+    PlugProcId -> [PageId] -> D.Conn -> m ()
+uCrwlPage c pId pV ppId pIds d = do
+    let p1 ppId' = map (crwlSiteId c, crwlSiteV c, pId, pV, ppId, ppId',) $
+            pIds ++ [pId]
+    forM_ (crwlPlugProcIds c) $ \ppId' -> executeManyW q1 (p1 ppId') d
+    executeW q2 p2 d
+    where
+        q1 = " \
+        \   /* uCrwlPage.1 */ \
+        \   INSERT INTO crwl_page ( \
+        \       site_id, \
+        \       site_v, \
+        \       p_page_id, \
+        \       p_page_v, \
+        \       p_plug_proc_id, \
+        \       plug_proc_id, \
+        \       page_id \
+        \   ) \
+        \   VALUES (?, ?, ?, ?, ?, ?, ?) \
+        \   ON CONFLICT DO NOTHING \
+        \ "
+        q2 = " \
+        \   /* uCrwlPage.2 */ \
+        \   UPDATE \
+        \       crwl_page \
+        \   SET \
+        \       (page_v, t_ins) = (?, STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')) \
+        \   WHERE \
+        \       (site_id, site_v, page_id, plug_proc_id) = (?, ?, ?, ?) \
+        \       AND \
+        \       page_v IS NULL \
+        \   "
+        p2 = (pV, crwlSiteId c, crwlSiteV c, pId, ppId)
 --------------------------------------------------------------------------------
 dPlugProc :: MonadIO m => PlugProcId -> D.Conn -> m ()
 dPlugProc ppId = executeW q p

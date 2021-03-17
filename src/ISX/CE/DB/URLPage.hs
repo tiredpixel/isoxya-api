@@ -1,6 +1,7 @@
 module ISX.CE.DB.URLPage (
     cEntryURLs,
     pageURLAbs,
+    urlsPageIds,
     ) where
 
 
@@ -24,6 +25,19 @@ cEntryURLs s c d = do
 
 pageURLAbs :: SiteURL -> PageURL -> SiteURL
 pageURLAbs s p = SiteURL $ relativeTo (unPageURL p) (unSiteURL s)
+
+urlsPageIds :: MonadIO m => Site -> Set URI -> D.Conn -> m [PageId]
+urlsPageIds s urls d = do
+    urls' <- mapM c2 $ toList urls
+    let urls'' = catMaybes urls'
+    return [pageId p | p <- urls'', pageSiteId p == siteId s]
+    where
+        c2 :: MonadIO m => URI -> m (Maybe Page)
+        c2 u = do
+            u' <- liftIO $ handle handleInvalidURL $ decomposeURLInt s u d
+            case u' of
+                Just u'' -> return $ Just u''
+                Nothing  -> return Nothing
 
 
 decomposeURL :: (MonadFail m, MonadIO m) => URI -> D.Conn -> m (Maybe Page)
@@ -53,16 +67,3 @@ storeReq req d = do
     where
         sURL = reqURISite req
         pURL = reqURIPage req
-
-urlsPageIds :: MonadIO m => Site -> Set URI -> D.Conn -> m [PageId]
-urlsPageIds s urls d = do
-    urls' <- mapM c2 $ toList urls
-    let urls'' = catMaybes urls'
-    return [pageId p | p <- urls'', pageSiteId p == siteId s]
-    where
-        c2 :: MonadIO m => URI -> m (Maybe Page)
-        c2 u = do
-            u' <- liftIO $ handle handleInvalidURL $ decomposeURLInt s u d
-            case u' of
-                Just u'' -> return $ Just u''
-                Nothing  -> return Nothing
