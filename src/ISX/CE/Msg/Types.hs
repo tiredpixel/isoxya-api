@@ -11,6 +11,7 @@ module ISX.CE.Msg.Types (
     CrwlPageResErr(..),
     MsgCrwl,
     MsgProc,
+    MsgStrm,
     httpExResErr,
     showCrwlPageRes,
     ) where

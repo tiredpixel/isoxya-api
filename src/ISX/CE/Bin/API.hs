@@ -17,6 +17,7 @@ import           TPX.Com.Snap.Main       as S
 import qualified ISX.CE.Crwl             as Crwl
 import qualified ISX.CE.Msg              as M
 import qualified ISX.CE.Proc             as Proc
+import qualified ISX.CE.Strm             as Strm
 import qualified TPX.Com.Log             as L
 import qualified TPX.Com.Net             as N
 import qualified TPX.Com.SQLite.Conn     as D
@@ -44,6 +45,7 @@ main = do
             D.migrate migrations d
             _ <- forkIO $ M.rx mChCrwl $ Crwl.process l ver mChProc n d
             _ <- forkIO $ M.rx mChProc $ Proc.process l mChStrm mChCrwl n d
+            _ <- forkIO $ M.rx mChStrm $ Strm.process l n d
             serveSnaplet S.config $ initApp mChCrwl d
     S.wait done tId
 
