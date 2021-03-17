@@ -9,11 +9,14 @@ module ISX.CE.Msg.Types (
     CrwlPageResErr(..),
     MsgCrwl,
     MsgProc,
+    httpExResErr,
+    showCrwlPageRes,
     ) where
 
 
 import           Control.Concurrent.Chan
 import qualified ISX.CE.DB               as D
+import qualified Network.HTTP.Conduit    as HTTP
 import qualified Network.HTTP.Types      as HTTP
 
 
@@ -60,3 +63,10 @@ data CrwlPageResErr =
 type MsgCrwl = (D.SiteId, CrwlPageId)
 
 type MsgProc = (D.PlugProcId, CrwlPage)
+
+httpExResErr :: HTTP.HttpException -> CrwlPageResErr
+httpExResErr _ = Internal
+
+showCrwlPageRes :: Show a => Either a CrwlPageRes -> Text
+showCrwlPageRes (Left e)  = show e
+showCrwlPageRes (Right r) = show $ crwlPageResStatus r
