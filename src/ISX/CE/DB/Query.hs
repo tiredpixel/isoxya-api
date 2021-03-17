@@ -103,7 +103,7 @@ cCrwlPagesEntry (sId, sV) ppIds pIds d = forM ppIds $ \ppId ->
 
 cPlugProc :: MonadIO m => URI -> Text -> D.Conn -> m (Maybe PlugProcId)
 cPlugProc url tag d = do
-    ppId <- generateUUID
+    ppId <- genUUID
     let p = (ppId, url, tag)
     executeW q p d
     r <- rPlugProcURL url d
@@ -123,7 +123,7 @@ cPlugProc url tag d = do
 
 cPlugStrm :: MonadIO m => URI -> Text -> D.Conn -> m (Maybe PlugStrmId)
 cPlugStrm url tag d = do
-    psId <- generateUUID
+    psId <- genUUID
     let p = (psId, url, tag)
     executeW q p d
     r <- rPlugStrmURL url d
