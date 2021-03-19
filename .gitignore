@@ -3,6 +3,7 @@
 /docker-compose.*.yml
 
 # Project
+/misc/eg/*/sqlite3.db
 /sqlite3.db
 /test/log/
 
@@ -11,3 +12,4 @@
 
 # Tigrosa
 /.tigrosa/
+/misc/eg/*/.tigrosa/

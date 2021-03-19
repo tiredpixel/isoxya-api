@@ -1,0 +1,37 @@
+version: "2.4"
+services:
+  #-----------------------------------------------------------------------------
+  api:
+    image: docker.io/isoxya/isoxya-ce:2
+    init: true
+    command: [isx-ce-api, -b, 0.0.0.0, -p, "8000"]
+    volumes:
+      - ./sqlite3.db:/home/x/sqlite3.db
+    networks:
+      - ce
+      #
+      - plug
+    ports:
+      - 0.0.0.0:8000:8000
+    restart: on-failure
+  #-----------------------------------------------------------------------------
+  plug_crawler_html:
+    image: docker.io/isoxya/isoxya-plugin-crawler-html:2
+    init: true
+    command: [isx-plug-crawler-html, -b, 0.0.0.0, -p, "8000"]
+    networks:
+      plug:
+        aliases:
+          - crawler-html.plugin.dev.isoxya.com
+    restart: on-failure
+  #-----------------------------------------------------------------------------
+  test_upstream:
+    image: docker.io/tiredpixel/nginx-test-upstream:latest
+    networks:
+      - plug
+    restart: on-failure
+  #-----------------------------------------------------------------------------
+networks:
+  ce: {}
+  #
+  plug: {}
