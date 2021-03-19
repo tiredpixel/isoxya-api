@@ -277,15 +277,6 @@ To crawl again, just use `isx-create-crwl`. To crawl another site, just register
 When you're ready to do something more complicated, you might like to take a look at other [Isoxya plugins](https://www.isoxya.com/plugins/). And of course, you can create your own plugins in your language of choice, whether processor plugins to extract page data differently, or streamer plugins to send data to your API endpoint or databases. If you create something cool, be sure to let me know!
 
 
-## Images
-
-There are two images built from this repo:
-
-- [build](https://hub.docker.com/r/isoxya/isoxya-ce-build) (`Dockerfile`): this is an image of dependencies, such as is suitable for development; package images are also constructed from this, making builds deterministic and debuggable; typically a latest tag is used (e.g. `head`)
-
-- [package](https://hub.docker.com/r/isoxya/isoxya-ce) (`pkg/Dockerfile`): this is an image of packaged programs with minimal dependencies, such as is suitable for running within a deployed environment; CI moves compiled binaries from the build image into this image; typically a stable tag is used (e.g. `2`; do not use `latest` for production!)
-
-
 ## Contact
 
 [en@isoxya.com](mailto:en@isoxya.com) · [isoxya.com](https://www.isoxya.com/)
