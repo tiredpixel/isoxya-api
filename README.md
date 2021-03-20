@@ -48,7 +48,7 @@ Support             | community   | direct      |
 Price               | free        | [on request](mailto:en@isoxya.com) |
 
 _Features and limits are indicative only, not guarantees._
-_∞ indicates _many_, not _infinite_!_
+_∞ indicates many, not infinite!_
 _¹ depending on licence and infrastructure_
 _² no hard-limit, but small as single-process_
 _³ not configurable_
