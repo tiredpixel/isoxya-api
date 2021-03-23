@@ -32,7 +32,9 @@ services:
     image: docker.io/tiredpixel/nginx-test-upstream:latest
     healthcheck: *healthcheck
     networks:
-      - plug
+      plug:
+        aliases:
+          - test-upstream.plugin.dev.isoxya.com
     restart: on-failure
   #-----------------------------------------------------------------------------
 networks:

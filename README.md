@@ -138,7 +138,7 @@ isx-create-plug-strm
 Isoxya CE/PE
 
 org.href (PE) []: 
-url (CE/PE) [http://elasticsearch.plugin.dev.isoxya.com:8000/data]: http://test_upstream
+url (CE/PE) [http://elasticsearch.plugin.dev.isoxya.com:8000/data]: http://test-upstream.plugin.dev.isoxya.com
 tag (CE/PE) [elasticsearch]: test-upstream
 pub (PE) [null]: 
 chans (PE) [null]: 
@@ -148,7 +148,7 @@ chans (PE) [null]:
 {
   "href": "/plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c",
   "tag": "test-upstream",
-  "url": "http://test_upstream"
+  "url": "http://test-upstream.plugin.dev.isoxya.com"
 }
 ```
 
