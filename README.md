@@ -55,7 +55,14 @@ _³ not configurable._
 _⁴ set globally per-site; configurable for on-prem only._
 
 
-## Usage
+## Dependencies
+
+- [jq](https://stedolan.github.io/jq/) (for scripts only)
+- [Tigrosa Scripts](https://github.com/tiredpixel/tigrosa-x-bin) (optional; needed for [Tutorial](#tutorial))
+- [Isoxya Scripts](https://github.com/isoxya/isoxya-x-bin) (optional; needed for [Tutorial](#tutorial))
+
+
+## Installation
 
 Choose an example stack, either `latest` or `stable` (recommended):
 
@@ -75,15 +82,12 @@ Boot the stack. This includes: Isoxya CE API, using SQLite as an embedded databa
 docker-compose up
 ```
 
-That's installation completed! Now you've got a powerful mini crawler at your disposal, extendible via its flexible plugin system. Next you'll probably want to configure the stack; the easiest way to do that is to use [Tigrosa Scripts](https://github.com/tiredpixel/tigrosa-x-bin) and [Isoxya Scripts](https://github.com/isoxya/isoxya-x-bin). These are provided by way of example, but are also suitable for controlling the API via a CLI even in production. These scripts can be cloned somewhere, and included in your PATH when required.
+That's installation completed! Now you've got a powerful mini crawler at your disposal, extendible via its flexible plugin system.
 
-```sh
-cd $HOME
-git clone git@github.com:tiredpixel/tigrosa-x-bin.git
-git clone git@github.com:isoxya/isoxya-x-bin.git
 
-PATH=$PATH:$HOME/isoxya-x-bin/bin::$HOME/tigrosa-x-bin/bin
-```
+## Tutorial
+
+This tutorial depends on [Tigrosa Scripts](https://github.com/tiredpixel/tigrosa-x-bin) and [Isoxya Scripts](https://github.com/isoxya/isoxya-x-bin), which must be installed first. There is no dependency on these (or [jq](https://stedolan.github.io/jq/)) for Isoxya itself, however.
 
 Initialise a state directory for Tigrosa:
 
