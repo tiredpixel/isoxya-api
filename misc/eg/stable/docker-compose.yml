@@ -3,8 +3,10 @@ services:
   #-----------------------------------------------------------------------------
   api:
     image: docker.io/isoxya/isoxya-ce:2
-    init: true
+    init: &init true
     command: [isx-ce-api, -b, 0.0.0.0, -p, "8000"]
+    healthcheck: &healthcheck
+      disable: true
     volumes:
       - ./sqlite3.db:/home/x/sqlite3.db
     networks:
@@ -17,8 +19,9 @@ services:
   #-----------------------------------------------------------------------------
   plug_crawler_html:
     image: docker.io/isoxya/isoxya-plugin-crawler-html:2
-    init: true
+    init: *init
     command: [isx-plug-crawler-html, -b, 0.0.0.0, -p, "8000"]
+    healthcheck: *healthcheck
     networks:
       plug:
         aliases:
@@ -27,6 +30,7 @@ services:
   #-----------------------------------------------------------------------------
   test_upstream:
     image: docker.io/tiredpixel/nginx-test-upstream:latest
+    healthcheck: *healthcheck
     networks:
       - plug
     restart: on-failure
