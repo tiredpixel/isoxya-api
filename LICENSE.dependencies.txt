@@ -240,7 +240,7 @@
 * lens-aeson
     License:  MIT
 * libiserv
-    License:  BSD-3-Clause
+    License:  BSD3
 * lifted-base
     License:  BSD3
 * map-syntax
