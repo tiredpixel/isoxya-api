@@ -48,11 +48,11 @@ Support             | community   | direct      |
 Price               | free        | [on request](mailto:en@isoxya.com) |
 
 _Features and limits are indicative only, not guarantees._
-_∞ indicates many, not infinite!_
-_¹ depending on licence and infrastructure._
-_² no hard-limit, but small as single-process._
-_³ not configurable._
-_⁴ set globally per-site; configurable for on-prem only._
+_∞ indicates many, not infinite!_
+_¹ depending on licence and infrastructure._
+_² no hard-limit, but small as single-process._
+_³ not configurable._
+_⁴ set globally per-site; configurable for on-prem only._
 
 
 ## Dependencies
