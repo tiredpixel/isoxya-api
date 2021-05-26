@@ -1,7 +1,7 @@
 # Base
 .*/
 Dockerfile
-docker-compose.yml
+docker-compose*.yml
 
 # Concourse CI
 cache/
