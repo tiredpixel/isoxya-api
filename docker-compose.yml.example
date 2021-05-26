@@ -2,7 +2,7 @@ version: "2.4"
 services:
   #-----------------------------------------------------------------------------
   api:
-    image: docker.repo.ci.tp-prd.tiredpixel.com/isoxya/isoxya-ce-build:head
+    image: docker.repo.ci.tp-prd.tiredpixel.com/isoxya.build/isoxya-ce:unstable
     init: true
     volumes:
       - ./lib:/home/x/repo/lib

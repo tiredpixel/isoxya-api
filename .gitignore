@@ -1,6 +1,5 @@
 # Base
-/*.env
-/docker-compose.*.yml
+/docker-compose*.yml
 
 # Project
 /misc/eg/*/sqlite3.db
