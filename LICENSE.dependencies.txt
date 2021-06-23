@@ -377,7 +377,7 @@
 * th-reify-many
     License:  BSD3
 * time
-    License:  BSD2
+    License:  BSD-2-Clause
 * time-compat
     License:  BSD3
 * tinylog
