@@ -51,7 +51,7 @@
 * bifunctors
     License:  BSD3
 * binary
-    License:  BSD3
+    License:  BSD-3-Clause
 * blaze-builder
     License:  BSD3
 * blaze-html
