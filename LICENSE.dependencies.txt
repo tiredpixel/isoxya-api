@@ -163,9 +163,9 @@
 * free
     License:  BSD3
 * ghc
-    License:  BSD-3-Clause
-* ghc-boot
     License:  BSD3
+* ghc-boot
+    License:  BSD-3-Clause
 * ghc-boot-th
     License:  BSD3
 * ghc-compact
@@ -323,7 +323,7 @@
 * securemem
     License:  BSD3
 * semigroupoids
-    License:  BSD3
+    License:  BSD2
 * semigroups
     License:  BSD3
 * setenv
