@@ -226,6 +226,13 @@ href (CE/PE):
 To crawl again, just use `isx-create-crwl`. To crawl another site, just register it with `isx-create-site` first. That's it!
 
 
+## Isoxya Pro
+
+Isoxya Pro adds high availability, error recovery, and horizontal scaling. It is available on-premises for installation on your servers, or in the cloud via SaaS subscription. Isoxya Pro is available via commercial licence. The API is able to scale crawlers, processors, and streamers. Support or custom development is available from Isoxya's creator.
+
+https://www.isoxya.com/pro/  
+
+
 ## Contact
 
 [tp@tiredpixel.com](mailto:tp@tiredpixel.com) · [www.tiredpixel.com](https://www.tiredpixel.com/) · [www.isoxya.com](https://www.isoxya.com/)
