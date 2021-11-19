@@ -1,8 +1,5 @@
-# Base
 .*/
 Dockerfile
-docker-compose*.yml
-
-# Concourse CI
 cache/
+docker-compose*.yml
 image/

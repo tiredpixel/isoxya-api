@@ -1,4 +1,3 @@
-#===============================================================================
 # FROMFREEZE docker.io/library/haskell:8.8
 FROM docker.io/library/haskell@sha256:b6ef32c8805ef8601db1c90fae177c9b8c069fb992660ebc5c2eaae1e71b8ce4
 
@@ -37,10 +36,9 @@ ENV PATH=${HOME}/repo/bin:${HOME}/.cabal/bin:$PATH \
     LANG=C.UTF-8 \
     LOG_LEVEL=Info
 
-CMD ["cabal", "v1-run", "isx-ce-api", "--", \
+CMD ["cabal", "v1-run", "isoxya-api", "--", \
     "-b", "0.0.0.0", "-p", "8000"]
 
 EXPOSE 8000
 
 HEALTHCHECK CMD curl -fs http://localhost:8000 || false
-#===============================================================================

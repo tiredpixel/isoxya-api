@@ -4,7 +4,7 @@ services:
   api:
     image: docker.io/isoxya/isoxya-ce:2
     init: &init true
-    command: [isx-ce-api, -b, 0.0.0.0, -p, "8000"]
+    command: [isoxya-api, -b, 0.0.0.0, -p, "8000"]
     healthcheck: &healthcheck
       disable: true
     volumes:

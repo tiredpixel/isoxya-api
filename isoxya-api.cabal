@@ -1,7 +1,7 @@
 cabal-version:          3.0
-name:                   isx-ce
+name:                   isoxya-api
 version:                0.0.0
-synopsis:               Isoxya CE
+synopsis:               Isoxya API
 license:                BSD-3-Clause
 author:                 Nic Williams <tp@tiredpixel.com>
 maintainer:             Nic Williams <tp@tiredpixel.com>
@@ -21,24 +21,24 @@ common common-properties
         -Wall
         -ddump-minimal-imports
 --------------------------------------------------------------------------------
-library lib-common-ce
+library lib-common
     import:             common-properties
     exposed-modules:
-        TPX.Com.Cursor
-        TPX.Com.Isoxya.PlugProc
-        TPX.Com.Isoxya.PlugStrm
-        TPX.Com.Log
-        TPX.Com.Net
-        TPX.Com.SQLite.Conn
-        TPX.Com.SQLite.Ext.Hash
-        TPX.Com.SQLite.Ext.URI
-        TPX.Com.SQLite.Ext.UUID
-        TPX.Com.SQLite.Meta
-        TPX.Com.SQLite.Query
-        TPX.Com.Snap.CoreUtils
-        TPX.Com.Snap.Main
-        TPX.Com.URI
-        TPX.Com.UUID
+        TiredPixel.Common.Cursor
+        TiredPixel.Common.Isoxya.PlugProc
+        TiredPixel.Common.Isoxya.PlugStrm
+        TiredPixel.Common.Log
+        TiredPixel.Common.Net
+        TiredPixel.Common.SQLite.Conn
+        TiredPixel.Common.SQLite.Ext.Hash
+        TiredPixel.Common.SQLite.Ext.URI
+        TiredPixel.Common.SQLite.Ext.UUID
+        TiredPixel.Common.SQLite.Meta
+        TiredPixel.Common.SQLite.Query
+        TiredPixel.Common.Snap.CoreUtils
+        TiredPixel.Common.Snap.Main
+        TiredPixel.Common.URI
+        TiredPixel.Common.UUID
     build-depends:
         aeson,
         base64-bytestring,
@@ -64,44 +64,44 @@ library lib-common-ce
         unordered-containers,
         uuid,
     hs-source-dirs:
-        lib/common-ce/src
+        lib/common/src
 --------------------------------------------------------------------------------
-library lib-isx-ce-api
+library lib-isoxya-api
     import:             common-properties
     exposed-modules:
-        ISX.CE.API
-        ISX.CE.API.Core
-        ISX.CE.Crwl
-        ISX.CE.DB.Migration
-        ISX.CE.Msg
-        ISX.CE.Proc
-        ISX.CE.Strm
+        Isoxya.API
+        Isoxya.API.Core
+        Isoxya.Crwl
+        Isoxya.DB.Migration
+        Isoxya.Msg
+        Isoxya.Proc
+        Isoxya.Strm
     other-modules:
-        Paths_isx_ce
+        Paths_isoxya_api
         --
-        ISX.CE.API.Auth
-        ISX.CE.API.Find
-        ISX.CE.API.Href
-        ISX.CE.API.Init
-        ISX.CE.API.Resource
-        ISX.CE.API.Types
-        ISX.CE.API.Zone.Apex
-        ISX.CE.API.Zone.Crwl
-        ISX.CE.API.Zone.PlugProc
-        ISX.CE.API.Zone.PlugStrm
-        ISX.CE.API.Zone.Site
-        ISX.CE.Crwl.Processor
-        ISX.CE.DB
-        ISX.CE.DB.Query
-        ISX.CE.DB.Types
-        ISX.CE.DB.URLPage
-        ISX.CE.Msg.Query
-        ISX.CE.Msg.Types
-        ISX.CE.Proc.Processor
-        ISX.CE.Strm.Processor
-        ISX.CE.URI
+        Isoxya.API.Auth
+        Isoxya.API.Find
+        Isoxya.API.Href
+        Isoxya.API.Init
+        Isoxya.API.Resource
+        Isoxya.API.Types
+        Isoxya.API.Zone.Apex
+        Isoxya.API.Zone.Crwl
+        Isoxya.API.Zone.PlugProc
+        Isoxya.API.Zone.PlugStrm
+        Isoxya.API.Zone.Site
+        Isoxya.Crwl.Processor
+        Isoxya.DB
+        Isoxya.DB.Query
+        Isoxya.DB.Types
+        Isoxya.DB.URLPage
+        Isoxya.Msg.Query
+        Isoxya.Msg.Types
+        Isoxya.Proc.Processor
+        Isoxya.Strm.Processor
+        Isoxya.URI
     build-depends:
-        lib-common-ce,
+        lib-common,
         --
         aeson,
         base64-bytestring,
@@ -126,28 +126,26 @@ library lib-isx-ce-api
     hs-source-dirs:
         src
 --------------------------------------------------------------------------------
-executable isx-ce-api
+executable isoxya-api
     import:             common-properties
     main-is:            API.hs
     other-modules:
-        Paths_isx_ce
+        Paths_isoxya_api
     build-depends:
-        lib-common-ce,
-        lib-isx-ce-api,
+        lib-common,
+        lib-isoxya-api,
         --
         lens,
         snap,
     hs-source-dirs:
-        src/ISX/CE/Bin
-    ghc-options:
-        -threaded
+        src/Isoxya/Bin
 --------------------------------------------------------------------------------
-library lib-common-ce-test
+library lib-common-test
     import:             common-properties
     exposed-modules:
-        TPX.Com.Snap.Test
+        TiredPixel.Common.Snap.Test
     other-modules:
-        TPX.Com.Snap.TestUtils
+        TiredPixel.Common.Snap.TestUtils
     build-depends:
         aeson,
         base64-bytestring,
@@ -169,19 +167,19 @@ library lib-common-ce-test
         unordered-containers,
         vector,
     hs-source-dirs:
-        lib/common-ce/test
+        lib/common/test
 --------------------------------------------------------------------------------
-test-suite test-isx-ce-api
+test-suite test-isoxya-api
     import:             common-properties
     type:               exitcode-stdio-1.0
     main-is:            Spec.hs
     other-modules:
-        ISX.CE.API.Test
-        ISX.CE.API.Zone.ApexSpec
+        Isoxya.API.Test
+        Isoxya.API.Zone.ApexSpec
     build-depends:
-        lib-common-ce,
-        lib-common-ce-test,
-        lib-isx-ce-api,
+        lib-common,
+        lib-common-test,
+        lib-isoxya-api,
         --
         hspec                           ==  2.*,
         snap,
@@ -191,6 +189,3 @@ test-suite test-isx-ce-api
         test
     build-tool-depends:
         hspec-discover:hspec-discover   ==  2.*
-    ghc-options:
-        -threaded
---------------------------------------------------------------------------------

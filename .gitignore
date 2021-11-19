@@ -1,14 +1,7 @@
-# Base
+/.tigrosa/
+/dist/
 /docker-compose*.yml
-
-# Project
+/misc/eg/*/.tigrosa/
 /misc/eg/*/sqlite3.db
 /sqlite3.db
 /test/log/
-
-# Haskell
-/dist/
-
-# Tigrosa
-/.tigrosa/
-/misc/eg/*/.tigrosa/
