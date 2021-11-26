@@ -1,3 +1,6 @@
 [submodule "lib/common"]
 	path = lib/common
 	url = git@github.com:tiredpixel/lib-haskell-common.git
+[submodule "lib/hspec-snap"]
+	path = lib/hspec-snap
+	url = git@github.com:dbp/hspec-snap.git
