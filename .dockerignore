@@ -1,6 +1,7 @@
 .*/
 Dockerfile
 cache/
+dist-newstyle/
 dist/
 docker-compose*.yml
 image/

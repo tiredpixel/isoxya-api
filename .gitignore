@@ -1,4 +1,5 @@
 /.tigrosa/
+/dist-newstyle/
 /dist/
 /docker-compose*.yml
 /misc/eg/*/.tigrosa/

@@ -5,12 +5,11 @@ synopsis:               Isoxya API
 license:                BSD-3-Clause
 author:                 Nic Williams <tp@tiredpixel.com>
 maintainer:             Nic Williams <tp@tiredpixel.com>
-build-type:             Simple
 --------------------------------------------------------------------------------
 common common-properties
     build-depends:
-        base                            ==  4.13.*,
-        relude,
+        base                            ^>= 4.14.3.0,
+        relude
     mixins:
         base                            hiding (Prelude),
         relude                          (Relude as Prelude)
@@ -19,14 +18,39 @@ common common-properties
         OverloadedStrings
     ghc-options:
         -Wall
-        -ddump-minimal-imports
+        -Werror
+--------------------------------------------------------------------------------
+-- HACK: hspec-snap 1.0.2.0 breaks on Haskell 8.10, base 4.14.3.0
+library hspec-snap
+    exposed-modules:
+        Test.Hspec.Snap
+    build-depends:
+                   base                     >= 4.6      && < 4.15
+                 , aeson                    >= 0.6      && < 1.5
+                 , bytestring               >= 0.9      && < 0.11
+                 , containers               >= 0.4      && < 0.7
+                 , digestive-functors       >= 0.7      && < 0.9
+                 , hspec                    >= 2.2      && < 2.8
+                 , hspec-core               >= 2.2      && < 2.8
+                 , HUnit                    >= 1.5      && < 1.7
+                 , hxt                      >= 9.3      && < 9.4
+                 , HandsomeSoup             >= 0.3      && < 0.5
+                 , lens                     >= 3.10     && < 5
+                 , mtl                      >= 2        && < 3
+                 , snap                     >= 1.0      && < 1.2
+                 , snap-core                >= 1.0      && < 1.2
+                 , text                     >= 0.11     && < 1.3
+                 , transformers             >= 0.3      && < 0.6
+    hs-source-dirs:
+        lib/hspec-snap/src
+    default-language:   Haskell2010
 --------------------------------------------------------------------------------
 library lib-common
     import:             common-properties
     exposed-modules:
         TiredPixel.Common.Cursor
-        TiredPixel.Common.Isoxya.PlugProc
-        TiredPixel.Common.Isoxya.PlugStrm
+        TiredPixel.Common.Isoxya.Processor
+        TiredPixel.Common.Isoxya.Streamer
         TiredPixel.Common.Log
         TiredPixel.Common.Net
         TiredPixel.Common.SQLite.Conn
@@ -71,38 +95,35 @@ library lib-isoxya-api
     exposed-modules:
         Isoxya.API
         Isoxya.API.Core
-        Isoxya.Crwl
+        Isoxya.Crawler
         Isoxya.DB.Migration
         Isoxya.Msg
-        Isoxya.Proc
-        Isoxya.Strm
+        Isoxya.Processor
+        Isoxya.Streamer
     other-modules:
-        Paths_isoxya_api
-        --
         Isoxya.API.Auth
+        Isoxya.API.Endpoint.Apex
+        Isoxya.API.Endpoint.Crawl
+        Isoxya.API.Endpoint.Processor
+        Isoxya.API.Endpoint.Site
+        Isoxya.API.Endpoint.Streamer
         Isoxya.API.Find
         Isoxya.API.Href
         Isoxya.API.Init
         Isoxya.API.Resource
         Isoxya.API.Types
-        Isoxya.API.Zone.Apex
-        Isoxya.API.Zone.Crwl
-        Isoxya.API.Zone.PlugProc
-        Isoxya.API.Zone.PlugStrm
-        Isoxya.API.Zone.Site
-        Isoxya.Crwl.Processor
+        Isoxya.Crawler.Processor
         Isoxya.DB
         Isoxya.DB.Query
         Isoxya.DB.Types
         Isoxya.DB.URLPage
         Isoxya.Msg.Query
         Isoxya.Msg.Types
-        Isoxya.Proc.Processor
-        Isoxya.Strm.Processor
+        Isoxya.Processor.Processor
+        Isoxya.Streamer.Processor
         Isoxya.URI
+        Paths_isoxya_api
     build-depends:
-        lib-common,
-        --
         aeson,
         base64-bytestring,
         bytestring,
@@ -114,6 +135,7 @@ library lib-isoxya-api
         http-types,
         lens,
         lens-aeson,
+        lib-common,
         network-uri,
         regex-compat,
         snap,
@@ -132,10 +154,9 @@ executable isoxya-api
     other-modules:
         Paths_isoxya_api
     build-depends:
+        lens,
         lib-common,
         lib-isoxya-api,
-        --
-        lens,
         snap,
     hs-source-dirs:
         src/Isoxya/Bin
@@ -174,14 +195,13 @@ test-suite test-isoxya-api
     type:               exitcode-stdio-1.0
     main-is:            Spec.hs
     other-modules:
+        Isoxya.API.Endpoint.ApexSpec
         Isoxya.API.Test
-        Isoxya.API.Zone.ApexSpec
     build-depends:
+        hspec                           ==  2.*,
         lib-common,
         lib-common-test,
         lib-isoxya-api,
-        --
-        hspec                           ==  2.*,
         snap,
     default-extensions:
         NoImplicitPrelude
