@@ -17,6 +17,4 @@ services:
     restart: on-failure
 networks:
   api: {}
-  plugin:
-    external: true
-    name: isoxya_plugin
+  plugin: {}

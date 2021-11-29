@@ -1,8 +1,9 @@
-/.tigrosa/
+/*.env
+/.isoxya/
 /dist-newstyle/
 /dist/
 /docker-compose*.yml
-/misc/eg/*/.tigrosa/
+/misc/eg/*/.isoxya/
 /misc/eg/*/sqlite3.db
 /sqlite3.db
 /test/log/
