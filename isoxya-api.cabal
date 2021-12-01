@@ -59,7 +59,7 @@ library lib-common
         TiredPixel.Common.SQLite.Ext.UUID
         TiredPixel.Common.SQLite.Meta
         TiredPixel.Common.SQLite.Query
-        TiredPixel.Common.Snap.CoreUtils
+        TiredPixel.Common.Snap.CoreUtil
         TiredPixel.Common.Snap.Main
         TiredPixel.Common.URI
         TiredPixel.Common.UUID
@@ -111,14 +111,14 @@ library lib-isoxya-api
         Isoxya.API.Href
         Isoxya.API.Init
         Isoxya.API.Resource
-        Isoxya.API.Types
+        Isoxya.API.Type
         Isoxya.Crawler.Processor
         Isoxya.DB
         Isoxya.DB.Query
-        Isoxya.DB.Types
+        Isoxya.DB.Type
         Isoxya.DB.URLPage
         Isoxya.Msg.Query
-        Isoxya.Msg.Types
+        Isoxya.Msg.Type
         Isoxya.Processor.Processor
         Isoxya.Streamer.Processor
         Isoxya.URI
@@ -166,7 +166,7 @@ library lib-common-test
     exposed-modules:
         TiredPixel.Common.Snap.Test
     other-modules:
-        TiredPixel.Common.Snap.TestUtils
+        TiredPixel.Common.Snap.TestUtil
     build-depends:
         aeson,
         base64-bytestring,
