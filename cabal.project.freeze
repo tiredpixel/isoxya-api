@@ -243,7 +243,7 @@ constraints: any.Cabal ==3.2.1.0,
              transformers-base +orphaninstances,
              any.transformers-compat ==0.6.6,
              transformers-compat -five +five-three -four +generic-deriving +mtl -three -two,
-             any.typed-process ==0.2.7.0,
+             any.typed-process ==0.2.8.0,
              any.unix ==2.7.2.2,
              any.unix-compat ==0.5.3,
              unix-compat -old-time,
@@ -268,4 +268,4 @@ constraints: any.Cabal ==3.2.1.0,
              any.zlib ==0.6.2.3,
              zlib -bundled-c-zlib -non-blocking-ffi -pkg-config,
              any.zlib-bindings ==0.1.1.5
-index-state: hackage.haskell.org 2021-11-26T13:12:52Z
+index-state: hackage.haskell.org 2021-12-01T18:01:21Z
