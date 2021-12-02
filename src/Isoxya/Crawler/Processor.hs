@@ -44,8 +44,8 @@ process l ver mProc n d (siteId, msg) = do
     L.debug l $ "LIMITING " <> show rateLim <> " μs"
     threadDelay rateLim
     where
-        reqLim = 1048576 -- 1 MB
-        rateLim = 10000000 -- 10 s
+        rateLim = 1000000 -- 1 s
+        reqLim  = 1048576 -- 1 MB
 
 
 httpH :: L.Logger -> D.Crawl -> D.PageId -> HTTP.Request -> UTCTime ->
