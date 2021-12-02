@@ -1,0 +1,28 @@
+#!/bin/bash -eu
+set -o pipefail
+
+href_=${1:-}
+
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
+
+echo -e "Isoxya API\n"
+#-------------------------------------------------------------------------------
+if [ -z "$href_" ]; then
+    ask_opts "href" 5 \
+        "${PROCESSOR_HREF:-}" \
+        "${STREAMER_HREF:-}" \
+        "${USER_AGENT_HREF:-}" \
+        \
+        "${SITE_HREF:-}" \
+        \
+        "${LIST_HREF:-}" \
+        \
+        "${CRAWL_HREF:-}" \
+        #
+    href=$ASK_BUF
+else
+    href=$href_
+fi
+#-------------------------------------------------------------------------------
+curla "$ENDPOINT_URL$href" | jq "$@"
+#-------------------------------------------------------------------------------

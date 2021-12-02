@@ -37,21 +37,19 @@ That's it! Now you've got a powerful web crawler and scraper at your disposal, e
 
 ## Tutorial
 
-Initialise a state directory for Tigrosa:
+Initialise a state directory:
 
 ```sh
-tgr-init
+isoxya-api-init
 ```
 
 ```txt
 endpoint [http://localhost:8000]: 
-usr.href [/usr/81848a8a-dc32-4f0b-87f3-02efd72836f5]: 
-usr_key.href [/usr_key/0644fee4-848c-4d57-a742-37161431b3dc]: 
 ```
 
 ```json
 {
-  "t_now": "2021-03-19T13:36:32.270915096Z",
+  "now": "2021-12-02T11:49:43.207658439Z",
   "version": "0.0.0"
 }
 ```
