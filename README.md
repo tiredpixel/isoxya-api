@@ -95,15 +95,11 @@ tag [elasticsearch]:
 Register a site:
 
 ```sh
-isx-create-site
+isoxya-api-create-site
 ```
 
 ```txt
-Isoxya CE/PE
-
-url (CE/PE) [http://example.com]: 
-rate_lim (PE) [null]: 
-chans (PE) [null]: 
+url [http://example.com]: 
 ```
 
 ```json
