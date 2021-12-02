@@ -1,5 +1,5 @@
 # FROMFREEZE docker.io/library/haskell:8.10
-FROM docker.io/library/haskell@sha256:82ac8f76e8608ac4f99adf3f9464b4a005469978c343141d74e6fb173879a8f8
+FROM docker.io/library/haskell@sha256:18589fed1f9557cb323d5b9ce7b8b122c530f8f8c8c227c9ff8c14f00eb17793
 
 ARG USER=x
 ARG HOME=/home/x
