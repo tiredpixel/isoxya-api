@@ -1,0 +1,32 @@
+#!/bin/bash -eu
+set -o pipefail
+
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
+#-------------------------------------------------------------------------------
+ask "site.href" "${SITE_HREF:-}"
+site_href=$ASK_BUF
+#-------------------------------------------------------------------------------
+ask "processor_config" null
+processor_config=$ASK_BUF
+
+ask "processors.hrefs" "${PROCESSOR_HREF:-}"
+j_processors=$(echo "$ASK_BUF" | tr ' ' '\n' | xargs -I {} echo '{"href": "{}"},' | sed '$ s/.$//' | tr '\n' ' ')
+
+ask "streamers.hrefs" "${STREAMER_HREF:-}"
+j_streamers=$(echo "$ASK_BUF" | tr ' ' '\n' | xargs -I {} echo '{"href": "{}"},' | sed '$ s/.$//' | tr '\n' ' ')
+#-------------------------------------------------------------------------------
+j=$(cat <<-EOT
+	{
+	  "processor_config": $processor_config,
+	  "processors": [$j_processors],
+	  "streamers": [$j_streamers]
+	}
+	EOT
+    )
+
+c=$(
+    curla -X POST -d "$j" "$ENDPOINT_URL$site_href/crawl"
+)
+echo "$c" | jq
+echo "$c" | jq -r '.href' | grep -v 'null' >> "$CRAWL_HREF_"
+#-------------------------------------------------------------------------------

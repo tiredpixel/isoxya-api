@@ -49,7 +49,7 @@ endpoint [http://localhost:8000]:
 
 ```json
 {
-  "now": "2021-12-02T11:49:43.207658439Z",
+  "now": "2021-12-02T13:35:22.149003003Z",
   "version": "0.0.0"
 }
 ```
@@ -67,7 +67,7 @@ tag [crawler-html]:
 
 ```json
 {
-  "href": "/processor/2a46ecef-0db8-47d2-9f0a-de84429ea010",
+  "href": "/processor/17f17cef-6eb3-4bf4-bbf0-a3d729b3d650",
   "tag": "crawler-html",
   "url": "http://isoxya-plugin-crawler-html.localhost:8000/data"
 }
@@ -86,7 +86,7 @@ tag [elasticsearch]:
 
 ```json
 {
-  "href": "/streamer/1b56af7a-82a6-4d4f-b71c-244f326b5319",
+  "href": "/streamer/68e526ee-dd89-4a0e-932f-bf23825fabd0",
   "tag": "elasticsearch",
   "url": "http://isoxya-plugin-elasticsearch.localhost:8000/data"
 }
@@ -112,41 +112,26 @@ url [http://example.com]:
 Start a crawl:
 
 ```sh
-isx-create-crwl
+isoxya-api-create-crawl
 ```
 
 ```txt
-Isoxya CE/PE
-
-site.href (CE/PE) [/site/aHR0cDovL2V4YW1wbGUuY29tOjgw]: 
-pages_max (PE) [null]: 
-depth_max (PE) [null]: 
-user_agent.href (PE) []: 
-list.href (PE):
-    0: null
-    1: 
-  [0]: 
-  null
-validate_ext (PE) [null]: 
-org.href (PE) []: 
-plug_proc_conf (CE/PE) [null]: 
-plug_proc.hrefs (CE/PE) [/plug_proc/b72b6972-210b-4795-9b36-9a634e2c4ce9]: 
-plug_strm.hrefs (CE/PE) [/plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c]: 
+site.href [/site/aHR0cDovL2V4YW1wbGUuY29tOjgw]: 
+processor_config [null]: 
+processors.hrefs [/processor/17f17cef-6eb3-4bf4-bbf0-a3d729b3d650]: 
+streamers.hrefs [/streamer/68e526ee-dd89-4a0e-932f-bf23825fabd0]: 
 ```
 
 ```json
 {
-  "href": "/site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crwl/2021-03-19T13:43:07.733671786Z",
+  "began": "2021-12-02T13:37:02.063613916Z",
+  "ended": null,
+  "href": "/site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crawl/2021-12-02T13:37:02.063613916Z",
   "pages": null,
-  "plug_proc": [
+  "processor_config": null,
+  "processors": [
     {
-      "href": "/plug_proc/b72b6972-210b-4795-9b36-9a634e2c4ce9"
-    }
-  ],
-  "plug_proc_conf": null,
-  "plug_strm": [
-    {
-      "href": "/plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c"
+      "href": "/processor/17f17cef-6eb3-4bf4-bbf0-a3d729b3d650"
     }
   ],
   "progress": null,
@@ -155,45 +140,42 @@ plug_strm.hrefs (CE/PE) [/plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c]:
     "url": "http://example.com:80"
   },
   "status": "pending",
-  "t_begin": "2021-03-19T13:43:07.733671786Z",
-  "t_end": null
+  "streamers": [
+    {
+      "href": "/streamer/68e526ee-dd89-4a0e-932f-bf23825fabd0"
+    }
+  ]
 }
 ```
 
 Read resources to check status:
 
 ```sh
-isx-read
+isoxya-api-read
 ```
 
 ```txt
-Isoxya CE/PE
-
-href (CE/PE):
-    0: 
-    1: /plug_proc/b72b6972-210b-4795-9b36-9a634e2c4ce9
-    2: /plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c
-    3: 
-    4: /site/aHR0cDovL2V4YW1wbGUuY29tOjgw
-    5: 
-    6: /site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crwl/2021-03-19T13:43:07.733671786Z
-  [6]: 
-  /site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crwl/2021-03-19T13:43:07.733671786Z
+href:
+    0: /processor/17f17cef-6eb3-4bf4-bbf0-a3d729b3d650
+    1: /streamer/68e526ee-dd89-4a0e-932f-bf23825fabd0
+    2: 
+    3: /site/aHR0cDovL2V4YW1wbGUuY29tOjgw
+    4: 
+    5: /site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crawl/2021-12-02T13:37:02.063613916Z
+  [5]: 
+  /site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crawl/2021-12-02T13:37:02.063613916Z
 ```
 
 ```json
 {
-  "href": "/site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crwl/2021-03-19T13:43:07.733671786Z",
+  "began": "2021-12-02T13:37:02.063613916Z",
+  "ended": "2021-12-02T13:37:02.596Z",
+  "href": "/site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crawl/2021-12-02T13:37:02.063613916Z",
   "pages": 1,
-  "plug_proc": [
+  "processor_config": null,
+  "processors": [
     {
-      "href": "/plug_proc/b72b6972-210b-4795-9b36-9a634e2c4ce9"
-    }
-  ],
-  "plug_proc_conf": null,
-  "plug_strm": [
-    {
-      "href": "/plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c"
+      "href": "/processor/17f17cef-6eb3-4bf4-bbf0-a3d729b3d650"
     }
   ],
   "progress": 100,
@@ -202,12 +184,15 @@ href (CE/PE):
     "url": "http://example.com:80"
   },
   "status": "completed",
-  "t_begin": "2021-03-19T13:43:07.733671786Z",
-  "t_end": "2021-03-19T13:43:08.801Z"
+  "streamers": [
+    {
+      "href": "/streamer/68e526ee-dd89-4a0e-932f-bf23825fabd0"
+    }
+  ]
 }
 ```
 
-To crawl again, just use `isx-create-crwl`. To crawl another site, just register it with `isx-create-site` first. That's it!
+To crawl again, just use `isoxya-api-create-crawl`. To crawl another site, just register it with `isoxya-api-create-site` first. That's it!
 
 
 ## Isoxya Pro

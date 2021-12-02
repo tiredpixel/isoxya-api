@@ -509,7 +509,7 @@ cPageAuto (sit, url) d = do
     where
         q = " \
         \   /* cPageAuto */ \
-        \   INSERT INTO pages ( \
+        \   INSERT INTO page ( \
         \       page_id, \
         \       site_id, \
         \       url \
