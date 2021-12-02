@@ -57,48 +57,38 @@ endpoint [http://localhost:8000]:
 Register a processor plugin:
 
 ```sh
-isx-create-plug-proc
+isoxya-api-create-processor
 ```
 
 ```txt
-Isoxya CE/PE
-
-org.href (PE) []: 
-url (CE/PE) [http://crawler-html.plugin.dev.isoxya.com:8000/data]: 
-tag (CE/PE) [crawler-html]: 
-pub (PE) [null]: 
-chans (PE) [null]: 
+url [http://isoxya-plugin-crawler-html.localhost:8000/data]: 
+tag [crawler-html]: 
 ```
 
 ```json
 {
-  "href": "/plug_proc/b72b6972-210b-4795-9b36-9a634e2c4ce9",
+  "href": "/processor/2a46ecef-0db8-47d2-9f0a-de84429ea010",
   "tag": "crawler-html",
-  "url": "http://crawler-html.plugin.dev.isoxya.com:8000/data"
+  "url": "http://isoxya-plugin-crawler-html.localhost:8000/data"
 }
 ```
 
 Register a streamer plugin:
 
 ```sh
-isx-create-plug-strm
+isoxya-api-create-streamer
 ```
 
 ```txt
-Isoxya CE/PE
-
-org.href (PE) []: 
-url (CE/PE) [http://elasticsearch.plugin.dev.isoxya.com:8000/data]: http://test-upstream.plugin.dev.isoxya.com
-tag (CE/PE) [elasticsearch]: test-upstream
-pub (PE) [null]: 
-chans (PE) [null]: 
+url [http://isoxya-plugin-elasticsearch.localhost:8000/data]: 
+tag [elasticsearch]: 
 ```
 
 ```json
 {
-  "href": "/plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c",
-  "tag": "test-upstream",
-  "url": "http://test-upstream.plugin.dev.isoxya.com"
+  "href": "/streamer/1b56af7a-82a6-4d4f-b71c-244f326b5319",
+  "tag": "elasticsearch",
+  "url": "http://isoxya-plugin-elasticsearch.localhost:8000/data"
 }
 ```
 
