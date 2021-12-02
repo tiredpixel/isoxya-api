@@ -66,6 +66,7 @@ function curla() {
     curl --netrc-file "$DIR/netrc" "$@"
 }
 
+# shellcheck disable=SC2120
 function jq() {
     $jq_ -S "$@"
 }
