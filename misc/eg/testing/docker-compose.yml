@@ -1,7 +1,7 @@
 version: "2.4"
 services:
   api:
-    image: docker.io/isoxya/isoxya-api:stable
+    image: docker.io/isoxya/isoxya-api:testing
     init: true
     volumes:
       - ./sqlite3.db:/home/x/sqlite3.db
@@ -12,7 +12,7 @@ services:
       - 0.0.0.0:8000:8000
     restart: on-failure
   plugin_crawler_html:
-    image: docker.io/isoxya/isoxya-plugin-crawler-html:stable
+    image: docker.io/isoxya/isoxya-plugin-crawler-html:testing
     init: true
     networks:
       plugin:

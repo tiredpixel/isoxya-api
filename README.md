@@ -14,10 +14,16 @@ https://github.com/isoxya/isoxya-api
 
 ## Installation
 
-Choose an example stack, either `stable` (recommended) or `latest`:
+Choose a stream: `stable` (recommended), `testing`, or `unstable`:
 
 ```sh
 cd misc/eg/stable/
+```
+
+Copy environment variables:
+
+```sh
+cp .env.example .env
 ```
 
 Initialise the stack:
