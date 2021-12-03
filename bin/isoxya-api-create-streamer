@@ -3,10 +3,10 @@ set -o pipefail
 
 source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
 #-------------------------------------------------------------------------------
-ask "url" http://isoxya-plugin-elasticsearch.localhost/data
+ask "url" http://nginx-test-upstream.localhost
 url=$ASK_BUF
 
-ask "tag" elasticsearch
+ask "tag" nginx-test-upstream
 tag=$ASK_BUF
 #-------------------------------------------------------------------------------
 j=$(cat <<-EOT
