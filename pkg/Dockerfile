@@ -27,7 +27,7 @@ ENV PATH=${HOME}/bin:$PATH \
     LANG=C.UTF-8 \
     LOG_LEVEL=Info
 
-CMD ["isoxya-api", "-b", "localhost", "-p", "8000"]
+CMD ["isoxya-api", "-b", "0.0.0.0", "-p", "8000"]
 
 EXPOSE 8000
 
