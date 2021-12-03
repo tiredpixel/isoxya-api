@@ -37,8 +37,8 @@ ENV PATH=${HOME}/repo/bin:${HOME}/.cabal/bin:$PATH \
     LOG_LEVEL=Info
 
 CMD ["cabal", "run", "isoxya-api", "--", \
-    "-b", "0.0.0.0", "-p", "8000"]
+    "-b", "0.0.0.0", "-p", "80"]
 
-EXPOSE 8000
+EXPOSE 80
 
-HEALTHCHECK CMD curl -fs http://localhost:8000 || false
+HEALTHCHECK CMD curl -fs http://localhost || false
