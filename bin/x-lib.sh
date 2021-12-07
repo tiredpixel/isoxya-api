@@ -71,6 +71,13 @@ function jq() {
     $jq_ -S "$@"
 }
 
+# shellcheck disable=SC2120
+function jqd() {
+    if [ "$ISOXYA_DEBUG" == "1" ]; then
+        $jq_ -S "$@"
+    fi
+}
+
 function reload_vars() {
     # shellcheck source=x-lib.sh
     source "$(readlink -f "${BASH_SOURCE[0]}")"

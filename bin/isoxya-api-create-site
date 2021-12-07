@@ -12,6 +12,7 @@ j=$(cat <<-EOT
 	}
 	EOT
     )
+echo "$j" | jqd
 
 s=$(
     curla -X POST -d "$j" "$ENDPOINT_URL/site"

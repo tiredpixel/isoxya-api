@@ -16,6 +16,7 @@ j=$(cat <<-EOT
 	}
 	EOT
     )
+echo "$j" | jqd
 
 p=$(
     curla -X POST -d "$j" "$ENDPOINT_URL/processor"
