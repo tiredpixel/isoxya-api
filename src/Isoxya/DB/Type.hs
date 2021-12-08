@@ -39,16 +39,16 @@ import qualified Data.Text                         as T
 
 
 data Crawl = Crawl {
-    crawlSiteId        :: SiteId,
-    crawlSiteV         :: SiteV,
-    crawlStatus        :: CrawlStatus,
-    crawlPages         :: Maybe Integer,
-    crawlProcessed     :: Maybe Integer,
-    crawlProgress      :: Maybe Integer,
-    crawlEnded         :: Maybe UTCTime,
-    crawlProcessorConf :: A.Value,
-    crawlProcessorIds  :: [ProcessorId],
-    crawlStreamerIds   :: [StreamerId]
+    crawlSiteId          :: SiteId,
+    crawlSiteV           :: SiteV,
+    crawlStatus          :: CrawlStatus,
+    crawlPages           :: Maybe Integer,
+    crawlProcessed       :: Maybe Integer,
+    crawlProgress        :: Maybe Integer,
+    crawlEnded           :: Maybe UTCTime,
+    crawlProcessorConfig :: A.Value,
+    crawlProcessorIds    :: [ProcessorId],
+    crawlStreamerIds     :: [StreamerId]
     } deriving (Show)
 instance FromRow Crawl where
     fromRow = Crawl <$>

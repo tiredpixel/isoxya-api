@@ -72,7 +72,7 @@ genProcessorI msg proc crwl site page = ProcessorI meta header body
         err = case M.crawlPageResponse msg of
             Left e  -> Just $ show e
             _       -> empty
-        config = D.crawlProcessorConf crwl ^? key (D.processorTag proc)
+        config = D.crawlProcessorConfig crwl ^? key (D.processorTag proc)
         meta = ProcessorIMeta {
             processorIMetaConfig   = config,
             processorIMetaDuration = duration,

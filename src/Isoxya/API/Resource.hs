@@ -147,7 +147,7 @@ genCrawl s c = Crawl {
     crawlProgress         = D.crawlProgress c,
     crawlBegan            = D.unSiteV $ D.crawlSiteV c,
     crawlEnded            = D.crawlEnded c,
-    crawlProcessorConfig  = D.crawlProcessorConf c,
+    crawlProcessorConfig  = D.crawlProcessorConfig c,
     crawlProcessorHrefs   = map toRouteHref $ D.crawlProcessorIds c,
     crawlStreamerHrefs    = map toRouteHref $ D.crawlStreamerIds c}
 
