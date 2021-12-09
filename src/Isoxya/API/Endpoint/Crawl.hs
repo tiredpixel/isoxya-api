@@ -1,7 +1,7 @@
 module Isoxya.API.Endpoint.Crawl (
-    createSite,
-    listSite,
-    readSite,
+    createWithSite,
+    listWithSite,
+    readWithSite,
     ) where
 
 
@@ -10,41 +10,41 @@ import qualified Isoxya.DB       as D
 import qualified Isoxya.Msg      as M
 
 
-createSite :: Handler b API ()
-createSite = do
+createWithSite :: Handler b API ()
+createWithSite = do
     m <- gets _msgCrwl
     d <- gets _db
-    Just (site, siteId) <- run notFound $ fCrawls AW d
+    Just (st, stId) <- run notFound $ fCrawls AW d
     req_ <- getJSON' >>= validateJSON
     Just req <- runValidate req_
-    Just procs <- run notFound $ mapM (\procH ->
-        fProcessorHref (Just procH) AR d) (crawlCProcessorHrefs req)
-    Just strms <- run notFound $ mapM (\strmH ->
-        fStreamerHref (Just strmH) AR d) (crawlCStreamerHrefs req)
-    Just siteV <- D.cCrawl siteId (crawlCProcessorConfig req)
-        (snd <$> procs) (snd <$> strms) d
-    Just crwl <- D.rCrawl (siteId, siteV) d
-    _ <- D.cEntryURLs site crwl d
-    pageIds <- D.lCrawlPagePageIdEntry (siteId, siteV) d
-    M.txCrawlPageIds site crwl pageIds m
-    let r = genCrawl site crwl
+    Just pros <- run notFound $ mapM (\proH ->
+        fProcessorHref (Just proH) AR d) (crawlCProcessorHrefs req)
+    Just strs <- run notFound $ mapM (\strH ->
+        fStreamerHref (Just strH) AR d) (crawlCStreamerHrefs req)
+    Just stV <- D.cCrawl stId (crawlCProcessorConfig req)
+        (snd <$> pros) (snd <$> strs) d
+    Just crl <- D.rCrawl (stId, stV) d
+    _ <- D.cEntryURLs st crl d
+    pgIds <- D.lCrawlPagePageIdEntry (stId, stV) d
+    M.txCrawlPageIds st crl pgIds m
+    let r = genCrawl st crl
     created (unCrawlHref $ crawlHref r) r
 
-listSite :: Handler b API ()
-listSite = do
+listWithSite :: Handler b API ()
+listWithSite = do
     d <- gets _db
-    Just (site, siteId) <- run notFound $ fCrawls AR d
+    Just (st, stId) <- run notFound $ fCrawls AR d
     cur <- parseReq
-    crwls <- D.lCrawl siteId cur d
-    setResLink (unCrawlsHref (toRouteHref (D.siteURL site) :: CrawlsHref))
-        (formatTime . D.unSiteV . D.crawlSiteV) crwls
-    rs <- forM crwls $ \crwl -> do
-        Just site' <- D.rSiteId (D.crawlSiteId crwl) d
-        return $ genCrawl site' crwl
+    crls <- D.lCrawl stId cur d
+    setResLink (unCrawlsHref (toRouteHref (D.siteURL st) :: CrawlsHref))
+        (formatTime . D.unSiteV . D.crawlSiteV) crls
+    rs <- forM crls $ \crl -> do
+        Just st' <- D.rSiteId (D.crawlSiteId crl) d
+        return $ genCrawl st' crl
     writeJSON rs
 
-readSite :: Handler b API ()
-readSite = do
+readWithSite :: Handler b API ()
+readWithSite = do
     d <- gets _db
-    Just ((site, crwl), _) <- run notFound $ fCrawl AR d
-    writeJSON $ genCrawl site crwl
+    Just ((st, crl), _) <- run notFound $ fCrawl AR d
+    writeJSON $ genCrawl st crl

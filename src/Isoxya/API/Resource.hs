@@ -139,34 +139,34 @@ instance FromJSON StreamerC where
 instance ValidateJSON StreamerC
 
 genCrawl :: D.Site -> D.Crawl -> Crawl
-genCrawl s c = Crawl {
-    crawlHref             = toRouteHref (D.siteURL s, D.crawlSiteV c),
-    crawlSite             = genSite s,
-    crawlStatus           = D.crawlStatus c,
-    crawlPages            = D.crawlPages c,
-    crawlProgress         = D.crawlProgress c,
-    crawlBegan            = D.unSiteV $ D.crawlSiteV c,
-    crawlEnded            = D.crawlEnded c,
-    crawlProcessorConfig  = D.crawlProcessorConfig c,
-    crawlProcessorHrefs   = map toRouteHref $ D.crawlProcessorIds c,
-    crawlStreamerHrefs    = map toRouteHref $ D.crawlStreamerIds c}
+genCrawl st crl = Crawl {
+    crawlHref             = toRouteHref (D.siteURL st, D.crawlSiteV crl),
+    crawlSite             = genSite st,
+    crawlStatus           = D.crawlStatus crl,
+    crawlPages            = D.crawlPages crl,
+    crawlProgress         = D.crawlProgress crl,
+    crawlBegan            = D.unSiteV $ D.crawlSiteV crl,
+    crawlEnded            = D.crawlEnded crl,
+    crawlProcessorConfig  = D.crawlProcessorConfig crl,
+    crawlProcessorHrefs   = map toRouteHref $ D.crawlProcessorIds crl,
+    crawlStreamerHrefs    = map toRouteHref $ D.crawlStreamerIds crl}
 
 genProcessor :: D.Processor -> Processor
-genProcessor p = Processor {
-    processorHref = toRouteHref $ D.processorId p,
-    processorURL  = D.unProcessorURL $ D.processorURL p,
-    processorTag  = D.processorTag p}
+genProcessor pro = Processor {
+    processorHref = toRouteHref $ D.processorId pro,
+    processorURL  = D.unProcessorURL $ D.processorURL pro,
+    processorTag  = D.processorTag pro}
 
 genSite :: D.Site -> Site
-genSite s = Site {
-    siteHref = toRouteHref $ D.siteURL s,
-    siteURL  = D.unSiteURL $ D.siteURL s}
+genSite st = Site {
+    siteHref = toRouteHref $ D.siteURL st,
+    siteURL  = D.unSiteURL $ D.siteURL st}
 
 genStreamer :: D.Streamer -> Streamer
-genStreamer s = Streamer {
-    streamerHref = toRouteHref $ D.streamerId s,
-    streamerURL  = D.unStreamerURL $ D.streamerURL s,
-    streamerTag  = D.streamerTag s}
+genStreamer str = Streamer {
+    streamerHref = toRouteHref $ D.streamerId str,
+    streamerURL  = D.unStreamerURL $ D.streamerURL str,
+    streamerTag  = D.streamerTag str}
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 objHref :: ToJSON v => Maybe v -> Value

@@ -17,10 +17,10 @@ create = do
     Just _ <- run notFound $ fProcessors AW d
     req_ <- getJSON' >>= validateJSON
     Just req <- runValidate req_
-    Just procId <- D.cProcessor
+    Just proId <- D.cProcessor
         (unURIAbsolute $ processorCURL req) (processorCTag req) d
-    Just proc <- D.rProcessor procId d
-    let r = genProcessor proc
+    Just pro <- D.rProcessor proId d
+    let r = genProcessor pro
     created (unProcessorHref $ processorHref r) r
 
 list :: Handler b API ()
@@ -28,21 +28,21 @@ list = do
     d <- gets _db
     Just _ <- run notFound $ fProcessors AR d
     cur <- parseReq
-    procs <- D.lProcessor cur d
+    pros <- D.lProcessor cur d
     setResLink (unProcessorsHref (toRouteHref () :: ProcessorsHref))
-        (formatTime . D.processorInserted) procs
-    rs <- forM procs $ \proc -> return $ genProcessor proc
+        (formatTime . D.processorInserted) pros
+    rs <- forM pros $ \pro -> return $ genProcessor pro
     writeJSON rs
 
 read :: Handler b API ()
 read = do
     d <- gets _db
-    Just (proc, _) <- run notFound $ fProcessor AR d
-    writeJSON $ genProcessor proc
+    Just (pro, _) <- run notFound $ fProcessor AR d
+    writeJSON $ genProcessor pro
 
 delete :: Handler b API ()
 delete = do
     d <- gets _db
-    Just (_, procId) <- run notFound $ fProcessor AW d
-    D.dProcessor procId d
+    Just (_, proId) <- run notFound $ fProcessor AW d
+    D.dProcessor proId d
     noContent
