@@ -21,58 +21,64 @@ import qualified Network.HTTP.Conduit      as HTTP
 import qualified Network.HTTP.Types.Status as HTTP
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-genCrawlPageError :: D.Crawl -> D.PageId -> HTTP.Request ->
-    CrawlPageResponseError -> UTCTime -> CrawlPage
-genCrawlPageError crwl pageId req resErr t = CrawlPage
-        (D.crawlSiteId crwl) (D.crawlSiteV crwl)
-        pageId (D.PageV t) req' (Left resErr) Nothing
+genCrawlPageError ::
+    D.Crawl -> D.PageId -> HTTP.Request -> CrawlPageResponseError ->
+    UTCTime -> CrawlPage
+genCrawlPageError crl pgId req resErr t = CrawlPage
+        (D.crawlSiteId crl) (D.crawlSiteV crl)
+        pgId (D.PageV t) req' (Left resErr) Nothing
     where
         req' = CrawlPageRequest (HTTP.method req) (HTTP.requestVersion req)
 
-genCrawlPageResponse :: D.Crawl -> D.PageId -> HTTP.Request ->
-    HTTP.Response LByteString -> UTCTime -> UTCTime -> CrawlPage
-genCrawlPageResponse crwl pageId req res t t' = CrawlPage
-        (D.crawlSiteId crwl) (D.crawlSiteV crwl)
-        pageId (D.PageV t) req' (Right res') (Just blob)
+genCrawlPageResponse ::
+    D.Crawl -> D.PageId -> HTTP.Request -> HTTP.Response LByteString ->
+    UTCTime -> UTCTime -> CrawlPage
+genCrawlPageResponse crl pgId req res t t' = CrawlPage
+        (D.crawlSiteId crl) (D.crawlSiteV crl)
+        pgId (D.PageV t) req' (Right res') (Just blb)
     where
         req' = CrawlPageRequest (HTTP.method req) (HTTP.requestVersion req)
         res' = CrawlPageResponse (HTTP.statusCode $ HTTP.responseStatus res)
             (HTTP.responseVersion res)
             (nominalDiffTimeToSeconds $ diffUTCTime t' t)
-        blob = CrawlPageBlob
+        blb = CrawlPageBlob
             (M.fromList (hConvert <$> HTTP.responseHeaders res))
             (HTTP.responseBody res)
 --------------------------------------------------------------------------------
-txCrawlPage :: MonadIO m => D.Crawl -> CrawlPage -> ChanProcessor -> m ()
-txCrawlPage crwl crwlPage m = liftIO $ writeList2Chan m msgs
+txCrawlPage :: MonadIO m =>
+    D.Crawl -> CrawlPage -> ChanProcessor -> m ()
+txCrawlPage crl crlPg m = liftIO $ writeList2Chan m msgs
     where
-        msgs = [(procId, crwlPage) | procId <- D.crawlProcessorIds crwl]
+        msgs = [(proId, crlPg) | proId <- D.crawlProcessorIds crl]
 
-txCrawlPageData :: MonadIO m => D.Crawl -> CrawlPage -> D.Processor ->
-    A.Value -> ChanStreamer -> m ()
-txCrawlPageData crwl crwlPage proc dat m = liftIO $ writeList2Chan m msgs
+txCrawlPageData :: MonadIO m =>
+    D.Crawl -> CrawlPage -> D.Processor -> A.Value -> ChanStreamer -> m ()
+txCrawlPageData crl crlPg pro dat m = liftIO $ writeList2Chan m msgs
     where
-        crwlPageData = genCrawlPageData crwl crwlPage proc dat
-        msgs = [(strmId, crwlPageData) | strmId <- D.crawlStreamerIds crwl]
+        crlPgData = genCrawlPageData crl crlPg pro dat
+        msgs = [(strmId, crlPgData) | strmId <- D.crawlStreamerIds crl]
 
-txCrawlPageIds :: MonadIO m => D.Site -> D.Crawl -> [D.PageId] -> ChanCrawler ->
-    m ()
-txCrawlPageIds site crwl pageIds m = liftIO $ writeList2Chan m msgs
+txCrawlPageIds :: MonadIO m =>
+    D.Site -> D.Crawl -> [D.PageId] -> ChanCrawler -> m ()
+txCrawlPageIds site crl pgIds m = liftIO $ writeList2Chan m msgs
     where
-        msgs = [(D.siteId site, genCrawlPageId crwl pageId) | pageId <- pageIds]
+        msgs = [(D.siteId site, genCrawlPageId crl pgId) | pgId <- pgIds]
 --------------------------------------------------------------------------------
-rx :: Chan a -> (a -> IO ()) -> IO ()
+rx ::
+    Chan a -> (a -> IO ()) -> IO ()
 rx m f = getChanContents m >>= mapM_ f
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-genCrawlPageId :: D.Crawl -> D.PageId -> CrawlPageId
-genCrawlPageId crwl = CrawlPageId (D.crawlSiteId crwl) (D.crawlSiteV crwl)
+genCrawlPageId ::
+    D.Crawl -> D.PageId -> CrawlPageId
+genCrawlPageId crl = CrawlPageId (D.crawlSiteId crl) (D.crawlSiteV crl)
 
-genCrawlPageData :: D.Crawl -> CrawlPage -> D.Processor -> A.Value ->
-    CrawlPageData
-genCrawlPageData crwl crwlPage proc = CrawlPageData
-    (D.crawlSiteId crwl) (D.crawlSiteV crwl)
-    (crawlPagePageId crwlPage) (crawlPagePageV crwlPage) (D.processorId proc)
+genCrawlPageData ::
+    D.Crawl -> CrawlPage -> D.Processor -> A.Value -> CrawlPageData
+genCrawlPageData crl crlPg pro = CrawlPageData
+    (D.crawlSiteId crl) (D.crawlSiteV crl)
+    (crawlPagePageId crlPg) (crawlPagePageV crlPg) (D.processorId pro)
 
-hConvert :: (CI.CI ByteString, ByteString) -> (Text, Text)
+hConvert ::
+    (CI.CI ByteString, ByteString) -> (Text, Text)
 hConvert (k, v) = (decodeUtf8 $ CI.original k, decodeUtf8 v)
