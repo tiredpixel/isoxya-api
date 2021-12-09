@@ -42,18 +42,19 @@ import qualified Data.Aeson                     as A
 import qualified TiredPixel.Common.SQLite.Conn  as D
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-cCrawl :: MonadIO m => SiteId -> A.Value -> [ProcessorId] -> [StreamerId] ->
-    D.Conn -> m (Maybe SiteV)
-cCrawl sitId conf procIds strmIds d = withTransaction d $ do
+cCrawl :: MonadIO m =>
+    SiteId ->
+    A.Value -> [ProcessorId] -> [StreamerId] -> D.Conn -> m (Maybe SiteV)
+cCrawl stId conf proIds strIds d = withTransaction d $ do
     t <- liftIO getCurrentTime
-    let sitV_ = Just $ SiteV t
-    let p0 = (sitId, sitV_, A.encode conf)
+    let stV_ = Just $ SiteV t
+    let p0 = (stId, stV_, A.encode conf)
     executeW q0 p0 d
-    let p1 = map (sitId, sitV_,) procIds
+    let p1 = map (stId, stV_,) proIds
     executeManyW q1 p1 d
-    let p2 = map (sitId, sitV_,) strmIds
+    let p2 = map (stId, stV_,) strIds
     executeManyW q2 p2 d
-    return sitV_
+    return stV_
     where
         q0 = " \
         \   /* cCrawl.0 */ \
@@ -85,10 +86,10 @@ cCrawl sitId conf procIds strmIds d = withTransaction d $ do
         \   ON CONFLICT DO NOTHING \
         \ "
 
-cCrawlPagesEntry :: MonadIO m => CrawlId -> [ProcessorId] -> [PageId] ->
-    D.Conn -> m [()]
-cCrawlPagesEntry (sitId, sitV) procIds pagIds d = forM procIds $ \procId ->
-    executeManyW q (p procId) d
+cCrawlPagesEntry :: MonadIO m =>
+    CrawlId -> [ProcessorId] -> [PageId] -> D.Conn -> m [()]
+cCrawlPagesEntry (stId, stV) proIds pgIds d = forM proIds $ \proId ->
+    executeManyW q (p proId) d
     where
         q = " \
         \   /* cCrawlPagesEntry */ \
@@ -101,12 +102,13 @@ cCrawlPagesEntry (sitId, sitV) procIds pagIds d = forM procIds $ \procId ->
         \   VALUES (?, ?, ?, ?) \
         \   ON CONFLICT DO NOTHING \
         \ "
-        p procId = map (sitId, sitV, procId,) pagIds
+        p proId = map (stId, stV, proId,) pgIds
 
-cProcessor :: MonadIO m => URI -> Text -> D.Conn -> m (Maybe ProcessorId)
+cProcessor :: MonadIO m =>
+    URI -> Text -> D.Conn -> m (Maybe ProcessorId)
 cProcessor url tag d = do
-    procId <- genUUID
-    let p = (procId, url, tag)
+    proId <- genUUID
+    let p = (proId, url, tag)
     executeW q p d
     r <- rProcessorURL url d
     return $ processorId <$> r
@@ -123,13 +125,14 @@ cProcessor url tag d = do
         \       tag = tag \
         \ "
 
-cSite :: MonadIO m => URI -> D.Conn -> m (Maybe SiteURL)
+cSite :: MonadIO m =>
+    URI -> D.Conn -> m (Maybe SiteURL)
 cSite url d = do
     executeW q p d
-    r <- rSiteId sitId d
+    r <- rSiteId stId d
     return $ siteURL <$> r
     where
-        sitId = SiteId $ hash $ show url
+        stId = SiteId $ hash $ show url
         q = " \
         \   /* cSite */ \
         \   INSERT INTO site ( \
@@ -140,12 +143,13 @@ cSite url d = do
         \   ON CONFLICT (site_id) DO UPDATE SET \
         \       auto = false \
         \ "
-        p = (sitId, url)
+        p = (stId, url)
 
-cStreamer :: MonadIO m => URI -> Text -> D.Conn -> m (Maybe StreamerId)
+cStreamer :: MonadIO m =>
+    URI -> Text -> D.Conn -> m (Maybe StreamerId)
 cStreamer url tag d = do
-    strmId <- genUUID
-    let p = (strmId, url, tag)
+    strId <- genUUID
+    let p = (strId, url, tag)
     executeW q p d
     r <- rStreamerURL url d
     return $ streamerId <$> r
@@ -162,12 +166,13 @@ cStreamer url tag d = do
         \       tag = tag \
         \ "
 --------------------------------------------------------------------------------
-lCrawl :: MonadIO m => SiteId -> Cursor -> D.Conn -> m [Crawl]
-lCrawl sitId = curse (lCrawlF sitId) (lCrawlN sitId) (lCrawlP sitId)
+lCrawl :: MonadIO m =>
+    SiteId -> Cursor -> D.Conn -> m [Crawl]
+lCrawl stId = curse (lCrawlF stId) (lCrawlN stId) (lCrawlP stId)
 
-lCrawlPagePageId :: MonadIO m => CrawlId -> PageId -> PageV ->
-    ProcessorId -> D.Conn -> m [PageId]
-lCrawlPagePageId (sitId, sitV) pagId pagV procId = queryR q p
+lCrawlPagePageId :: MonadIO m =>
+    CrawlId -> PageId -> PageV -> ProcessorId -> D.Conn -> m [PageId]
+lCrawlPagePageId (stId, stV) pgId pgV proId = queryR q p
     where
         q = " \
         \   /* lCrawlPagePageId */ \
@@ -182,10 +187,11 @@ lCrawlPagePageId (sitId, sitV) pagId pagV procId = queryR q p
         \       AND \
         \       page_v IS NULL \
         \ "
-        p = (sitId, sitV, pagId, pagV, procId)
+        p = (stId, stV, pgId, pgV, proId)
 
-lCrawlPagePageIdEntry :: MonadIO m => CrawlId -> D.Conn -> m [PageId]
-lCrawlPagePageIdEntry crwlId = queryR q p
+lCrawlPagePageIdEntry :: MonadIO m =>
+    CrawlId -> D.Conn -> m [PageId]
+lCrawlPagePageIdEntry crlId = queryR q p
     where
         q = " \
         \   /* lCrawlPagePageIdEntry */ \
@@ -202,16 +208,19 @@ lCrawlPagePageIdEntry crwlId = queryR q p
         \       AND \
         \       page_v IS NULL \
         \ "
-        p = crwlId
+        p = crlId
 
-lProcessor :: MonadIO m => Cursor -> D.Conn -> m [Processor]
+lProcessor :: MonadIO m =>
+    Cursor -> D.Conn -> m [Processor]
 lProcessor = curse lProcessorF lProcessorN lProcessorP
 
-lStreamer :: MonadIO m => Cursor -> D.Conn -> m [Streamer]
+lStreamer :: MonadIO m =>
+    Cursor -> D.Conn -> m [Streamer]
 lStreamer = curse lStreamerF lStreamerN lStreamerP
 --------------------------------------------------------------------------------
-rCrawl :: MonadIO m => CrawlId -> D.Conn -> m (Maybe Crawl)
-rCrawl crwlId d = listToMaybe <$> queryR q p d
+rCrawl :: MonadIO m =>
+    CrawlId -> D.Conn -> m (Maybe Crawl)
+rCrawl crlId d = listToMaybe <$> queryR q p d
     where
         q = " \
         \   /* rCrawl */ \
@@ -220,10 +229,11 @@ rCrawl crwlId d = listToMaybe <$> queryR q p d
         \       (site_id, site_v) = (?, ?) \
         \   LIMIT 1 \
         \ "
-        p = crwlId
+        p = crlId
 
-rPageId :: MonadIO m => (SiteId, PageId) -> D.Conn -> m (Maybe Page)
-rPageId (sitId, pagId) d = listToMaybe <$> queryR q p d
+rPageId :: MonadIO m =>
+    (SiteId, PageId) -> D.Conn -> m (Maybe Page)
+rPageId (stId, pgId) d = listToMaybe <$> queryR q p d
     where
         q = " \
         \   /* rPageId */ \
@@ -232,15 +242,17 @@ rPageId (sitId, pagId) d = listToMaybe <$> queryR q p d
         \       (site_id, page_id) = (?, ?) \
         \   LIMIT 1 \
         \ "
-        p = (sitId, pagId)
+        p = (stId, pgId)
 
-rPageIns :: MonadIO m => (Site, PageURL) -> D.Conn -> m (Maybe Page)
-rPageIns (sit, pURL) d = rPage (siteId sit, pURL) d >>= \case
+rPageIns :: MonadIO m =>
+    (Site, PageURL) -> D.Conn -> m (Maybe Page)
+rPageIns (st, pgURL) d = rPage (siteId st, pgURL) d >>= \case
     Just pag -> return $ Just pag
-    Nothing  -> cPageAuto (sit, unPageURL pURL) d >> rPage (siteId sit, pURL) d
+    Nothing  -> cPageAuto (st, unPageURL pgURL) d >> rPage (siteId st, pgURL) d
 
-rProcessor :: MonadIO m => ProcessorId -> D.Conn -> m (Maybe Processor)
-rProcessor procId d = listToMaybe <$> queryR q p d
+rProcessor :: MonadIO m =>
+    ProcessorId -> D.Conn -> m (Maybe Processor)
+rProcessor proId d = listToMaybe <$> queryR q p d
     where
         q = " \
         \   /* rProcessor */ \
@@ -249,10 +261,11 @@ rProcessor procId d = listToMaybe <$> queryR q p d
         \       processor_id = ? \
         \   LIMIT 1 \
         \ "
-        p = [procId]
+        p = [proId]
 
-rSite :: MonadIO m => SiteURL -> D.Conn -> m (Maybe Site)
-rSite sURL d = listToMaybe <$> queryR q p d
+rSite :: MonadIO m =>
+    SiteURL -> D.Conn -> m (Maybe Site)
+rSite stURL d = listToMaybe <$> queryR q p d
     where
         q = " \
         \   /* rSite */ \
@@ -261,10 +274,11 @@ rSite sURL d = listToMaybe <$> queryR q p d
         \       url = ? \
         \   LIMIT 1 \
         \ "
-        p = [sURL]
+        p = [stURL]
 
-rSiteId :: MonadIO m => SiteId -> D.Conn -> m (Maybe Site)
-rSiteId sitId d = listToMaybe <$> queryR q p d
+rSiteId :: MonadIO m =>
+    SiteId -> D.Conn -> m (Maybe Site)
+rSiteId stId d = listToMaybe <$> queryR q p d
     where
         q = " \
         \   /* rSiteId */ \
@@ -273,15 +287,17 @@ rSiteId sitId d = listToMaybe <$> queryR q p d
         \       site_id = ? \
         \   LIMIT 1 \
         \ "
-        p = [sitId]
+        p = [stId]
 
-rSiteIns :: MonadIO m => SiteURL -> D.Conn -> m (Maybe Site)
-rSiteIns sURL d = rSite sURL d >>= \case
-    Just sit -> return $ Just sit
-    Nothing  -> cSiteAuto (unSiteURL sURL) d >> rSite sURL d
+rSiteIns :: MonadIO m =>
+    SiteURL -> D.Conn -> m (Maybe Site)
+rSiteIns stURL d = rSite stURL d >>= \case
+    Just st -> return $ Just st
+    Nothing -> cSiteAuto (unSiteURL stURL) d >> rSite stURL d
 
-rStreamer :: MonadIO m => StreamerId -> D.Conn -> m (Maybe Streamer)
-rStreamer strmId d = listToMaybe <$> queryR q p d
+rStreamer :: MonadIO m =>
+    StreamerId -> D.Conn -> m (Maybe Streamer)
+rStreamer strId d = listToMaybe <$> queryR q p d
     where
         q = " \
         \   /* rStreamer */ \
@@ -290,15 +306,15 @@ rStreamer strmId d = listToMaybe <$> queryR q p d
         \       streamer_id = ? \
         \   LIMIT 1 \
         \ "
-        p = [strmId]
+        p = [strId]
 --------------------------------------------------------------------------------
-uCrawlPage :: (MonadFail m, MonadIO m) => Crawl -> PageId -> PageV ->
-    ProcessorId -> [PageId] -> D.Conn -> m ()
-uCrawlPage crwl pagId pagV procId pagIds d = do
-    let p1 pprocId' = map (crawlSiteId crwl, crawlSiteV crwl,
-            pagId, pagV, procId, pprocId',) $
-            pagIds ++ [pagId]
-    forM_ (crawlProcessorIds crwl) $ \procId' -> executeManyW q1 (p1 procId') d
+uCrawlPage :: (MonadFail m, MonadIO m) =>
+    Crawl -> PageId -> PageV -> ProcessorId -> [PageId] -> D.Conn -> m ()
+uCrawlPage crl pgId pgV proId pgIds d = do
+    let p1 pproId' = map (crawlSiteId crl, crawlSiteV crl,
+            pgId, pgV, proId, pproId',) $
+            pgIds ++ [pgId]
+    forM_ (crawlProcessorIds crl) $ \proId' -> executeManyW q1 (p1 proId') d
     executeW q2 p2 d
     where
         q1 = " \
@@ -326,10 +342,11 @@ uCrawlPage crwl pagId pagV procId pagIds d = do
         \       AND \
         \       page_v IS NULL \
         \   "
-        p2 = (pagV, crawlSiteId crwl, crawlSiteV crwl, pagId, procId)
+        p2 = (pgV, crawlSiteId crl, crawlSiteV crl, pgId, proId)
 --------------------------------------------------------------------------------
-dProcessor :: MonadIO m => ProcessorId -> D.Conn -> m ()
-dProcessor procId = executeW q p
+dProcessor :: MonadIO m =>
+    ProcessorId -> D.Conn -> m ()
+dProcessor proId = executeW q p
     where
         q = " \
         \   /* dProcessor */ \
@@ -337,10 +354,11 @@ dProcessor procId = executeW q p
         \   WHERE \
         \       processor_id = ? \
         \ "
-        p = [procId]
+        p = [proId]
 
-dStreamer :: MonadIO m => StreamerId -> D.Conn -> m ()
-dStreamer strmId = executeW q p
+dStreamer :: MonadIO m =>
+    StreamerId -> D.Conn -> m ()
+dStreamer strId = executeW q p
     where
         q = " \
         \   /* dStreamer */ \
@@ -348,11 +366,12 @@ dStreamer strmId = executeW q p
         \   WHERE \
         \       streamer_id = ? \
         \ "
-        p = [strmId]
+        p = [strId]
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-lCrawlF :: MonadIO m => SiteId -> Integer -> D.Conn -> m [Crawl]
-lCrawlF sitId curLim d = do
+lCrawlF :: MonadIO m =>
+    SiteId -> Integer -> D.Conn -> m [Crawl]
+lCrawlF stId curLim d = do
     rs <- queryR q p d :: MonadIO m => m [CrawlId']
     catMaybes <$> forM rs (\r -> rCrawl (crawlSiteId' r, crawlSiteV' r) d)
     where
@@ -365,10 +384,11 @@ lCrawlF sitId curLim d = do
         \       site_v DESC \
         \   LIMIT ? \
         \ "
-        p = (sitId, curLim)
+        p = (stId, curLim)
 
-lCrawlN :: MonadIO m => SiteId -> Integer -> ByteString -> D.Conn -> m [Crawl]
-lCrawlN sitId curLim curPosN d = do
+lCrawlN :: MonadIO m =>
+    SiteId -> Integer -> ByteString -> D.Conn -> m [Crawl]
+lCrawlN stId curLim curPosN d = do
     rs <- queryR q p d :: MonadIO m => m [CrawlId']
     catMaybes <$> forM rs (\r -> rCrawl (crawlSiteId' r, crawlSiteV' r) d)
     where
@@ -383,10 +403,11 @@ lCrawlN sitId curLim curPosN d = do
         \       site_v DESC \
         \   LIMIT ? \
         \ "
-        p = (sitId, curPosN, curLim)
+        p = (stId, curPosN, curLim)
 
-lCrawlP :: MonadIO m => SiteId -> Integer -> ByteString -> D.Conn -> m [Crawl]
-lCrawlP sitId curLim curPosP d = do
+lCrawlP :: MonadIO m =>
+    SiteId -> Integer -> ByteString -> D.Conn -> m [Crawl]
+lCrawlP stId curLim curPosP d = do
     rs <- queryR q p d :: MonadIO m => m [CrawlId']
     reverse . catMaybes <$>
         forM rs (\r -> rCrawl (crawlSiteId' r, crawlSiteV' r) d)
@@ -402,12 +423,13 @@ lCrawlP sitId curLim curPosP d = do
         \       site_v ASC \
         \   LIMIT ? \
         \ "
-        p = (sitId, curPosP, curLim)
+        p = (stId, curPosP, curLim)
 --------------------------------------------------------------------------------
-lProcessorF :: MonadIO m => Integer -> D.Conn -> m [Processor]
+lProcessorF :: MonadIO m =>
+    Integer -> D.Conn -> m [Processor]
 lProcessorF curLim d = do
-    procIds <- queryR q p d
-    catMaybes <$> forM procIds (`rProcessor` d)
+    proIds <- queryR q p d
+    catMaybes <$> forM proIds (`rProcessor` d)
     where
         q = " \
         \   /* lProcessorF */ \
@@ -419,10 +441,11 @@ lProcessorF curLim d = do
         \ "
         p = [curLim]
 
-lProcessorN :: MonadIO m => Integer -> ByteString -> D.Conn -> m [Processor]
+lProcessorN :: MonadIO m =>
+    Integer -> ByteString -> D.Conn -> m [Processor]
 lProcessorN curLim curPosN d = do
-    procIds <- queryR q p d
-    catMaybes <$> forM procIds (`rProcessor` d)
+    proIds <- queryR q p d
+    catMaybes <$> forM proIds (`rProcessor` d)
     where
         q = " \
         \   /* lProcessorN */ \
@@ -436,10 +459,11 @@ lProcessorN curLim curPosN d = do
         \ "
         p = (curPosN, curLim)
 
-lProcessorP :: MonadIO m => Integer -> ByteString -> D.Conn -> m [Processor]
+lProcessorP :: MonadIO m =>
+    Integer -> ByteString -> D.Conn -> m [Processor]
 lProcessorP curLim curPosP d = do
-    procIds <- queryR q p d
-    reverse . catMaybes <$> forM procIds (`rProcessor` d)
+    proIds <- queryR q p d
+    reverse . catMaybes <$> forM proIds (`rProcessor` d)
     where
         q = " \
         \   /* lProcessorP */ \
@@ -453,10 +477,11 @@ lProcessorP curLim curPosP d = do
         \ "
         p = (curPosP, curLim)
 --------------------------------------------------------------------------------
-lStreamerF :: MonadIO m => Integer -> D.Conn -> m [Streamer]
+lStreamerF :: MonadIO m =>
+    Integer -> D.Conn -> m [Streamer]
 lStreamerF curLim d = do
-    strmIds <- queryR q p d
-    catMaybes <$> forM strmIds (`rStreamer` d)
+    strIds <- queryR q p d
+    catMaybes <$> forM strIds (`rStreamer` d)
     where
         q = " \
         \   /* lStreamerF */ \
@@ -468,10 +493,11 @@ lStreamerF curLim d = do
         \ "
         p = [curLim]
 
-lStreamerN :: MonadIO m => Integer -> ByteString -> D.Conn -> m [Streamer]
+lStreamerN :: MonadIO m =>
+    Integer -> ByteString -> D.Conn -> m [Streamer]
 lStreamerN curLim curPosN d = do
-    strmIds <- queryR q p d
-    catMaybes <$> forM strmIds (`rStreamer` d)
+    strIds <- queryR q p d
+    catMaybes <$> forM strIds (`rStreamer` d)
     where
         q = " \
         \   /* lStreamerN */ \
@@ -485,10 +511,11 @@ lStreamerN curLim curPosN d = do
         \ "
         p = (curPosN, curLim)
 
-lStreamerP :: MonadIO m => Integer -> ByteString -> D.Conn -> m [Streamer]
+lStreamerP :: MonadIO m =>
+    Integer -> ByteString -> D.Conn -> m [Streamer]
 lStreamerP curLim curPosP d = do
-    strmIds <- queryR q p d
-    reverse . catMaybes <$> forM strmIds (`rStreamer` d)
+    strIds <- queryR q p d
+    reverse . catMaybes <$> forM strIds (`rStreamer` d)
     where
         q = " \
         \   /* lStreamerP */ \
@@ -502,11 +529,14 @@ lStreamerP curLim curPosP d = do
         \ "
         p = (curPosP, curLim)
 --------------------------------------------------------------------------------
-cPageAuto :: MonadIO m => (Site, URI) -> D.Conn -> m (Maybe PageURL)
-cPageAuto (sit, url) d = do
+cPageAuto :: MonadIO m =>
+    (Site, URI) -> D.Conn -> m (Maybe PageURL)
+cPageAuto (st, url) d = do
     executeW q p d
     return $ Just $ PageURL url
     where
+        url' = toText $ show (siteURL st) ++ show url
+        pgId = PageId $ hash url'
         q = " \
         \   /* cPageAuto */ \
         \   INSERT INTO page ( \
@@ -517,15 +547,15 @@ cPageAuto (sit, url) d = do
         \   VALUES (?, ?, ?) \
         \   ON CONFLICT DO NOTHING \
         \ "
-        url' = toText $ show (siteURL sit) ++ show url
-        pagId = PageId $ hash url'
-        p = (pagId, siteId sit, url)
+        p = (pgId, siteId st, url)
 
-cSiteAuto :: MonadIO m => URI -> D.Conn -> m (Maybe SiteURL)
+cSiteAuto :: MonadIO m =>
+    URI -> D.Conn -> m (Maybe SiteURL)
 cSiteAuto url d = do
     executeW q p d
     return $ Just $ SiteURL url
     where
+        stId = SiteId $ hash $ show url
         q = " \
         \   /* cSiteAuto */ \
         \   INSERT INTO site ( \
@@ -537,11 +567,11 @@ cSiteAuto url d = do
         \   ON CONFLICT (site_id) DO UPDATE SET \
         \       auto = true \
         \ "
-        sitId = SiteId $ hash $ show url
-        p = (sitId, url)
+        p = (stId, url)
 
-rPage :: MonadIO m => (SiteId, PageURL) -> D.Conn -> m (Maybe Page)
-rPage (sitId, pURL) d = listToMaybe <$> queryR q p d
+rPage :: MonadIO m =>
+    (SiteId, PageURL) -> D.Conn -> m (Maybe Page)
+rPage (stId, pgURL) d = listToMaybe <$> queryR q p d
     where
         q = " \
         \   /* rPage */ \
@@ -550,9 +580,10 @@ rPage (sitId, pURL) d = listToMaybe <$> queryR q p d
         \       (site_id, url) = (?, ?) \
         \   LIMIT 1 \
         \ "
-        p = (sitId, pURL)
+        p = (stId, pgURL)
 
-rProcessorURL :: MonadIO m => URI -> D.Conn -> m (Maybe Processor)
+rProcessorURL :: MonadIO m =>
+    URI -> D.Conn -> m (Maybe Processor)
 rProcessorURL url d = listToMaybe <$> queryR q p d
     where
         q = " \
@@ -564,7 +595,8 @@ rProcessorURL url d = listToMaybe <$> queryR q p d
         \ "
         p = [url]
 
-rStreamerURL :: MonadIO m => URI -> D.Conn -> m (Maybe Streamer)
+rStreamerURL :: MonadIO m =>
+    URI -> D.Conn -> m (Maybe Streamer)
 rStreamerURL url d = listToMaybe <$> queryR q p d
     where
         q = " \
@@ -576,5 +608,6 @@ rStreamerURL url d = listToMaybe <$> queryR q p d
         \ "
         p = [url]
 
-hash :: Text -> Hash.Digest Hash.SHA256
+hash ::
+    Text -> Hash.Digest Hash.SHA256
 hash t = Hash.hash (encodeUtf8 t :: ByteString)

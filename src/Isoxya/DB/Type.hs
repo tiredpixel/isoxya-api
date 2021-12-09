@@ -89,7 +89,7 @@ instance FromField CrawlStatus where
         _           -> returnError ConversionFailed f "must be CrawlStatus"
     fromField f = returnError ConversionFailed f "must be SQLText"
 instance ToField CrawlStatus where
-    toField e = toField (T.drop 10 $ show e :: Text)
+    toField e = toField (T.drop 11 $ show e :: Text)
 
 data Page = Page {
     pageId     :: PageId,
@@ -208,4 +208,4 @@ instance ToField StreamerURL where
     toField = toField . unStreamerURL
 
 crawlId :: Crawl -> CrawlId
-crawlId c = (crawlSiteId c, crawlSiteV c)
+crawlId crl = (crawlSiteId crl, crawlSiteV crl)
