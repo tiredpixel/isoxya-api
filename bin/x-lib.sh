@@ -92,5 +92,4 @@ cache_var LIST_HREF
 cache_var PROCESSOR_HREF
 cache_var SITE_HREF
 cache_var STREAMER_HREF
-cache_var USER_AGENT_HREF
 #-------------------------------------------------------------------------------

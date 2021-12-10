@@ -6,10 +6,9 @@ href_=${1:-}
 source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
 #-------------------------------------------------------------------------------
 if [ -z "$href_" ]; then
-    ask_opts "href" 5 \
+    ask_opts "href" 4 \
         "${PROCESSOR_HREF:-}" \
         "${STREAMER_HREF:-}" \
-        "${USER_AGENT_HREF:-}" \
         \
         "${SITE_HREF:-}" \
         \
