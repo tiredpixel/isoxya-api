@@ -6,7 +6,6 @@ services:
     volumes:
       - ./isoxya-api.cabal:/home/x/repo/isoxya-api.cabal
       - ./lib:/home/x/repo/lib
-      - ./sqlite3.db:/home/x/repo/sqlite3.db
       - ./src:/home/x/repo/src
       - ./test:/home/x/repo/test
     networks:

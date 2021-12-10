@@ -4,6 +4,4 @@
 /dist/
 /docker-compose*.yml
 /misc/eg/*/.isoxya/
-/misc/eg/*/sqlite3.db
-/sqlite3.db
 /test/log/

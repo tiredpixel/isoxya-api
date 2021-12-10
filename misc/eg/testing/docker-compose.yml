@@ -3,8 +3,6 @@ services:
   api:
     image: docker.io/isoxya/isoxya-api:testing
     init: true
-    volumes:
-      - ./sqlite3.db:/home/x/sqlite3.db
     networks:
       - api
       - plugin

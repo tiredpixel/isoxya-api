@@ -20,12 +20,6 @@ Choose a stream: `stable` (recommended), `testing`, or `unstable`:
 cd misc/eg/stable/
 ```
 
-Initialise the stack:
-
-```sh
-./docker-compose.init.sh
-```
-
 Boot the stack:
 
 ```sh
