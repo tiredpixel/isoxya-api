@@ -67,7 +67,7 @@ genProcessorI msg proc crwl site page = ProcessorI meta header body
             Right r -> Just $ toInteger $ M.crawlPageResponseStatus r
             _       -> empty
         duration = case M.crawlPageResponse msg of
-            Right r -> Just $ round (M.crawlPageResponseDuration r * 1000)
+            Right r -> Just $ fromRational $ M.crawlPageResponseDuration r
             _       -> empty
         err = case M.crawlPageResponse msg of
             Left e  -> Just $ show e
