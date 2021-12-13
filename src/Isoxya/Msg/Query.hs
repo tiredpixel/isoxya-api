@@ -40,7 +40,7 @@ genCrawlPageResponse crl pgId req res t t' = CrawlPage
         req' = CrawlPageRequest (HTTP.method req) (HTTP.requestVersion req)
         res' = CrawlPageResponse (HTTP.statusCode $ HTTP.responseStatus res)
             (HTTP.responseVersion res)
-            (nominalDiffTimeToSeconds $ diffUTCTime t' t)
+            (toRational $ nominalDiffTimeToSeconds $ diffUTCTime t' t)
         blb = CrawlPageBlob
             (M.fromList (hConvert <$> HTTP.responseHeaders res))
             (HTTP.responseBody res)

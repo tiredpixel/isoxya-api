@@ -18,7 +18,6 @@ module Isoxya.Msg.Type (
 
 
 import           Control.Concurrent.Chan
-import           Data.Fixed              (Pico)
 import qualified Data.Aeson              as A
 import qualified Isoxya.DB               as D
 import qualified Network.HTTP.Conduit    as HTTP
@@ -69,7 +68,7 @@ data CrawlPageRequest = CrawlPageRequest {
 data CrawlPageResponse = CrawlPageResponse {
     crawlPageResponseStatus   :: Int,
     crawlPageResponseVersion  :: HTTP.HttpVersion,
-    crawlPageResponseDuration :: Pico
+    crawlPageResponseDuration :: Rational
     } deriving (Show)
 
 data CrawlPageResponseError =
