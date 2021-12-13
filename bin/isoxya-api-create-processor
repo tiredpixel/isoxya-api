@@ -3,16 +3,20 @@ set -o pipefail
 
 source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
 #-------------------------------------------------------------------------------
-ask "url" http://isoxya-plugin-crawler-html.localhost/data
-url=$ASK_BUF
+ask "channels (Pro)" null
+channels=$ASK_BUF
 
 ask "tag" crawler-html
 tag=$ASK_BUF
+
+ask "url" http://isoxya-plugin-crawler-html.localhost/data
+url=$ASK_BUF
 #-------------------------------------------------------------------------------
 j=$(cat <<-EOT
 	{
-	  "url": "$url",
-	  "tag": "$tag"
+	  "channels": $channels,
+	  "tag": "$tag",
+	  "url": "$url"
 	}
 	EOT
     )

@@ -3,11 +3,19 @@ set -o pipefail
 
 source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
 #-------------------------------------------------------------------------------
+ask "channels (Pro)" null
+channels=$ASK_BUF
+
+ask "rate_lim (Pro)" null
+rate_lim=$ASK_BUF
+
 ask "url" http://example.com
 url=$ASK_BUF
 #-------------------------------------------------------------------------------
 j=$(cat <<-EOT
 	{
+	  "channels": $channels,
+	  "rate_lim": $rate_lim,
 	  "url": "$url"
 	}
 	EOT
