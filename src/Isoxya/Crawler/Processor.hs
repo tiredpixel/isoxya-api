@@ -20,19 +20,18 @@ process l ver mProc n d (stId, msg) = do
     Just st <- D.rSiteId stId d
     L.debug l $ show st
     Just crl <- D.rCrawl (M.crawlPageIdSiteId msg, M.crawlPageIdSiteV msg) d
-    let crlId = D.crawlId crl
     L.debug l $ show crl
     Just pg <- D.rPageId (D.crawlSiteId crl, M.crawlPageIdPageId msg) d
-    let pgId = D.pageId pg
     let reqURL = D.pageURLAbs (D.siteURL st) (D.pageURL pg)
     let ua = userAgent ver
     let req = N.userAgentReq ua $ N.makeReq "GET" (D.unSiteURL reqURL) ""
     L.debug l $ show req
     tR <- getCurrentTime
-    crlPg <- handle (httpH l crlId pgId req tR) $ do
+    crlPg <- handle (httpH l (D.crawlId crl) (D.pageId pg) req tR) $ do
         res <- N.makeResLim reqLim req n
         L.debug l $ show res
-        M.genCrawlPageResponse crlId pgId req res tR <$> getCurrentTime
+        M.genCrawlPageResponse (D.crawlId crl) (D.pageId pg) req res tR <$>
+            getCurrentTime
     L.debug l $ show crlPg
     _ <- M.txCrawlPage crl crlPg mProc
     L.info l $

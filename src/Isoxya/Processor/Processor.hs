@@ -20,47 +20,47 @@ import qualified TiredPixel.Common.Net              as N
 
 process :: L.Logger -> M.ChanStreamer -> M.ChanCrawler -> N.Conn -> D.Conn ->
     M.MsgProcessor -> IO ()
-process l mStrm mCrwl n d (procId, msg) = do
-    Just proc <- D.rProcessor procId d
-    L.debug l $ show proc
-    Just crwl <- D.rCrawl (M.crawlPageSiteId msg, M.crawlPageSiteV msg) d
-    L.debug l $ show crwl
-    Just site <- D.rSiteId (D.crawlSiteId crwl) d
-    L.debug l $ show site
-    Just page <- D.rPageId (D.crawlSiteId crwl, M.crawlPagePageId msg) d
-    let tx = genProcessorI msg proc crwl site page
+process l mStrm mCrwl n d (proId, msg) = do
+    Just pro <- D.rProcessor proId d
+    L.debug l $ show pro
+    Just crl <- D.rCrawl (M.crawlPageSiteId msg, M.crawlPageSiteV msg) d
+    L.debug l $ show crl
+    Just st <- D.rSiteId (D.crawlSiteId crl) d
+    L.debug l $ show st
+    Just pg <- D.rPageId (D.crawlSiteId crl, M.crawlPagePageId msg) d
+    let tx = genProcessorI msg pro crl st pg
     L.debug l $ show tx
     let req = N.jsonReq $ N.makeReq' "POST"
-            (D.unProcessorURL $ D.processorURL proc) (encode tx)
+            (D.unProcessorURL $ D.processorURL pro) (encode tx)
     L.debug l $ show req
     L.debug l $ decodeUtf8 $ encode tx
     res <- N.makeRes req n
     L.debug l $ show res
     L.debug l $ decodeUtf8 $ HTTP.responseBody res
     let Just rx = decode $ HTTP.responseBody res :: Maybe ProcessorO
-    pageIdsInt <- D.urlsPageIds site
+    pgIdsInt <- D.urlsPageIds st
         (S.map unURIReference $ processorOURLs rx) d
-    D.uCrawlPage crwl (M.crawlPagePageId msg) (M.crawlPagePageV msg)
-        (D.processorId proc) pageIdsInt d
-    pageIds <- D.lCrawlPagePageId (D.crawlId crwl) (M.crawlPagePageId msg)
-        (M.crawlPagePageV msg) (D.processorId proc) d
-    _ <- M.txCrawlPageIds site (D.crawlId crwl) pageIds mCrwl
-    _ <- M.txCrawlPageData crwl msg proc (processorOData rx) mStrm
+    D.uCrawlPage crl (M.crawlPagePageId msg) (M.crawlPagePageV msg)
+        (D.processorId pro) pgIdsInt d
+    pgIds <- D.lCrawlPagePageId (D.crawlId crl) (M.crawlPagePageId msg)
+        (M.crawlPagePageV msg) (D.processorId pro) d
+    _ <- M.txCrawlPageIds st (D.crawlId crl) pgIds mCrwl
+    _ <- M.txCrawlPageData crl msg pro (processorOData rx) mStrm
     L.info l $
         decodeUtf8 (unCrawlHref $
-            toRouteHref (D.siteURL site, D.crawlSiteV crwl)) <> " PROC " <>
-        show (D.unProcessorId $ D.processorId proc) <> " " <>
-        show (D.unSiteURL $ D.siteURL site) <>
-        show (D.unPageURL $ D.pageURL page) <> " " <>
+            toRouteHref (D.siteURL st, D.crawlSiteV crl)) <> " PROC " <>
+        show (D.unProcessorId $ D.processorId pro) <> " " <>
+        show (D.unSiteURL $ D.siteURL st) <>
+        show (D.unPageURL $ D.pageURL pg) <> " " <>
         show (HTTP.statusCode $ HTTP.responseStatus res)
 
 
 genProcessorI :: M.CrawlPage -> D.Processor -> D.Crawl -> D.Site -> D.Page ->
     ProcessorI
-genProcessorI msg proc crwl site page = ProcessorI meta header body
+genProcessorI msg pro crl st pg = ProcessorI meta header body
     where
         url = URIAbsolute $ D.unSiteURL $
-            D.pageURLAbs (D.siteURL site) (D.pageURL page)
+            D.pageURLAbs (D.siteURL st) (D.pageURL pg)
         method = decodeUtf8 <$>
             M.crawlPageRequestMethod $ M.crawlPageRequest msg
         status = case M.crawlPageResponse msg of
@@ -72,9 +72,9 @@ genProcessorI msg proc crwl site page = ProcessorI meta header body
         err = case M.crawlPageResponse msg of
             Left e  -> Just $ show e
             _       -> empty
-        config = D.crawlProcessorConfig crwl ^? key (D.processorTag proc)
+        conf = D.crawlProcessorConfig crl ^? key (D.processorTag pro)
         meta = ProcessorIMeta {
-            processorIMetaConfig   = config,
+            processorIMetaConfig   = conf,
             processorIMetaDuration = duration,
             processorIMetaError    = err,
             processorIMetaMethod   = method,
