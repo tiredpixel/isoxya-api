@@ -44,7 +44,7 @@ process l mStrm mCrwl n d (procId, msg) = do
         (D.processorId proc) pageIdsInt d
     pageIds <- D.lCrawlPagePageId (D.crawlId crwl) (M.crawlPagePageId msg)
         (M.crawlPagePageV msg) (D.processorId proc) d
-    _ <- M.txCrawlPageIds site crwl pageIds mCrwl
+    _ <- M.txCrawlPageIds site (D.crawlId crwl) pageIds mCrwl
     _ <- M.txCrawlPageData crwl msg proc (processorOData rx) mStrm
     L.info l $
         decodeUtf8 (unCrawlHref $

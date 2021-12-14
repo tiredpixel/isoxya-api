@@ -26,7 +26,7 @@ createWithSite = do
     Just crl <- D.rCrawl (stId, stV) d
     _ <- D.cEntryURLs st crl d
     pgIds <- D.lCrawlPagePageIdEntry (stId, stV) d
-    M.txCrawlPageIds st crl pgIds m
+    M.txCrawlPageIds st (stId, stV) pgIds m
     let r = genCrawl st crl
     created (unCrawlHref $ crawlHref r) r
 

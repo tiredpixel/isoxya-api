@@ -49,28 +49,21 @@ txCrawlPageData :: MonadIO m => D.Crawl -> CrawlPage -> D.Processor ->
     A.Value -> ChanStreamer -> m ()
 txCrawlPageData crl crlPg pro dat ch = liftIO $ writeList2Chan ch msgs
     where
-        crlPgDat = genCrawlPageData crl crlPg pro dat
+        crlPgDat = CrawlPageData (D.crawlSiteId crl) (D.crawlSiteV crl)
+            (crawlPagePageId crlPg) (crawlPagePageV crlPg)
+            (D.processorId pro) dat
         msgs = [(strId, crlPgDat) | strId <- D.crawlStreamerIds crl]
 
-txCrawlPageIds :: MonadIO m => D.Site -> D.Crawl -> [D.PageId] -> ChanCrawler ->
-    m ()
-txCrawlPageIds st crl pgIds ch = liftIO $ writeList2Chan ch msgs
+txCrawlPageIds :: MonadIO m => D.Site -> D.CrawlId -> [D.PageId] ->
+    ChanCrawler -> m ()
+txCrawlPageIds st (stId, stV) pgIds ch = liftIO $ writeList2Chan ch msgs
     where
-        msgs = [(D.siteId st, genCrawlPageId crl pgId) | pgId <- pgIds]
+        crlPgId = CrawlPageId stId stV
+        msgs = [(D.siteId st, crlPgId pgId) | pgId <- pgIds]
 --------------------------------------------------------------------------------
 rx :: Chan a -> (a -> IO ()) -> IO ()
 rx ch f = getChanContents ch >>= mapM_ f
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-genCrawlPageId ::
-    D.Crawl -> D.PageId -> CrawlPageId
-genCrawlPageId crl = CrawlPageId (D.crawlSiteId crl) (D.crawlSiteV crl)
-
-genCrawlPageData ::
-    D.Crawl -> CrawlPage -> D.Processor -> A.Value -> CrawlPageData
-genCrawlPageData crl crlPg pro = CrawlPageData
-    (D.crawlSiteId crl) (D.crawlSiteV crl)
-    (crawlPagePageId crlPg) (crawlPagePageV crlPg) (D.processorId pro)
-
 hConvert :: (CI.CI ByteString, ByteString) -> (Text, Text)
 hConvert (k, v) = (decodeUtf8 $ CI.original k, decodeUtf8 v)
