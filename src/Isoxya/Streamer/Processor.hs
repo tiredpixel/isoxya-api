@@ -15,50 +15,50 @@ import qualified TiredPixel.Common.Net             as N
 
 
 process :: L.Logger -> N.Conn -> D.Conn -> M.MsgStreamer -> IO ()
-process l n d (strmId, msg) = do
-    Just strm <- D.rStreamer strmId d
-    L.debug l $ show strm
-    Just proc <- D.rProcessor (M.crawlPageDataProcessorId msg) d
-    L.debug l $ show proc
-    Just crwl <- D.rCrawl
-        (M.crawlPageDataSiteId msg, M.crawlPageDataSiteV msg) d
-    L.debug l $ show crwl
-    Just site <- D.rSiteId (D.crawlSiteId crwl) d
-    L.debug l $ show site
-    Just page <- D.rPageId (D.crawlSiteId crwl, M.crawlPageDataPageId msg) d
-    let tx = genStreamer msg proc crwl site page
+process l n d (strId, msg) = do
+    Just str <- D.rStreamer strId d
+    L.debug l $ show str
+    Just pro <- D.rProcessor (M.crawlPageDataProcessorId msg) d
+    L.debug l $ show pro
+    Just crl <- D.rCrawl (M.crawlPageDataSiteId msg, M.crawlPageDataSiteV msg) d
+    L.debug l $ show crl
+    Just st <- D.rSiteId (D.crawlSiteId crl) d
+    L.debug l $ show st
+    Just pg <- D.rPageId (D.crawlSiteId crl, M.crawlPageDataPageId msg) d
+    let tx = genStreamer msg pro crl st pg
     L.debug l $ show tx
-    let req = N.jsonReq $
-            N.makeReq' "POST" (D.unStreamerURL $ D.streamerURL strm) (encode tx)
+    let req = N.jsonReq $ N.makeReq' "POST"
+            (D.unStreamerURL $ D.streamerURL str) (encode tx)
     L.debug l $ show req
     L.debug l $ decodeUtf8 $ encode tx
     res <- N.makeRes req n
     L.debug l $ show res
     L.info l $
         decodeUtf8 (unCrawlHref $
-            toRouteHref (D.siteURL site, D.crawlSiteV crwl)) <> " STRM " <>
-        show (D.unStreamerId $ D.streamerId strm) <> " " <>
-        show (D.unSiteURL $ D.siteURL site) <>
-        show (D.unPageURL $ D.pageURL page) <> " " <>
+            toRouteHref (D.siteURL st, D.crawlSiteV crl)) <> " STRM " <>
+        show (D.unStreamerId $ D.streamerId str) <> " " <>
+        show (D.unSiteURL $ D.siteURL st) <>
+        show (D.unPageURL $ D.pageURL pg) <> " " <>
         show (HTTP.statusCode $ HTTP.responseStatus res)
 
 
-genStreamer :: M.CrawlPageData -> D.Processor -> D.Crawl -> D.Site ->
-    D.Page -> Streamer
-genStreamer msg proc crwl site page = Streamer {
-    streamerCrawlBegan    = D.unSiteV $ D.crawlSiteV crwl,
-    streamerCrawlHref     = crwlH,
+genStreamer :: M.CrawlPageData -> D.Processor -> D.Crawl -> D.Site -> D.Page ->
+    Streamer
+genStreamer msg pro crl st pg = Streamer {
+    streamerCrawlBegan    = D.unSiteV $ D.crawlSiteV crl,
+    streamerCrawlHref     = crlH,
     streamerData          = M.crawlPageDataData msg,
-    streamerProcessorHref = procH,
-    streamerProcessorTag  = D.processorTag proc,
+    streamerProcessorHref = proH,
+    streamerProcessorTag  = D.processorTag pro,
     streamerRetrieved     = D.unPageV $ M.crawlPageDataPageV msg,
-    streamerSiteHref      = decodeUtf8 $ unSiteHref $ toRouteHref (D.siteURL site),
-    streamerSiteURL       = URIAbsolute $ D.unSiteURL $ D.siteURL site,
+    streamerSiteHref      = stH,
+    streamerSiteURL       = URIAbsolute $ D.unSiteURL $ D.siteURL st,
     streamerURL           = url}
     where
-        crwlH = decodeUtf8 $ unCrawlHref $
-            toRouteHref (D.siteURL site, D.crawlSiteV crwl)
-        procH = decodeUtf8 $ unProcessorHref $
-            toRouteHref (D.processorId proc)
+        stH = decodeUtf8 $ unSiteHref $ toRouteHref (D.siteURL st)
+        crlH = decodeUtf8 $ unCrawlHref $
+            toRouteHref (D.siteURL st, D.crawlSiteV crl)
+        proH = decodeUtf8 $ unProcessorHref $
+            toRouteHref (D.processorId pro)
         url = URIAbsolute $ D.unSiteURL $
-            D.pageURLAbs (D.siteURL site) (D.pageURL page)
+            D.pageURLAbs (D.siteURL st) (D.pageURL pg)
