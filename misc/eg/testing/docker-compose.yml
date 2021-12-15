@@ -5,7 +5,8 @@ services:
     init: true
     networks:
       - api
-      - plugin
+      - processor
+      - streamer
     ports:
       - 0.0.0.0:80:80
     restart: on-failure
@@ -13,17 +14,18 @@ services:
     image: docker.io/isoxya/isoxya-plugin-crawler-html:testing
     init: true
     networks:
-      plugin:
+      processor:
         aliases:
           - isoxya-plugin-crawler-html.localhost
     restart: on-failure
   nginx_test_upstream:
     image: docker.io/tiredpixel/nginx-test-upstream:latest
     networks:
-      plugin:
+      streamer:
         aliases:
           - nginx-test-upstream.localhost
     restart: on-failure
 networks:
   api: {}
-  plugin: {}
+  processor: {}
+  streamer: {}

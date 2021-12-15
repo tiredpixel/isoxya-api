@@ -10,11 +10,13 @@ services:
       - ./test:/home/x/repo/test
     networks:
       - api
-      - plugin
+      - processor
+      - streamer
     ports:
       - 0.0.0.0:80:80
     restart: on-failure
     env_file: .env
 networks:
   api: {}
-  plugin: {}
+  processor: {}
+  streamer: {}
