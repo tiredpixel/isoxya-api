@@ -6,10 +6,10 @@ source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
 ask "channels (Pro)" null
 channels=$ASK_BUF
 
-ask "tag" nginx-test-upstream
+ask "tag" nginx
 tag=$ASK_BUF
 
-ask "url" http://nginx-test-upstream.localhost
+ask "url" http://isoxya-plugin-nginx.localhost
 url=$ASK_BUF
 #-------------------------------------------------------------------------------
 j=$(cat <<-EOT

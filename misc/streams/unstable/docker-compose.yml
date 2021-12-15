@@ -18,12 +18,12 @@ services:
         aliases:
           - isoxya-plugin-crawler-html.localhost
     restart: on-failure
-  nginx_test_upstream:
-    image: docker.io/tiredpixel/nginx-test-upstream:latest
+  plugin_nginx:
+    image: docker.io/isoxya/isoxya-plugin-nginx:latest
     networks:
       streamer:
         aliases:
-          - nginx-test-upstream.localhost
+          - isoxya-plugin-nginx.localhost
     restart: on-failure
 networks:
   api: {}
