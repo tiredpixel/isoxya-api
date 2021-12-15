@@ -31,12 +31,12 @@ import qualified Isoxya.DB                       as D
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 data Apex = Apex {
-    apexNow     :: UTCTime,
+    apexTime    :: UTCTime,
     apexVersion :: Text
     } deriving (Show)
 instance ToJSON Apex where
     toJSON Apex{..} = object [
-        "now"     .= apexNow,
+        "time"    .= apexTime,
         "version" .= apexVersion]
 
 data Crawl = Crawl {

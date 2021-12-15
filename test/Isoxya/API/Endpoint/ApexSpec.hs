@@ -12,6 +12,6 @@ spec = snapAPI $
             res <- runRequest req
             rspStatus res `shouldBe` 200
             b <- getResponseBody res
-            b ^. key "now" . _String `shouldContain` "T"
+            b ^. key "time" . _String `shouldContain` "T"
             b ^. key "version" . _String `shouldBe` "0.0.0"
             b ^. _Object `shouldMeasure` 2
