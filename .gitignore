@@ -3,5 +3,4 @@
 /dist-newstyle/
 /dist/
 /docker-compose*.yml
-/misc/eg/*/.isoxya/
-/test/log/
+/misc/streams/*/.isoxya/

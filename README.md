@@ -17,7 +17,7 @@ https://github.com/isoxya/isoxya-api
 Choose a stream: `stable` (recommended), `testing`, or `unstable`:
 
 ```sh
-cd misc/eg/stable/
+cd misc/streams/stable/
 ```
 
 Boot the stack:
