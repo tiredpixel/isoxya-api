@@ -20,6 +20,12 @@ Choose a stream: `stable` (recommended), `testing`, or `unstable`:
 cd misc/streams/stable/
 ```
 
+Copy environment variables:
+
+```sh
+cp .env.example .env
+```
+
 Boot the stack:
 
 ```sh
