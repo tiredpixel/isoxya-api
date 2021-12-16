@@ -1,0 +1,35 @@
+#!/bin/bash -eu
+set -o pipefail
+
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../x-lib.sh"
+#-------------------------------------------------------------------------------
+j_urls=$(xargs -I {} echo '"{}",' | sed '$ s/.$//')
+#-------------------------------------------------------------------------------
+ask "site.href" "${SITE_HREF:-}"
+site_href=$ASK_BUF
+#-------------------------------------------------------------------------------
+j=$(cat <<-EOT
+	{
+	}
+	EOT
+    )
+echo "$j" | jqd
+
+lst=$(
+    curl_ -X POST -d "$j" "$ENDPOINT_URL$site_href/list"
+)
+echo "$lst" | jq_
+echo "$lst" | jq_ -r '.href' | grep -v 'null' >> "$LIST_HREF_"
+reload_vars
+#-------------------------------------------------------------------------------
+j=$(cat <<-EOT
+	{
+	  "urls": [$j_urls]
+	}
+	EOT
+    )
+echo "$j" | jqd
+
+curl_ -X POST -d "$j" "$ENDPOINT_URL$LIST_HREF/list_page" | jq_
+
+curl_ "$ENDPOINT_URL$LIST_HREF" | jq_

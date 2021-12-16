@@ -1,0 +1,23 @@
+#!/bin/bash -eu
+set -o pipefail
+
+href_=${1:-}
+
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../x-lib.sh"
+#-------------------------------------------------------------------------------
+if [ -z "$href_" ]; then
+    ask "href" "${CRAWL_HREF:-}"
+    href=$ASK_BUF
+else
+    href=$href_
+fi
+#-------------------------------------------------------------------------------
+j=$(cat <<-EOT
+	{
+	  "status": "canceled"
+	}
+	EOT
+    )
+echo "$j" | jqd
+
+curl_ -X PATCH -d "$j" "$ENDPOINT_URL$href" | jq_

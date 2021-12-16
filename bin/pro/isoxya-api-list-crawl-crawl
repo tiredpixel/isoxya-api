@@ -1,0 +1,11 @@
+#!/bin/bash -eu
+set -o pipefail
+
+q=${1:-}
+
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../x-lib.sh"
+#-------------------------------------------------------------------------------
+ask "crawl.href" "${CRAWL_HREF:-}"
+crawl_href=$ASK_BUF
+#-------------------------------------------------------------------------------
+curl_ -f "$ENDPOINT_URL$crawl_href/crawl?$q" | jq_
