@@ -6,6 +6,31 @@ source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
 ask "site.href" "${SITE_HREF:-}"
 site_href=$ASK_BUF
 #-------------------------------------------------------------------------------
+ask "agent (Pro)" null
+if [ "$ASK_BUF" == "null" ]; then
+    j_agent=null
+else
+    j_agent="\"$ASK_BUF\""
+fi
+
+ask "depth_max (Pro)" null
+depth_max=$ASK_BUF
+
+ask_opts "list.href (Pro)" 0 null "${LIST_HREF:-}"
+if [ "$ASK_BUF" == "null" ]; then
+    j_list=null
+else
+    j_list=$(cat <<-EOT
+	  {
+	    "href": "$ASK_BUF"
+	  }
+	EOT
+        )
+fi
+
+ask "pages_max (Pro)" null
+pages_max=$ASK_BUF
+
 ask "processor_config" null
 processor_config=$ASK_BUF
 
@@ -14,12 +39,20 @@ j_processors=$(echo "$ASK_BUF" | tr ' ' '\n' | xargs -I {} echo '{"href": "{}"},
 
 ask "streamers.hrefs" "${STREAMER_HREF:-}"
 j_streamers=$(echo "$ASK_BUF" | tr ' ' '\n' | xargs -I {} echo '{"href": "{}"},' | sed '$ s/.$//' | tr '\n' ' ')
+
+ask "validate (Pro)" null
+validate=$ASK_BUF
 #-------------------------------------------------------------------------------
 j=$(cat <<-EOT
 	{
+	  "agent": $j_agent,
+	  "depth_max": $depth_max,
+	  "list": $j_list,
+	  "pages_max": $pages_max,
 	  "processor_config": $processor_config,
 	  "processors": [$j_processors],
-	  "streamers": [$j_streamers]
+	  "streamers": [$j_streamers],
+	  "validate": $validate
 	}
 	EOT
     )
