@@ -1,7 +1,9 @@
 /*.env
-/.isoxya/
+/.isoxya
 /dist-newstyle/
 /dist/
 /docker-compose*.yml
 /misc/streams/*/*.env
-/misc/streams/*/.isoxya/
+/misc/streams/*/.isoxya
+
+# .isoxya is used rather than .isoxya/ , to allow symlinks
