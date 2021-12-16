@@ -25,9 +25,8 @@ j=$(cat <<-EOT
     )
 echo "$j" | jqd
 
-c=$(
-    curla -X POST -d "$j" "$ENDPOINT_URL$site_href/crawl"
+crl=$(
+    curl_ -X POST -d "$j" "$ENDPOINT_URL$site_href/crawl"
 )
-echo "$c" | jq
-echo "$c" | jq -r '.href' | grep -v 'null' >> "$CRAWL_HREF_"
-#-------------------------------------------------------------------------------
+echo "$crl" | jq_
+echo "$crl" | jq_ -r '.href' | grep -v 'null' >> "$CRAWL_HREF_"

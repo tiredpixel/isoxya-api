@@ -8,9 +8,6 @@ export NETRC="$DIR/netrc"
 export SES_JSON="$DIR/ses.json"
 export SES_JSON_SIG="$DIR/ses.json.sha256.sig.base64"
 
-curl_=$(which curl)
-jq_=$(which jq)
-
 ISOXYA_DEBUG=${ISOXYA_DEBUG:-0}
 #-------------------------------------------------------------------------------
 function ask() {
@@ -54,27 +51,26 @@ function cache_var() {
     test -f "${!v_}" && export declare "$v=$(tail -n1 "${!v_}")" || true
 }
 
-function curl() {
+function curl_() {
     if [ "$ISOXYA_DEBUG" == "1" ]; then
-        $curl_ -sv "$@"
+        curl -sv "$@"
     else
-        $curl_ -s "$@"
+        curl -s "$@"
     fi
 }
 
 function curla() {
-    curl --netrc-file "$DIR/netrc" "$@"
+    curl_ --netrc-file "$DIR/netrc" "$@"
 }
 
-# shellcheck disable=SC2120
-function jq() {
-    $jq_ -S "$@"
+function jq_() {
+    jq -S "$@"
 }
 
 # shellcheck disable=SC2120
 function jqd() {
     if [ "$ISOXYA_DEBUG" == "1" ]; then
-        $jq_ -S "$@"
+        jq_ "$@"
     fi
 }
 
@@ -92,4 +88,3 @@ cache_var LIST_HREF
 cache_var PROCESSOR_HREF
 cache_var SITE_HREF
 cache_var STREAMER_HREF
-#-------------------------------------------------------------------------------
