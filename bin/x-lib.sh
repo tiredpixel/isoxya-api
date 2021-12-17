@@ -2,12 +2,6 @@
 set -o pipefail
 
 export DIR=".isoxya"
-export KEY_PRI_PEM="$DIR/pri.pem"
-export KEY_PUB_PEM="$DIR/pub.pem"
-export NETRC="$DIR/netrc"
-export SES_JSON="$DIR/ses.json"
-export SES_JSON_SIG="$DIR/ses.json.sha256.sig.base64"
-
 ISOXYA_DEBUG=${ISOXYA_DEBUG:-0}
 #-------------------------------------------------------------------------------
 function ask() {
@@ -57,10 +51,6 @@ function curl_() {
     else
         curl -s "$@"
     fi
-}
-
-function curla() {
-    curl_ --netrc-file "$DIR/netrc" "$@"
 }
 
 function jq_() {
