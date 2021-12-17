@@ -101,7 +101,6 @@ library lib-isoxya-api
         Isoxya.Processor
         Isoxya.Streamer
     other-modules:
-        Isoxya.API.Auth
         Isoxya.API.Endpoint.Apex
         Isoxya.API.Endpoint.Crawl
         Isoxya.API.Endpoint.Processor
@@ -121,7 +120,6 @@ library lib-isoxya-api
         Isoxya.Msg.Type
         Isoxya.Processor.Processor
         Isoxya.Streamer.Processor
-        Isoxya.URI
         Paths_isoxya_api
     build-depends:
         aeson,

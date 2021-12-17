@@ -14,6 +14,7 @@ apex :: Handler b API ()
 apex = do
     d <- gets _db
     t <- liftIO getCurrentTime
-    let v = toText $ showVersion version
     _ <- D.ping d
-    writeJSON $ Apex t v
+    writeJSON $ Apex t ver
+    where
+        ver = toText $ showVersion version

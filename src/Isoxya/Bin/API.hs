@@ -32,7 +32,6 @@ makeLenses ''App
 
 main :: IO ()
 main = do
-    let ver = toText $ showVersion version
     hPutStrLn stderr $ "Isoxya API " <> toString ver
     done <- S.init
     tId <- forkIO $ L.withLog $ \l -> do
@@ -43,14 +42,13 @@ main = do
         D.withConnS $ \d -> do
             D.setForeignKeys True d
             D.migrate migrations d
-            _ <- forkIO $ M.rx mCrwl $
-                Crawler.process l ver mProc n d
-            _ <- forkIO $ M.rx mProc $
-                Processor.process l mStrm mCrwl n d
-            _ <- forkIO $ M.rx mStrm $
-                Streamer.process l n d
+            _ <- forkIO $ M.rx mCrwl $ Crawler.process l ver mProc n d
+            _ <- forkIO $ M.rx mProc $ Processor.process l mStrm mCrwl n d
+            _ <- forkIO $ M.rx mStrm $ Streamer.process l n d
             serveSnaplet S.config $ initApp mCrwl d
     S.wait done tId
+    where
+        ver = toText $ showVersion version
 
 
 initApp :: M.ChanCrawler -> D.Conn -> SnapletInit App App

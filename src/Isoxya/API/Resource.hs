@@ -23,13 +23,12 @@ module Isoxya.API.Resource (
 import           Data.Aeson
 import           Data.Time.Clock
 import           Isoxya.API.Href
-import           Isoxya.URI
 import           Network.URI
 import           TiredPixel.Common.Snap.CoreUtil
 import           TiredPixel.Common.URI
 import qualified Isoxya.DB                       as D
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+
+
 data Apex = Apex {
     apexTime    :: UTCTime,
     apexVersion :: Text
@@ -140,16 +139,16 @@ instance ValidateJSON StreamerC
 
 genCrawl :: D.Site -> D.Crawl -> Crawl
 genCrawl st crl = Crawl {
-    crawlHref             = toRouteHref (D.siteURL st, D.crawlSiteV crl),
-    crawlSite             = genSite st,
-    crawlStatus           = D.crawlStatus crl,
-    crawlPages            = D.crawlPages crl,
-    crawlProgress         = D.crawlProgress crl,
-    crawlBegan            = D.unSiteV $ D.crawlSiteV crl,
-    crawlEnded            = D.crawlEnded crl,
-    crawlProcessorConfig  = D.crawlProcessorConfig crl,
-    crawlProcessorHrefs   = map toRouteHref $ D.crawlProcessorIds crl,
-    crawlStreamerHrefs    = map toRouteHref $ D.crawlStreamerIds crl}
+    crawlHref            = toRouteHref (D.siteURL st, D.crawlSiteV crl),
+    crawlSite            = genSite st,
+    crawlStatus          = D.crawlStatus crl,
+    crawlPages           = D.crawlPages crl,
+    crawlProgress        = D.crawlProgress crl,
+    crawlBegan           = D.unSiteV $ D.crawlSiteV crl,
+    crawlEnded           = D.crawlEnded crl,
+    crawlProcessorConfig = D.crawlProcessorConfig crl,
+    crawlProcessorHrefs  = map toRouteHref $ D.crawlProcessorIds crl,
+    crawlStreamerHrefs   = map toRouteHref $ D.crawlStreamerIds crl}
 
 genProcessor :: D.Processor -> Processor
 genProcessor pro = Processor {
@@ -167,12 +166,8 @@ genStreamer str = Streamer {
     streamerHref = toRouteHref $ D.streamerId str,
     streamerURL  = D.unStreamerURL $ D.streamerURL str,
     streamerTag  = D.streamerTag str}
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-objHref :: ToJSON v => Maybe v -> Value
-objHref (Just v) = object ["href" .= v]
-objHref Nothing  = Null
---------------------------------------------------------------------------------
+
+
 instance FromJSON D.CrawlStatus where
     parseJSON = withText "CrawlStatus" $ \case
         "pending"   -> pure D.CrawlStatusPending
@@ -186,3 +181,7 @@ instance ToJSON D.CrawlStatus where
         D.CrawlStatusCompleted -> "completed"
         D.CrawlStatusLimited   -> "limited"
         D.CrawlStatusCanceled  -> "canceled") :: Text)
+
+objHref :: ToJSON v => Maybe v -> Value
+objHref (Just v) = object ["href" .= v]
+objHref Nothing  = Null

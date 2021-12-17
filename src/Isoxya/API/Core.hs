@@ -1,6 +1,5 @@
 module Isoxya.API.Core (
     module Data.Aeson,
-    module Isoxya.API.Auth,
     module Isoxya.API.Find,
     module Isoxya.API.Href,
     module Isoxya.API.Resource,
@@ -13,7 +12,6 @@ module Isoxya.API.Core (
 
 
 import Data.Aeson
-import Isoxya.API.Auth
 import Isoxya.API.Find
 import Isoxya.API.Href
 import Isoxya.API.Resource

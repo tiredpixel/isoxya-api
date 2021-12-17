@@ -14,13 +14,13 @@ createWithSite :: Handler b API ()
 createWithSite = do
     m <- gets _msgCrwl
     d <- gets _db
-    Just (st, stId) <- run notFound $ fCrawls AW d
+    Just (st, stId) <- run notFound $ fCrawls d
     req_ <- getJSON' >>= validateJSON
     Just req <- runValidate req_
     Just pros <- run notFound $ mapM (\proH ->
-        fProcessorHref (Just proH) AR d) (crawlCProcessorHrefs req)
+        fProcessorHref (Just proH) d) (crawlCProcessorHrefs req)
     Just strs <- run notFound $ mapM (\strH ->
-        fStreamerHref (Just strH) AR d) (crawlCStreamerHrefs req)
+        fStreamerHref (Just strH) d) (crawlCStreamerHrefs req)
     Just stV <- D.cCrawl stId (crawlCProcessorConfig req)
         (snd <$> pros) (snd <$> strs) d
     Just crl <- D.rCrawl (stId, stV) d
@@ -33,7 +33,7 @@ createWithSite = do
 listWithSite :: Handler b API ()
 listWithSite = do
     d <- gets _db
-    Just (st, stId) <- run notFound $ fCrawls AR d
+    Just (st, stId) <- run notFound $ fCrawls d
     cur <- parseReq
     crls <- D.lCrawl stId cur d
     setResLink (unCrawlsHref (toRouteHref (D.siteURL st) :: CrawlsHref))
@@ -46,5 +46,5 @@ listWithSite = do
 readWithSite :: Handler b API ()
 readWithSite = do
     d <- gets _db
-    Just ((st, crl), _) <- run notFound $ fCrawl AR d
+    Just ((st, crl), _) <- run notFound $ fCrawl d
     writeJSON $ genCrawl st crl
