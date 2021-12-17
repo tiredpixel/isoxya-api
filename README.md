@@ -7,9 +7,19 @@ https://hub.docker.com/r/isoxya/isoxya-api
 https://github.com/isoxya/isoxya-api  
 
 
+## Tutorial
+
+To get started, follow the [tutorial](https://github.com/isoxya/isoxya-docs/blob/unstable/Tutorial.md).
+
+
+## Documentation
+
+The API uses REST and JSON, and [documentation](https://github.com/isoxya/isoxya-docs) is available as a repo.
+
+
 ## Dependencies
 
-- [jq](https://stedolan.github.io/jq/) (for scripts only)
+- [jq](https://stedolan.github.io/jq/) (for `bin/` example scripts only)
 
 
 ## Installation
@@ -18,12 +28,6 @@ Choose a stream: `stable` (recommended), `testing`, or `unstable`:
 
 ```sh
 cd misc/streams/stable/
-```
-
-Copy environment variables:
-
-```sh
-cp .env.example .env
 ```
 
 Boot the stack:
