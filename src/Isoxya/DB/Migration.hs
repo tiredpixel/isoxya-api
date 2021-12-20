@@ -43,7 +43,7 @@ m1638201652 d =
         \ "
         q13 = " \
         \   /* m1638201652.13 */ \
-        \   CREATE VIEW d_processor_0 AS \
+        \   CREATE VIEW processor_0 AS \
         \    SELECT processor.processor_id, \
         \       processor.url, \
         \       processor.tag, \
@@ -61,7 +61,7 @@ m1638201652 d =
         \ "
         q18 = " \
         \   /* m1638201652.18 */ \
-        \   CREATE VIEW d_streamer_0 AS \
+        \   CREATE VIEW streamer_0 AS \
         \    SELECT streamer.streamer_id, \
         \       streamer.url, \
         \       streamer.tag, \
@@ -79,7 +79,7 @@ m1638201652 d =
         \ "
         q27 = " \
         \   /* m1638201652.27 */ \
-        \   CREATE VIEW d_site_0 AS \
+        \   CREATE VIEW site_0 AS \
         \    SELECT site.site_id, \
         \       site.url, \
         \       site.inserted \
@@ -99,7 +99,7 @@ m1638201652 d =
         \ "
         q32 = " \
         \   /* m1638201652.32 */ \
-        \   CREATE VIEW d_page_0 AS \
+        \   CREATE VIEW page_0 AS \
         \    SELECT page.page_id, \
         \       page.site_id, \
         \       page.url \
@@ -173,7 +173,7 @@ m1638201652 d =
         \ "
         q73 = " \
         \   /* m1638201652.73 */ \
-        \   CREATE VIEW d_crawl_0 AS \
+        \   CREATE VIEW crawl_0 AS \
         \   SELECT \
         \       c.site_id, \
         \       c.site_v, \

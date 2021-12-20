@@ -15,8 +15,7 @@ import qualified Network.HTTP.Conduit          as HTTP
 import qualified TiredPixel.Common.SQLite.Conn as D
 
 
-cEntryURLs :: MonadIO m =>
-    Site -> Crawl -> D.Conn -> m [()]
+cEntryURLs :: MonadIO m => Site -> Crawl -> D.Conn -> m [()]
 cEntryURLs st crl d = do
     pgIds <- urlsPageIds st (S.fromList urls) d
     cCrawlPagesEntry (crawlId crl) (crawlProcessorIds crl) pgIds d
@@ -24,13 +23,11 @@ cEntryURLs st crl d = do
         urls = unSiteURL . pageURLAbs (siteURL st) . PageURL <$>
             catMaybes [parseURIReference "/"]
 
-pageURLAbs ::
-    SiteURL -> PageURL -> SiteURL
+pageURLAbs :: SiteURL -> PageURL -> SiteURL
 pageURLAbs stURL pgURL = SiteURL $
     relativeTo (unPageURL pgURL) (unSiteURL stURL)
 
-urlsPageIds :: MonadIO m =>
-    Site -> Set URI -> D.Conn -> m [PageId]
+urlsPageIds :: MonadIO m => Site -> Set URI -> D.Conn -> m [PageId]
 urlsPageIds st urls d = do
     urls' <- mapM c2 $ toList urls
     let urls'' = catMaybes urls'
@@ -45,29 +42,26 @@ urlsPageIds st urls d = do
                 Nothing  -> return Nothing
 
 
-decomposeURL :: (MonadFail m, MonadIO m) =>
-    URI -> D.Conn -> m (Maybe Page)
+decomposeURL :: (MonadFail m, MonadIO m) => URI -> D.Conn -> m (Maybe Page)
 decomposeURL url d = do
     req <- liftIO $ HTTP.parseRequest $ show url
     pg <- storeReq req d
     return $ Just pg
 
-decomposeURLInt :: (MonadFail m, MonadIO m) =>
-    Site -> URI -> D.Conn -> m (Maybe Page)
+decomposeURLInt :: (MonadFail m, MonadIO m) => Site -> URI -> D.Conn ->
+    m (Maybe Page)
 decomposeURLInt st url d = do
     req <- liftIO $ HTTP.parseRequest $ show url
     if reqURISite req == unSiteURL (siteURL st)
         then decomposeURL url d
         else return Nothing
 
-handleInvalidURL :: MonadIO m =>
-    HTTP.HttpException -> m (Maybe a)
+handleInvalidURL :: MonadIO m => HTTP.HttpException -> m (Maybe a)
 handleInvalidURL ex = case ex of
     HTTP.InvalidUrlException _ _ -> return Nothing
     _                            -> bug ex
 
-storeReq :: (MonadFail m, MonadIO m) =>
-    HTTP.Request -> D.Conn -> m Page
+storeReq :: (MonadFail m, MonadIO m) => HTTP.Request -> D.Conn -> m Page
 storeReq req d = do
     Just st <- rSiteIns (SiteURL stURL) d
     Just pg <- rPageIns (st, PageURL pgURL) d

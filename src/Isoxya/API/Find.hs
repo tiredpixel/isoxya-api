@@ -10,7 +10,7 @@ module Isoxya.API.Find (
 
 
 import           Isoxya.API.Href
-import           Snap.Core                       hiding (pass)
+import           Snap.Core
 import           TiredPixel.Common.Snap.CoreUtil
 import qualified Isoxya.DB                       as D
 
