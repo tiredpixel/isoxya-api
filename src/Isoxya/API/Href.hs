@@ -82,10 +82,10 @@ instance ToJSON SiteHref where
 newtype StreamerHref = StreamerHref { unStreamerHref :: ByteString
     } deriving (Show)
 instance RouteHref StreamerHref D.StreamerId where
-    toRouteHref p = StreamerHref $ streamers <> "/" <> fromRouteId p
+    toRouteHref s = StreamerHref $ streamers <> "/" <> fromRouteId s
     fromRouteHref h = do
-        ["", "streamer", p] <- return $ C8.split '/' $ unStreamerHref h
-        toRouteId p
+        ["", "streamer", s] <- return $ C8.split '/' $ unStreamerHref h
+        toRouteId s
 instance FromJSON StreamerHref where
     parseJSON = withText "streamer.href" $ pure . StreamerHref . encodeUtf8
 instance ToJSON StreamerHref where

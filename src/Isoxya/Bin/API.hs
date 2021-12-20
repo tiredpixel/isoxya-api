@@ -36,22 +36,22 @@ main = do
     done <- S.init
     tId <- forkIO $ L.withLog $ \l -> do
         n <- N.openConn
-        mCrwl <- newChan
-        mProc <- newChan
-        mStrm <- newChan
+        mCrl <- newChan
+        mPro <- newChan
+        mStr <- newChan
         D.withConnS $ \d -> do
             D.setForeignKeys True d
             D.migrate migrations d
-            _ <- forkIO $ M.rx mCrwl $ Crawler.process l ver mProc n d
-            _ <- forkIO $ M.rx mProc $ Processor.process l mStrm mCrwl n d
-            _ <- forkIO $ M.rx mStrm $ Streamer.process l n d
-            serveSnaplet S.config $ initApp mCrwl d
+            _ <- forkIO $ M.rx mCrl $ Crawler.process l mPro n d
+            _ <- forkIO $ M.rx mPro $ Processor.process l mStr mCrl n d
+            _ <- forkIO $ M.rx mStr $ Streamer.process l n d
+            serveSnaplet S.config $ initApp mCrl d
     S.wait done tId
     where
         ver = toText $ showVersion version
 
 
 initApp :: M.ChanCrawler -> D.Conn -> SnapletInit App App
-initApp mCrwl d = makeSnaplet "App" "" Nothing $ do
-    api' <- nestSnaplet "" api $ initAPI mCrwl d
+initApp mCrl d = makeSnaplet "App" "" Nothing $ do
+    api' <- nestSnaplet "" api $ initAPI mCrl d
     return $ App api'

@@ -14,11 +14,10 @@ import qualified Isoxya.DB             as D
 create :: Handler b API ()
 create = do
     d <- gets _db
-    Just _ <- run notFound $ fProcessors d
     req_ <- getJSON' >>= validateJSON
     Just req <- runValidate req_
-    Just proId <- D.cProcessor
-        (unURIAbsolute $ processorCURL req) (processorCTag req) d
+    Just proId <- D.cProcessor (unURIAbsolute $ processorCURL req)
+        (processorCTag req) d
     Just pro <- D.rProcessor proId d
     let r = genProcessor pro
     created (unProcessorHref $ processorHref r) r
@@ -26,7 +25,6 @@ create = do
 list :: Handler b API ()
 list = do
     d <- gets _db
-    Just _ <- run notFound $ fProcessors d
     cur <- parseReq
     pros <- D.lProcessor cur d
     setResLink (unProcessorsHref (toRouteHref () :: ProcessorsHref))

@@ -14,11 +14,10 @@ import qualified Isoxya.DB             as D
 create :: Handler b API ()
 create = do
     d <- gets _db
-    Just _ <- run notFound $ fStreamers d
     req_ <- getJSON' >>= validateJSON
     Just req <- runValidate req_
-    Just strId <- D.cStreamer
-        (unURIAbsolute $ streamerCURL req) (streamerCTag req) d
+    Just strId <- D.cStreamer (unURIAbsolute $ streamerCURL req)
+        (streamerCTag req) d
     Just str <- D.rStreamer strId d
     let r = genStreamer str
     created (unStreamerHref $ streamerHref r) r
@@ -26,7 +25,6 @@ create = do
 list :: Handler b API ()
 list = do
     d <- gets _db
-    Just _ <- run notFound $ fStreamers d
     cur <- parseReq
     strs <- D.lStreamer cur d
     setResLink (unStreamersHref (toRouteHref () :: StreamersHref))

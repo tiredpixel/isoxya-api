@@ -35,7 +35,7 @@ process l n d (strId, msg) = do
     L.debug l $ show res
     L.info l $
         decodeUtf8 (unCrawlHref $
-            toRouteHref (D.siteURL st, D.crawlSiteV crl)) <> " STRM " <>
+            toRouteHref (D.siteURL st, D.crawlSiteV crl)) <> " STR " <>
         show (D.unStreamerId $ D.streamerId str) <> " " <>
         show (D.unSiteURL $ D.siteURL st) <>
         show (D.unPageURL $ D.pageURL pg) <> " " <>

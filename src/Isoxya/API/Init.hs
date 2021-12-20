@@ -18,9 +18,9 @@ import qualified TiredPixel.Common.SQLite.Conn   as D
 
 
 initAPI :: M.ChanCrawler -> D.Conn -> SnapletInit b API
-initAPI mCrwl d = makeSnaplet "API" "" Nothing $ do
+initAPI mCrl d = makeSnaplet "API" "" Nothing $ do
     addRoutes routesAPI
-    return $ API mCrwl d
+    return $ API mCrl d
 
 routesAPI :: [(ByteString, Handler b API ())]
 routesAPI = [

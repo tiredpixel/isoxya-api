@@ -20,7 +20,7 @@ import qualified TiredPixel.Common.Net              as N
 
 process :: L.Logger -> M.ChanStreamer -> M.ChanCrawler -> N.Conn -> D.Conn ->
     M.MsgProcessor -> IO ()
-process l mStrm mCrwl n d (proId, msg) = do
+process l mStr mCrl n d (proId, msg) = do
     Just pro <- D.rProcessor proId d
     L.debug l $ show pro
     Just crl <- D.rCrawl (M.crawlPageSiteId msg, M.crawlPageSiteV msg) d
@@ -44,11 +44,11 @@ process l mStrm mCrwl n d (proId, msg) = do
         (D.processorId pro) pgIdsInt d
     pgIds <- D.lCrawlPagePageId (D.crawlId crl) (M.crawlPagePageId msg)
         (M.crawlPagePageV msg) (D.processorId pro) d
-    _ <- M.txCrawlPageIds st (D.crawlId crl) pgIds mCrwl
-    _ <- M.txCrawlPageData crl msg pro (processorOData rx) mStrm
+    _ <- M.txCrawlPageIds st (D.crawlId crl) pgIds mCrl
+    _ <- M.txCrawlPageData crl msg pro (processorOData rx) mStr
     L.info l $
         decodeUtf8 (unCrawlHref $
-            toRouteHref (D.siteURL st, D.crawlSiteV crl)) <> " PROC " <>
+            toRouteHref (D.siteURL st, D.crawlSiteV crl)) <> " PRO " <>
         show (D.unProcessorId $ D.processorId pro) <> " " <>
         show (D.unSiteURL $ D.siteURL st) <>
         show (D.unPageURL $ D.pageURL pg) <> " " <>

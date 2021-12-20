@@ -12,7 +12,7 @@ import qualified Isoxya.Msg      as M
 
 createWithSite :: Handler b API ()
 createWithSite = do
-    m <- gets _msgCrwl
+    m <- gets _msgCrl
     d <- gets _db
     Just (st, stId) <- run notFound $ fCrawls d
     req_ <- getJSON' >>= validateJSON
@@ -21,8 +21,8 @@ createWithSite = do
         fProcessorHref (Just proH) d) (crawlCProcessorHrefs req)
     Just strs <- run notFound $ mapM (\strH ->
         fStreamerHref (Just strH) d) (crawlCStreamerHrefs req)
-    Just stV <- D.cCrawl stId (crawlCProcessorConfig req)
-        (snd <$> pros) (snd <$> strs) d
+    Just stV <- D.cCrawl stId
+        (crawlCProcessorConfig req) (snd <$> pros) (snd <$> strs) d
     Just crl <- D.rCrawl (stId, stV) d
     _ <- D.cEntryURLs st crl d
     pgIds <- D.lCrawlPagePageIdEntry (stId, stV) d

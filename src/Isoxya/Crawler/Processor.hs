@@ -4,7 +4,9 @@ module Isoxya.Crawler.Processor (process) where
 import           Control.Concurrent              (threadDelay)
 import           Control.Exception               (handle)
 import           Data.Time.Clock
+import           Data.Version                    (showVersion)
 import           Isoxya.API.Href
+import           Paths_isoxya_api                (version)
 import           TiredPixel.Common.Snap.CoreUtil
 import qualified Isoxya.DB                       as D
 import qualified Isoxya.Msg                      as M
@@ -14,17 +16,17 @@ import qualified TiredPixel.Common.Log           as L
 import qualified TiredPixel.Common.Net           as N
 
 
-process :: L.Logger -> Text -> M.ChanProcessor -> N.Conn -> D.Conn ->
-    M.MsgCrawler -> IO ()
-process l ver mProc n d (stId, msg) = do
+process :: L.Logger -> M.ChanProcessor -> N.Conn -> D.Conn -> M.MsgCrawler ->
+    IO ()
+process l mPro n d (stId, msg) = do
     Just st <- D.rSiteId stId d
     L.debug l $ show st
     Just crl <- D.rCrawl (M.crawlPageIdSiteId msg, M.crawlPageIdSiteV msg) d
     L.debug l $ show crl
     Just pg <- D.rPageId (D.crawlSiteId crl, M.crawlPageIdPageId msg) d
     let reqURL = D.pageURLAbs (D.siteURL st) (D.pageURL pg)
-    let ua = userAgent ver
-    let req = N.userAgentReq ua $ N.makeReq "GET" (D.unSiteURL reqURL) ""
+    let req = N.userAgentReq (encodeUtf8 $ userAgent ver) $ N.makeReq "GET"
+            (D.unSiteURL reqURL) ""
     L.debug l $ show req
     tR <- getCurrentTime
     crlPg <- handle (httpH l (D.crawlId crl) (D.pageId pg) req tR) $ do
@@ -33,10 +35,10 @@ process l ver mProc n d (stId, msg) = do
         M.genCrawlPageResponse (D.crawlId crl) (D.pageId pg) req res tR <$>
             getCurrentTime
     L.debug l $ show crlPg
-    _ <- M.txCrawlPage crl crlPg mProc
+    _ <- M.txCrawlPage crl crlPg mPro
     L.info l $
         decodeUtf8 (unCrawlHref $
-            toRouteHref (D.siteURL st, D.crawlSiteV crl)) <> " CRWL " <>
+            toRouteHref (D.siteURL st, D.crawlSiteV crl)) <> " CRL " <>
         decodeUtf8 (M.crawlPageRequestMethod $
             M.crawlPageRequest crlPg) <> " " <>
         show (D.unSiteURL $ D.siteURL st) <>
@@ -45,6 +47,7 @@ process l ver mProc n d (stId, msg) = do
     limitRate l
     where
         reqLim = 1048576 -- 1 MB
+        ver = toText $ showVersion version
 
 
 httpH :: L.Logger -> D.CrawlId -> D.PageId -> HTTP.Request -> UTCTime ->
@@ -60,8 +63,8 @@ limitRate l = do
     where
         rateLim = 1000000 -- 1 s
 
-userAgent :: Text -> ByteString
-userAgent ver = encodeUtf8 $ toText $ R.subRegex r str (toString ver)
+userAgent :: Text -> Text
+userAgent ver = toText $ R.subRegex r str (toString ver)
     where
         str = "Isoxya/${VERSION} (+https://www.isoxya.com/)"
         r = R.mkRegex "\\$\\{VERSION\\}"

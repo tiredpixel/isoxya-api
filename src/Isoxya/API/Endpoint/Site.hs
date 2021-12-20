@@ -12,7 +12,6 @@ import qualified Isoxya.DB             as D
 create :: Handler b API ()
 create = do
     d <- gets _db
-    Just _ <- run notFound $ fSites d
     req_ <- getJSON' >>= validateJSON
     Just req <- runValidate req_
     Just stId <- D.cSite (unURISite $ siteCURL req) d
