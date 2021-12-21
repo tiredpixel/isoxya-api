@@ -21,6 +21,7 @@ module Isoxya.API.Resource (
 
 
 import           Data.Aeson
+import           Data.Fixed                      (Pico)
 import           Data.Time.Clock
 import           Isoxya.API.Href
 import           Network.URI
@@ -46,6 +47,8 @@ data Crawl = Crawl {
     crawlProgress        :: Maybe Integer,
     crawlBegan           :: UTCTime,
     crawlEnded           :: Maybe UTCTime,
+    crawlDuration        :: Maybe Pico,
+    crawlSpeed           :: Maybe Pico,
     crawlProcessorConfig :: Value,
     crawlProcessorHrefs  :: [ProcessorHref],
     crawlStreamerHrefs   :: [StreamerHref]
@@ -59,6 +62,8 @@ instance ToJSON Crawl where
         "progress"         .= crawlProgress,
         "began"            .= crawlBegan,
         "ended"            .= crawlEnded,
+        "duration"         .= crawlDuration,
+        "speed"            .= crawlSpeed,
         "processor_config" .= crawlProcessorConfig,
         "processors"       .= map (objHref . Just) crawlProcessorHrefs,
         "streamers"        .= map (objHref . Just) crawlStreamerHrefs]
@@ -144,11 +149,21 @@ genCrawl st crl = Crawl {
     crawlStatus          = D.crawlStatus crl,
     crawlPages           = D.crawlPages crl,
     crawlProgress        = D.crawlProgress crl,
-    crawlBegan           = D.unSiteV $ D.crawlSiteV crl,
+    crawlBegan           = tB,
     crawlEnded           = D.crawlEnded crl,
+    crawlDuration        = fromRational <$> duration,
+    crawlSpeed           = fromRational <$> speed,
     crawlProcessorConfig = D.crawlProcessorConfig crl,
     crawlProcessorHrefs  = map toRouteHref $ D.crawlProcessorIds crl,
     crawlStreamerHrefs   = map toRouteHref $ D.crawlStreamerIds crl}
+    where
+        tB = D.unSiteV $ D.crawlSiteV crl
+        duration = case D.crawlEnded crl of
+            Just tE -> Just $ toRational $ diffUTCTime tE tB
+            Nothing -> Nothing
+        speed = case (D.crawlPages crl, duration) of
+            (Just pages, Just dur) -> Just (toRational pages / dur)
+            _                      -> Nothing
 
 genProcessor :: D.Processor -> Processor
 genProcessor pro = Processor {
