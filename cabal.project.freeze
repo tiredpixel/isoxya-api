@@ -237,7 +237,7 @@ constraints: any.Cabal ==3.2.1.0,
              any.time-compat ==1.9.6.1,
              time-compat -old-locale,
              any.tinylog ==0.15.0,
-             any.tls ==1.5.5,
+             any.tls ==1.5.6,
              tls +compat -hans +network,
              any.transformers ==0.5.6.2,
              any.transformers-base ==0.4.6,
@@ -269,4 +269,4 @@ constraints: any.Cabal ==3.2.1.0,
              any.zlib ==0.6.2.3,
              zlib -bundled-c-zlib -non-blocking-ffi -pkg-config,
              any.zlib-bindings ==0.1.1.5
-index-state: hackage.haskell.org 2021-12-15T06:06:00Z
+index-state: hackage.haskell.org 2021-12-21T02:03:04Z
