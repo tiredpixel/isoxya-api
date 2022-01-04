@@ -41,7 +41,7 @@ main = do
         mStr <- newChan
         D.withConnS $ \d -> do
             D.setForeignKeys True d
-            D.migrate migrations d
+            D.migrate migrations schema d
             _ <- forkIO $ M.rx mCrl $ Crawler.process l mPro n d
             _ <- forkIO $ M.rx mPro $ Processor.process l mStr mCrl n d
             _ <- forkIO $ M.rx mStr $ Streamer.process l n d

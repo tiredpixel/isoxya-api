@@ -24,7 +24,7 @@ initAPITest :: SnapletInit b API
 initAPITest = makeSnaplet "API" "" Nothing $ do
     d <- liftIO D.openConnS
     liftIO $ D.setForeignKeys True d
-    liftIO $ D.migrate migrations d
+    liftIO $ D.migrate migrations schema d
     mCrl <- liftIO newChan
     addRoutes routesAPI
     return $ API mCrl d

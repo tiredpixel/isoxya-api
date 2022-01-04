@@ -1,4 +1,7 @@
-module Isoxya.DB.Migration (migrations) where
+module Isoxya.DB.Migration (
+    migrations,
+    schema,
+    ) where
 
 
 import           TiredPixel.Common.SQLite.Query
@@ -10,6 +13,9 @@ import qualified TiredPixel.Common.SQLite.Conn  as D
 migrations :: [(Integer, D.Conn -> IO ())]
 migrations = [
     (1638201652, m1638201652)]
+
+schema :: Text
+schema = "isoxya"
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 m1638201652 :: D.Conn -> IO ()
