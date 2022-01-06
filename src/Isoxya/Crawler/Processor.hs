@@ -25,7 +25,7 @@ process l mPro n d (stId, msg) = do
     L.debug l $ show crl
     Just pg <- D.rPageId (D.crawlSiteId crl, M.crawlPageIdPageId msg) d
     let reqURL = D.pageURLAbs (D.siteURL st) (D.pageURL pg)
-    let req = N.userAgentReq (encodeUtf8 $ userAgent ver) $ N.makeReq "GET"
+    let req = N.userAgentReq (encodeUtf8 agentDef) $ N.makeReq "GET"
             (D.unSiteURL reqURL) ""
     L.debug l $ show req
     tR <- getCurrentTime
@@ -47,7 +47,6 @@ process l mPro n d (stId, msg) = do
     limitRate l
     where
         reqLim = 1048576 -- 1 MB
-        ver = toText $ showVersion version
 
 
 httpH :: L.Logger -> D.CrawlId -> D.PageId -> HTTP.Request -> UTCTime ->
@@ -63,8 +62,9 @@ limitRate l = do
     where
         rateLim = 1000000 -- 1 s
 
-userAgent :: Text -> Text
-userAgent ver = toText $ R.subRegex r str (toString ver)
+agentDef :: Text
+agentDef = toText $ R.subRegex r str ver
     where
+        ver = showVersion version
         str = "Isoxya/${VERSION} (+https://www.isoxya.com/)"
         r = R.mkRegex "\\$\\{VERSION\\}"
