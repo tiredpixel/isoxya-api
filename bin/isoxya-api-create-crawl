@@ -35,10 +35,10 @@ ask "processor_config" null
 processor_config=$ASK_BUF
 
 ask "processors.hrefs" "${PROCESSOR_HREF:-}"
-j_processors=$(echo "$ASK_BUF" | tr ' ' '\n' | xargs -I {} echo '{"href": "{}"},' | sed '$ s/.$//' | tr '\n' ' ')
+j_processors=$(echo "$ASK_BUF" | tr ',' '\n' | xargs -I {} echo '{"href": "{}"},' | sed '$ s/.$//' | tr '\n' ' ')
 
 ask "streamers.hrefs" "${STREAMER_HREF:-}"
-j_streamers=$(echo "$ASK_BUF" | tr ' ' '\n' | xargs -I {} echo '{"href": "{}"},' | sed '$ s/.$//' | tr '\n' ' ')
+j_streamers=$(echo "$ASK_BUF" | tr ',' '\n' | xargs -I {} echo '{"href": "{}"},' | sed '$ s/.$//' | tr '\n' ' ')
 
 ask "validate (Pro)" null
 validate=$ASK_BUF
