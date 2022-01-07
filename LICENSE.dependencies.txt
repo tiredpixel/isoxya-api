@@ -57,7 +57,7 @@
 * terminfo
     License:  BSD3
 * text
-    License:  BSD2
+    License:  BSD-2-Clause
 * time
     License:  BSD-2-Clause
 * transformers
