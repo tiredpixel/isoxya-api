@@ -1,0 +1,9 @@
+#!/bin/bash -eu
+set -o pipefail
+
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
+#-------------------------------------------------------------------------------
+ask "endpoint" http://localhost
+echo "$ASK_BUF" > "$ENDPOINT_URL_"
+#-------------------------------------------------------------------------------
+"$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/isoxya-api-apex"

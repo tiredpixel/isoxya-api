@@ -1,0 +1,18 @@
+#!/bin/bash -eu
+set -o pipefail
+
+href_=${1:-}
+
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
+#-------------------------------------------------------------------------------
+if [ -z "$href_" ]; then
+    ask "href" null
+    href=$ASK_BUF
+else
+    href=$href_
+fi
+#-------------------------------------------------------------------------------
+curl_ -X DELETE "$ENDPOINT_URL$href" | jq_
+#-------------------------------------------------------------------------------
+grep -l -Z "$href" "$DIR"/*_HREF | xargs -r -0 sed -i "s|^$href$||g" || true
+rm -rf "$DIR$href"

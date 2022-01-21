@@ -1,0 +1,210 @@
+cabal-version:          3.0
+name:                   isoxya-api
+version:                0.0.0
+synopsis:               Isoxya API
+license:                BSD-3-Clause
+author:                 Nic Williams <tp@tiredpixel.com>
+maintainer:             Nic Williams <tp@tiredpixel.com>
+--------------------------------------------------------------------------------
+common common-properties
+    build-depends:
+        base                            ^>= 4.14.3.0,
+        relude
+    mixins:
+        base                            hiding (Prelude),
+        relude                          (Relude as Prelude)
+    default-language:   Haskell2010
+    default-extensions:
+        OverloadedStrings
+    ghc-options:
+        -Wall
+        -Werror
+        -Wunused-packages
+--------------------------------------------------------------------------------
+-- HACK: hspec-snap 1.0.2.0 breaks on Haskell 8.10, base 4.14.3.0
+library hspec-snap
+    exposed-modules:
+        Test.Hspec.Snap
+    build-depends:
+                   base                     >= 4.6      && < 4.15
+                 , aeson                    >= 0.6      && < 1.5
+                 , bytestring               >= 0.9      && < 0.11
+                 , containers               >= 0.4      && < 0.7
+                 , digestive-functors       >= 0.7      && < 0.9
+                 , hspec                    >= 2.2      && < 2.8
+                 , hspec-core               >= 2.2      && < 2.8
+                 , HUnit                    >= 1.5      && < 1.7
+                 , hxt                      >= 9.3      && < 9.4
+                 , HandsomeSoup             >= 0.3      && < 0.5
+                 , lens                     >= 3.10     && < 5
+                 , mtl                      >= 2        && < 3
+                 , snap                     >= 1.0      && < 1.2
+                 , snap-core                >= 1.0      && < 1.2
+                 , text                     >= 0.11     && < 1.3
+                 , transformers             >= 0.3      && < 0.6
+    hs-source-dirs:
+        lib/hspec-snap/src
+    default-language:   Haskell2010
+--------------------------------------------------------------------------------
+library lib-common
+    import:             common-properties
+    exposed-modules:
+        TiredPixel.Common.Cursor
+        TiredPixel.Common.Isoxya.Processor
+        TiredPixel.Common.Isoxya.Streamer
+        TiredPixel.Common.Log
+        TiredPixel.Common.Net
+        TiredPixel.Common.SQLite.Conn
+        TiredPixel.Common.SQLite.Ext.Hash
+        TiredPixel.Common.SQLite.Ext.URI
+        TiredPixel.Common.SQLite.Ext.UUID
+        TiredPixel.Common.SQLite.Meta
+        TiredPixel.Common.SQLite.Query
+        TiredPixel.Common.Snap.CoreUtil
+        TiredPixel.Common.Snap.Main
+        TiredPixel.Common.URI
+        TiredPixel.Common.UUID
+    build-depends:
+        aeson,
+        base64-bytestring,
+        bytestring,
+        conduit,
+        conduit-extra,
+        cryptonite,
+        direct-sqlite,
+        http-conduit,
+        http-types,
+        memory,
+        network-uri,
+        regex-compat,
+        resourcet,
+        safe,
+        snap-core,
+        snap-extras,
+        snap-server,
+        sqlite-simple,
+        time,
+        tinylog,
+        unix,
+        unordered-containers,
+        uuid,
+    hs-source-dirs:
+        lib/common/src
+--------------------------------------------------------------------------------
+library lib-isoxya-api
+    import:             common-properties
+    exposed-modules:
+        Isoxya.API
+        Isoxya.API.Core
+        Isoxya.Crawler
+        Isoxya.DB.Migration
+        Isoxya.Msg
+        Isoxya.Processor
+        Isoxya.Streamer
+    other-modules:
+        Isoxya.API.Endpoint.Apex
+        Isoxya.API.Endpoint.Crawl
+        Isoxya.API.Endpoint.Processor
+        Isoxya.API.Endpoint.Site
+        Isoxya.API.Endpoint.Streamer
+        Isoxya.API.Find
+        Isoxya.API.Href
+        Isoxya.API.Init
+        Isoxya.API.Resource
+        Isoxya.API.Type
+        Isoxya.Crawler.Processor
+        Isoxya.DB
+        Isoxya.DB.Query
+        Isoxya.DB.Type
+        Isoxya.DB.URLPage
+        Isoxya.Msg.Query
+        Isoxya.Msg.Type
+        Isoxya.Processor.Processor
+        Isoxya.Streamer.Processor
+        Paths_isoxya_api
+    build-depends:
+        aeson,
+        base64-bytestring,
+        bytestring,
+        case-insensitive,
+        containers,
+        cryptonite,
+        direct-sqlite,
+        http-conduit,
+        http-types,
+        lens,
+        lens-aeson,
+        lib-common,
+        network-uri,
+        regex-compat,
+        snap,
+        snap-core,
+        snap-extras,
+        sqlite-simple,
+        text,
+        time,
+        uuid,
+    hs-source-dirs:
+        src
+--------------------------------------------------------------------------------
+executable isoxya-api
+    import:             common-properties
+    main-is:            API.hs
+    other-modules:
+        Paths_isoxya_api
+    build-depends:
+        lens,
+        lib-common,
+        lib-isoxya-api,
+        snap,
+    hs-source-dirs:
+        src/Isoxya/Bin
+--------------------------------------------------------------------------------
+library lib-common-test
+    import:             common-properties
+    exposed-modules:
+        TiredPixel.Common.Snap.Test
+    other-modules:
+        TiredPixel.Common.Snap.TestUtil
+    build-depends:
+        aeson,
+        base64-bytestring,
+        bytestring,
+        containers,
+        directory,
+        filepath,
+        hspec                           ==  2.*,
+        hspec-core,
+        hspec-snap,
+        http-link-header,
+        lens,
+        lens-aeson,
+        mtl,
+        network-uri,
+        process,
+        snap-core,
+        text,
+        unordered-containers,
+        vector,
+    hs-source-dirs:
+        lib/common/test
+--------------------------------------------------------------------------------
+test-suite test-isoxya-api
+    import:             common-properties
+    type:               exitcode-stdio-1.0
+    main-is:            Spec.hs
+    other-modules:
+        Isoxya.API.Endpoint.ApexSpec
+        Isoxya.API.Test
+    build-depends:
+        hspec                           ==  2.*,
+        lib-common,
+        lib-common-test,
+        lib-isoxya-api,
+        snap,
+    default-extensions:
+        NoImplicitPrelude
+    hs-source-dirs:
+        test
+    build-tool-depends:
+        hspec-discover:hspec-discover   ==  2.*

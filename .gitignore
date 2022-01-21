@@ -1,14 +1,8 @@
-# Base
-/docker-compose*.yml
-
-# Project
-/misc/eg/*/sqlite3.db
-/sqlite3.db
-/test/log/
-
-# Haskell
+/*.env
+/.isoxya
+/dist-newstyle/
 /dist/
+/docker-compose*.yml
+/misc/streams/*/.isoxya
 
-# Tigrosa
-/.tigrosa/
-/misc/eg/*/.tigrosa/
+# .isoxya is used rather than .isoxya/ , to allow symlinks

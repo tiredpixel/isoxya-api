@@ -1,292 +1,56 @@
-# Isoxya web crawler Community Edition (Isoxya CE)
+# Isoxya
 
-[Isoxya web crawler Community Edition](https://github.com/isoxya/isoxya-ce) (Isoxya CE) is a free and open-source (BSD 3-Clause) mini crawler, suitable for small crawls on a single computer. It is part of [Isoxya](https://www.isoxya.com/) web crawler, an internet data processing system representing years of research into building next-generation crawlers and scrapers. 
+Isoxya is an extensible data processing system for crawling and scraping the internet. It is written in a compiled, statically typed language for speed and reliability. Isoxya is free, open-source, and packaged as a container. The API can be used by CLI scripts or called by another project. Various plugins are available, many also open-source.
 
-Also available is [Isoxya web crawler Pro Edition](https://www.isoxya.com/) (Isoxya PE), a commercial and closed-source distributed crawler, suitable for small, large, and humongous crawls on high-availability clusters of multiple computers. Both editions utilise flexible [plugins](https://www.isoxya.com/plugins/), allowing numerous programming languages to be used to extend the core engine via JSON [interfaces](https://docs.isoxya.com/#interfaces). Plugins written for Isoxya CE should typically scale to Isoxya PE with minimal or no changes. More details and licences are available [on request](mailto:en@isoxya.com).
+https://www.isoxya.com/  
+https://hub.docker.com/r/isoxya/isoxya-api  
+https://github.com/isoxya/isoxya-api  
 
 
-# Features
+## Tutorial
 
-Feature             | Community Edition (CE) | Pro Edition (PE) |
---------------------|-------------|-------------|
-Licence             | open-source | commercial  |
-API                 | ✓           | ✓           |
-CLI scripts         | ✓           | ✓           |
-Plugins             | 3+          | 3+          |
-·                   |             |             |
-Authentication      | ✗           | Tigrosa     |
-Database            | SQLite      | PostgreSQL  |
-Cache               | ✗           | Redis       |
-Message broker      | ✗           | RabbitMQ    |
-·                   |             |             |
-High-availability   | ✗           | ✓           |
-Horizontal scaling  | ✗           | ✓           |
-Error recovery      | ✗           | ✓           |
-Resource management | ✗           | ✓           |
-·                   |             |             |
-Concurrent crawls   | 1           | ∞¹          |
-Pages/crawl         | ∞²⁺³        | ∞¹          |
-User-agents         | 1³          | ∞¹          |
-Rate-limit (reqs/s) | 1/10³       | ∞¹⁺⁴        |
-·                   |             |             |
-Robots.txt          | ✗           | ✓           |
-Crawl max pages     | ✗           | ✓           |
-Crawl max depth     | ✗           | ✓           |
-List crawls         | ✗           | ✓           |
-External link check | ✗           | ✓           |
-Crawl cancellation  | ✗           | ✓           |
-Organisations       | ✗           | ✓           |
-·                   |             |             |
-Crawler channels    | 1           | ∞¹          |
-Processor channels  | 1           | ∞¹          |
-Streamer channels   | 1           | ∞¹          |
-·                   |             |             |
-OS variant          | Linux       | Linux       |
-Packaging           | container   | container   |
-Support             | community   | direct      |
-·                   |             |             |
-Price               | free        | [on request](mailto:en@isoxya.com) |
+To get started, follow the [tutorial](https://github.com/isoxya/isoxya-docs/blob/unstable/Tutorial.md).
 
-_Features and limits are indicative only, not guarantees._
-_∞ indicates many, not infinite!_
-_¹ depending on licence and infrastructure._
-_² no hard-limit, but small as single-process._
-_³ not configurable._
-_⁴ set globally per-site; configurable for on-prem only._
+
+## Documentation
+
+The API uses REST and JSON, and [documentation](https://github.com/isoxya/isoxya-docs) is available as a repo.
 
 
 ## Dependencies
 
-- [jq](https://stedolan.github.io/jq/) (for scripts only)
-- [Tigrosa Scripts](https://github.com/tiredpixel/tigrosa-x-bin) (optional; needed for [Tutorial](#tutorial))
-- [Isoxya Scripts](https://github.com/isoxya/isoxya-x-bin) (optional; needed for [Tutorial](#tutorial))
+- [jq](https://stedolan.github.io/jq/) (for `bin/` example scripts only)
 
 
 ## Installation
 
-Choose an example stack, either `latest` or `stable` (recommended):
+Choose a stream: `stable` (recommended), `testing`, or `unstable`:
 
 ```sh
-cd misc/eg/stable/
+cd misc/streams/stable/
 ```
 
-Initialise the stack:
-
-```sh
-./docker-compose.init.sh
-```
-
-Boot the stack. This includes: Isoxya CE API, using SQLite as an embedded database; [Isoxya plugin: Crawler HTML](https://github.com/isoxya/isoxya-plugin-crawler-html), a processor plugin for crawling static HTML; and [NGINX Test Upstream](https://github.com/tiredpixel/nginx-test-upstream), a simple echo server used to demonstrate a streamer plugin.
+Boot the stack:
 
 ```sh
 docker-compose up
 ```
 
-That's installation completed! Now you've got a powerful mini crawler at your disposal, extendible via its flexible plugin system.
+That's it! Now you've got a powerful web crawler and scraper at your disposal, extensible via plugins.
 
 
-## Tutorial
+## Isoxya Pro
 
-This tutorial depends on [Tigrosa Scripts](https://github.com/tiredpixel/tigrosa-x-bin) and [Isoxya Scripts](https://github.com/isoxya/isoxya-x-bin), which must be installed first. There is no dependency on these (or [jq](https://stedolan.github.io/jq/)) for Isoxya itself, however.
+Isoxya Pro adds high availability, error recovery, and horizontal scaling. It is available on-premises for installation on your servers, or in the cloud via SaaS subscription. Isoxya Pro is available via commercial licence. The API is able to scale crawlers, processors, and streamers. Support or custom development is available from Isoxya's creator.
 
-Initialise a state directory for Tigrosa:
-
-```sh
-tgr-init
-```
-
-```txt
-endpoint [http://localhost:8000]: 
-usr.href [/usr/81848a8a-dc32-4f0b-87f3-02efd72836f5]: 
-usr_key.href [/usr_key/0644fee4-848c-4d57-a742-37161431b3dc]: 
-```
-
-```json
-{
-  "t_now": "2021-03-19T13:36:32.270915096Z",
-  "version": "0.0.0"
-}
-```
-
-Register a processor plugin:
-
-```sh
-isx-create-plug-proc
-```
-
-```txt
-Isoxya CE/PE
-
-org.href (PE) []: 
-url (CE/PE) [http://crawler-html.plugin.dev.isoxya.com:8000/data]: 
-tag (CE/PE) [crawler-html]: 
-pub (PE) [null]: 
-chans (PE) [null]: 
-```
-
-```json
-{
-  "href": "/plug_proc/b72b6972-210b-4795-9b36-9a634e2c4ce9",
-  "tag": "crawler-html",
-  "url": "http://crawler-html.plugin.dev.isoxya.com:8000/data"
-}
-```
-
-Register a streamer plugin:
-
-```sh
-isx-create-plug-strm
-```
-
-```txt
-Isoxya CE/PE
-
-org.href (PE) []: 
-url (CE/PE) [http://elasticsearch.plugin.dev.isoxya.com:8000/data]: http://test-upstream.plugin.dev.isoxya.com
-tag (CE/PE) [elasticsearch]: test-upstream
-pub (PE) [null]: 
-chans (PE) [null]: 
-```
-
-```json
-{
-  "href": "/plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c",
-  "tag": "test-upstream",
-  "url": "http://test-upstream.plugin.dev.isoxya.com"
-}
-```
-
-Register a site:
-
-```sh
-isx-create-site
-```
-
-```txt
-Isoxya CE/PE
-
-url (CE/PE) [http://example.com]: 
-rate_lim (PE) [null]: 
-chans (PE) [null]: 
-```
-
-```json
-{
-  "href": "/site/aHR0cDovL2V4YW1wbGUuY29tOjgw",
-  "url": "http://example.com:80"
-}
-```
-
-Start a crawl:
-
-```sh
-isx-create-crwl
-```
-
-```txt
-Isoxya CE/PE
-
-site.href (CE/PE) [/site/aHR0cDovL2V4YW1wbGUuY29tOjgw]: 
-pages_max (PE) [null]: 
-depth_max (PE) [null]: 
-user_agent.href (PE) []: 
-list.href (PE):
-    0: null
-    1: 
-  [0]: 
-  null
-validate_ext (PE) [null]: 
-org.href (PE) []: 
-plug_proc_conf (CE/PE) [null]: 
-plug_proc.hrefs (CE/PE) [/plug_proc/b72b6972-210b-4795-9b36-9a634e2c4ce9]: 
-plug_strm.hrefs (CE/PE) [/plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c]: 
-```
-
-```json
-{
-  "href": "/site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crwl/2021-03-19T13:43:07.733671786Z",
-  "pages": null,
-  "plug_proc": [
-    {
-      "href": "/plug_proc/b72b6972-210b-4795-9b36-9a634e2c4ce9"
-    }
-  ],
-  "plug_proc_conf": null,
-  "plug_strm": [
-    {
-      "href": "/plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c"
-    }
-  ],
-  "progress": null,
-  "site": {
-    "href": "/site/aHR0cDovL2V4YW1wbGUuY29tOjgw",
-    "url": "http://example.com:80"
-  },
-  "status": "pending",
-  "t_begin": "2021-03-19T13:43:07.733671786Z",
-  "t_end": null
-}
-```
-
-Read resources to check status:
-
-```sh
-isx-read
-```
-
-```txt
-Isoxya CE/PE
-
-href (CE/PE):
-    0: 
-    1: /plug_proc/b72b6972-210b-4795-9b36-9a634e2c4ce9
-    2: /plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c
-    3: 
-    4: /site/aHR0cDovL2V4YW1wbGUuY29tOjgw
-    5: 
-    6: /site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crwl/2021-03-19T13:43:07.733671786Z
-  [6]: 
-  /site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crwl/2021-03-19T13:43:07.733671786Z
-```
-
-```json
-{
-  "href": "/site/aHR0cDovL2V4YW1wbGUuY29tOjgw/crwl/2021-03-19T13:43:07.733671786Z",
-  "pages": 1,
-  "plug_proc": [
-    {
-      "href": "/plug_proc/b72b6972-210b-4795-9b36-9a634e2c4ce9"
-    }
-  ],
-  "plug_proc_conf": null,
-  "plug_strm": [
-    {
-      "href": "/plug_strm/0a2dfa6d-d4b1-45e0-8167-9fd78e128c6c"
-    }
-  ],
-  "progress": 100,
-  "site": {
-    "href": "/site/aHR0cDovL2V4YW1wbGUuY29tOjgw",
-    "url": "http://example.com:80"
-  },
-  "status": "completed",
-  "t_begin": "2021-03-19T13:43:07.733671786Z",
-  "t_end": "2021-03-19T13:43:08.801Z"
-}
-```
-
-To crawl again, just use `isx-create-crwl`. To crawl another site, just register it with `isx-create-site` first. That's it!
-
-When you're ready to do something more complicated, you might like to take a look at other [Isoxya plugins](https://www.isoxya.com/plugins/). And of course, you can create your own plugins in your language of choice, whether processor plugins to extract page data differently, or streamer plugins to send data to your API endpoint or databases. If you create something cool, be sure to let me know!
+https://www.isoxya.com/pro/  
 
 
 ## Contact
 
-[en@isoxya.com](mailto:en@isoxya.com) · [isoxya.com](https://www.isoxya.com/)
+[tp@tiredpixel.com](mailto:tp@tiredpixel.com) · [www.tiredpixel.com](https://www.tiredpixel.com/) · [www.isoxya.com](https://www.isoxya.com/)
 
-[tp@tiredpixel.com](mailto:tp@tiredpixel.com) · [tiredpixel.com](https://www.tiredpixel.com/)
-
-LinkedIn: [in/nic-williams](https://www.linkedin.com/in/nic-williams/) · GitHub: [tiredpixel](https://github.com/tiredpixel)
+LinkedIn: [in/nic-williams](https://www.linkedin.com/in/nic-williams/) · Twitter: [tiredpixel](https://twitter.com/tiredpixel/) · GitHub: [tiredpixel](https://github.com/tiredpixel)
 
 
 ## Licence

@@ -1,6 +1,5 @@
-#===============================================================================
 # FROMFREEZE docker.io/library/debian:10
-FROM docker.io/library/debian@sha256:e5333f8697a86fa1be53b2a7e994247083f61885166df0cdda9f812acb514d7c
+FROM docker.io/library/debian@sha256:94ccfd1c5115a6903cbb415f043a0b04e307be3f37b768cf6d6d3edff0021da3
 
 ARG USER=x
 ARG HOME=/home/x
@@ -28,9 +27,8 @@ ENV PATH=${HOME}/bin:$PATH \
     LANG=C.UTF-8 \
     LOG_LEVEL=Info
 
-CMD ["isx-ce-api", "-b", "localhost", "-p", "8000"]
+CMD ["isoxya-api", "-b", "0.0.0.0", "-p", "80"]
 
-EXPOSE 8000
+EXPOSE 80
 
-HEALTHCHECK CMD curl -fs http://localhost:8000 || false
-#===============================================================================
+HEALTHCHECK CMD curl -fs http://localhost || false

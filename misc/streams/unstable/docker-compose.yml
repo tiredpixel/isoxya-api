@@ -1,0 +1,31 @@
+version: "2.4"
+services:
+  api:
+    image: docker.io/isoxya/isoxya-api:unstable
+    init: true
+    networks:
+      - api
+      - processor
+      - streamer
+    ports:
+      - 0.0.0.0:80:80
+    restart: on-failure
+  plugin_crawler_html:
+    image: docker.io/isoxya/isoxya-plugin-crawler-html:unstable
+    init: true
+    networks:
+      processor:
+        aliases:
+          - isoxya-plugin-crawler-html.localhost
+    restart: on-failure
+  plugin_nginx:
+    image: docker.io/isoxya/isoxya-plugin-nginx:latest
+    networks:
+      streamer:
+        aliases:
+          - isoxya-plugin-nginx.localhost
+    restart: on-failure
+networks:
+  api: {}
+  processor: {}
+  streamer: {}

@@ -1,0 +1,24 @@
+#!/bin/bash -eu
+set -o pipefail
+
+href_=${1:-}
+
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
+#-------------------------------------------------------------------------------
+if [ -z "$href_" ]; then
+    ask_opts "href" 4 \
+        "${PROCESSOR_HREF:-}" \
+        "${STREAMER_HREF:-}" \
+        \
+        "${SITE_HREF:-}" \
+        \
+        "${LIST_HREF:-}" \
+        \
+        "${CRAWL_HREF:-}" \
+        #
+    href=$ASK_BUF
+else
+    href=$href_
+fi
+#-------------------------------------------------------------------------------
+curl_ "$ENDPOINT_URL$href" | jq_

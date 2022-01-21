@@ -1,6 +1,5 @@
-#===============================================================================
-# FROMFREEZE docker.io/library/haskell:8.8
-FROM docker.io/library/haskell@sha256:b6ef32c8805ef8601db1c90fae177c9b8c069fb992660ebc5c2eaae1e71b8ce4
+# FROMFREEZE docker.io/library/haskell:8.10
+FROM docker.io/library/haskell@sha256:6b4948a36e40b66a9cd6bfc279df43958d1aebc67a3909ba0c521d1d1395d26f
 
 ARG USER=x
 ARG HOME=/home/x
@@ -26,21 +25,20 @@ USER ${USER}
 WORKDIR ${HOME}/repo
 
 COPY --chown=x:x [ \
-    "cabal.config", \
+    "cabal.project.freeze", \
     "*.cabal", \
     "./"]
 
-RUN cabal v1-update && \
-    cabal v1-install -j --only-dependencies --enable-tests
+RUN cabal update && \
+    cabal build --only-dependencies --enable-tests
 #-------------------------------------------------------------------------------
 ENV PATH=${HOME}/repo/bin:${HOME}/.cabal/bin:$PATH \
     LANG=C.UTF-8 \
     LOG_LEVEL=Info
 
-CMD ["cabal", "v1-run", "isx-ce-api", "--", \
-    "-b", "0.0.0.0", "-p", "8000"]
+CMD ["cabal", "run", "isoxya-api", "--", \
+    "-b", "0.0.0.0", "-p", "80"]
 
-EXPOSE 8000
+EXPOSE 80
 
-HEALTHCHECK CMD curl -fs http://localhost:8000 || false
-#===============================================================================
+HEALTHCHECK CMD curl -fs http://localhost || false

@@ -1,0 +1,35 @@
+#!/bin/bash -eu
+set -o pipefail
+
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
+#-------------------------------------------------------------------------------
+ask "channels (Pro)" null
+channels=$ASK_BUF
+
+ask "rate_limit (Pro)" null
+rate_limit=$ASK_BUF
+
+ask "url" http://example.com
+url=$ASK_BUF
+#-------------------------------------------------------------------------------
+j=$(cat <<-EOT
+	{
+	  "channels": $channels,
+	  "rate_limit": $rate_limit,
+	  "url": "$url"
+	}
+	EOT
+    )
+echo "$j" | jqd
+
+st=$(
+    curl_ -X POST -d "$j" "$ENDPOINT_URL/site"
+)
+echo "$st" | jq_
+echo "$st" | jq_ -r '.href' | grep -v 'null' >> "$SITE_HREF_"
+reload_vars
+#-------------------------------------------------------------------------------
+if [ -f .env ]; then
+    queue=$(echo -n "$SITE_HREF" | cut -d'/' -f3)
+    sed -i "s/^CRAWLER_QUEUE=.*$/CRAWLER_QUEUE=$queue/" .env
+fi

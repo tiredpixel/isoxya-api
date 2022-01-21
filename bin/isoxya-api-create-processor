@@ -1,0 +1,35 @@
+#!/bin/bash -eu
+set -o pipefail
+
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
+#-------------------------------------------------------------------------------
+ask "channels (Pro)" null
+channels=$ASK_BUF
+
+ask "tag" crawler-html
+tag=$ASK_BUF
+
+ask "url" http://isoxya-plugin-crawler-html.localhost/data
+url=$ASK_BUF
+#-------------------------------------------------------------------------------
+j=$(cat <<-EOT
+	{
+	  "channels": $channels,
+	  "tag": "$tag",
+	  "url": "$url"
+	}
+	EOT
+    )
+echo "$j" | jqd
+
+pro=$(
+    curl_ -X POST -d "$j" "$ENDPOINT_URL/processor"
+)
+echo "$pro" | jq_
+echo "$pro" | jq_ -r '.href' | grep -v 'null' >> "$PROCESSOR_HREF_"
+reload_vars
+#-------------------------------------------------------------------------------
+if [ -f .env ]; then
+    queue=$(echo -n "$PROCESSOR_HREF" | cut -d'/' -f3)
+    sed -i "s/^PROCESSOR_QUEUE=.*$/PROCESSOR_QUEUE=$queue/" .env
+fi
