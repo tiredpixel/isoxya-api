@@ -18,7 +18,6 @@ import qualified Isoxya.Crawler                 as Crawler
 import qualified Isoxya.Msg                     as M
 import qualified Isoxya.Processor               as Processor
 import qualified Isoxya.Streamer                as Streamer
-import qualified TiredPixel.Common.Log          as L
 import qualified TiredPixel.Common.Net          as N
 import qualified TiredPixel.Common.SQLite.Conn  as D
 import qualified TiredPixel.Common.SQLite.Meta  as D
@@ -34,7 +33,7 @@ main :: IO ()
 main = do
     hPutStrLn stderr $ "Isoxya API " <> toString ver
     done <- S.init
-    tId <- forkIO $ L.withLog $ \l -> do
+    tId <- forkIO $ do
         n <- N.openConn
         mCrl <- newChan
         mPro <- newChan
@@ -42,9 +41,9 @@ main = do
         D.withConnS $ \d -> do
             D.setForeignKeys True d
             D.migrate migrations schema d
-            _ <- forkIO $ M.rx mCrl $ Crawler.process l mPro n d
-            _ <- forkIO $ M.rx mPro $ Processor.process l mStr mCrl n d
-            _ <- forkIO $ M.rx mStr $ Streamer.process l n d
+            _ <- forkIO $ M.rx mCrl $ Crawler.process mPro n d
+            _ <- forkIO $ M.rx mPro $ Processor.process mStr mCrl n d
+            _ <- forkIO $ M.rx mStr $ Streamer.process n d
             serveSnaplet S.config $ initApp mCrl d
     S.wait done tId
     where

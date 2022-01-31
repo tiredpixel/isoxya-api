@@ -27,7 +27,7 @@ library lib-common
         TiredPixel.Common.Cursor
         TiredPixel.Common.Isoxya.Processor
         TiredPixel.Common.Isoxya.Streamer
-        TiredPixel.Common.Log
+        TiredPixel.Common.Logger
         TiredPixel.Common.Net
         TiredPixel.Common.SQLite.Conn
         TiredPixel.Common.SQLite.Ext.Hash

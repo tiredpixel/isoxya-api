@@ -6,6 +6,7 @@ import           Data.Aeson
 import           Data.Aeson.Lens
 import           Isoxya.API.Href
 import           TiredPixel.Common.Isoxya.Processor
+import           TiredPixel.Common.Logger
 import           TiredPixel.Common.Snap.CoreUtil
 import           TiredPixel.Common.URI
 import qualified Data.Map                           as M
@@ -14,29 +15,28 @@ import qualified Isoxya.DB                          as D
 import qualified Isoxya.Msg                         as M
 import qualified Network.HTTP.Conduit               as HTTP
 import qualified Network.HTTP.Types                 as HTTP
-import qualified TiredPixel.Common.Log              as L
 import qualified TiredPixel.Common.Net              as N
 
 
-process :: L.Logger -> M.ChanStreamer -> M.ChanCrawler -> N.Conn -> D.Conn ->
+process :: M.ChanStreamer -> M.ChanCrawler -> N.Conn -> D.Conn ->
     M.MsgProcessor -> IO ()
-process l mStr mCrl n d (proId, msg) = do
+process mStr mCrl n d (proId, msg) = runLogger $ do
     Just pro <- D.rProcessor proId d
-    L.debug l $ show pro
+    logDebugN $ show pro
     Just crl <- D.rCrawl (M.crawlPageSiteId msg, M.crawlPageSiteV msg) d
-    L.debug l $ show crl
+    logDebugN $ show crl
     Just st <- D.rSiteId (D.crawlSiteId crl) d
-    L.debug l $ show st
+    logDebugN $ show st
     Just pg <- D.rPageId (D.crawlSiteId crl, M.crawlPagePageId msg) d
     let tx = genProcessorI msg pro crl st pg
-    L.debug l $ show tx
+    logDebugN $ show tx
     let req = N.jsonReq $ N.makeReq' "POST"
             (D.unProcessorURL $ D.processorURL pro) (encode tx)
-    L.debug l $ show req
-    L.debug l $ decodeUtf8 $ encode tx
+    logDebugN $ show req
+    logDebugN $ decodeUtf8 $ encode tx
     res <- N.makeRes req n
-    L.debug l $ show res
-    L.debug l $ decodeUtf8 $ HTTP.responseBody res
+    logDebugN $ show res
+    logDebugN $ decodeUtf8 $ HTTP.responseBody res
     let Just rx = decode $ HTTP.responseBody res :: Maybe ProcessorO
     pgIdsInt <- D.urlsPageIds st
         (S.map unURIReference $ processorOURLs rx) d
@@ -46,7 +46,7 @@ process l mStr mCrl n d (proId, msg) = do
         (M.crawlPagePageV msg) (D.processorId pro) d
     _ <- M.txCrawlPageIds st (D.crawlId crl) pgIds mCrl
     _ <- M.txCrawlPageData crl msg pro (processorOData rx) mStr
-    L.info l $
+    logInfoN $
         decodeUtf8 (unCrawlHref $
             toRouteHref (D.siteURL st, D.crawlSiteV crl)) <> " PRO " <>
         show (D.unProcessorId $ D.processorId pro) <> " " <>
