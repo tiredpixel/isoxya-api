@@ -53,7 +53,7 @@ process mPro n d (stId, msg) = runLogger $ do
         reqLim = 1048576 -- 1 MB
 
 
-limitRate :: LoggingT IO ()
+limitRate :: (MonadIO m, MonadLogger m) => m ()
 limitRate = do
     logDebugN $ "LIMITING " <> show rateLim <> " μs"
     liftIO $ threadDelay rateLim
