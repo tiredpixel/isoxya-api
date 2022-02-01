@@ -11,7 +11,6 @@ import           TiredPixel.Common.Logger
 import           TiredPixel.Common.Snap.CoreUtil
 import qualified Isoxya.DB                       as D
 import qualified Isoxya.Msg                      as M
-import qualified Network.HTTP.Conduit            as HTTP
 import qualified Text.Regex                      as R
 import qualified TiredPixel.Common.Net           as N
 
@@ -28,8 +27,7 @@ process mPro n d (stId, msg) = runLogger $ do
             (D.unSiteURL reqURL) ""
     logDebugN $ show req
     tR <- liftIO getCurrentTime
-    res_ <- (liftIO . try) (N.makeResLim reqLim req n) ::
-        LoggingT IO (Either HTTP.HttpException (HTTP.Response LByteString))
+    res_ <- (liftIO . try) (N.makeResLim reqLim req n)
     crlPg <- case res_ of
         Left ex   -> do
             logErrorN $ show ex
