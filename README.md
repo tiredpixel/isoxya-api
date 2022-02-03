@@ -55,4 +55,4 @@ LinkedIn: [in/nic-williams](https://www.linkedin.com/in/nic-williams/) · Twitte
 
 ## Licence
 
-Copyright © 2021 [Nic Williams](https://www.tiredpixel.com/). It is free software, released under the BSD 3-Clause licence, and may be redistributed under the terms specified in `LICENSE`.
+Copyright © [Nic Williams](https://www.tiredpixel.com/). It is free software, released under the BSD 3-Clause licence, and may be redistributed under the terms specified in `LICENSE`.
