@@ -80,9 +80,7 @@ genProcessorI msg pro crl st pg = ProcessorI meta header body
             processorIMetaMethod   = method,
             processorIMetaStatus   = status,
             processorIMetaURL      = url}
-        header = case M.crawlPageBlob msg of
-            Just b  -> M.crawlPageBlobHeader b
-            Nothing -> M.empty
+        header = maybe M.empty M.crawlPageBlobHeader (M.crawlPageBlob msg)
         body = case M.crawlPageBlob msg of
             Just b  -> toStrict $ M.crawlPageBlobBody b
             Nothing -> ""
