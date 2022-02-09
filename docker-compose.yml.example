@@ -4,6 +4,7 @@ services:
     image: docker.io/tiredpixel/isoxya-api.build:unstable
     init: true
     volumes:
+      - ./.hlint.yaml:/home/x/repo/.hlint.yaml
       - ./isoxya-api.cabal:/home/x/repo/isoxya-api.cabal
       - ./lib:/home/x/repo/lib
       - ./src:/home/x/repo/src
