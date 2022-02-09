@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
@@ -15,17 +15,17 @@ module Isoxya.API.Href (
 
 
 import           Data.Aeson
-import           Network.URI
-import           TiredPixel.Common.Snap.CoreUtil
 import qualified Data.ByteString.Base64.URL      as B64
 import qualified Data.ByteString.Char8           as C8
 import qualified Data.Time.Format                as Time
 import qualified Data.UUID                       as UUID
 import qualified Isoxya.DB                       as D
+import           Network.URI
+import           TiredPixel.Common.Snap.CoreUtil
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-newtype CrawlHref = CrawlHref { unCrawlHref :: ByteString
-    } deriving (Show)
+newtype CrawlHref = CrawlHref { unCrawlHref :: ByteString }
+  deriving (Show)
 instance RouteHref CrawlHref (D.SiteURL, D.SiteV) where
     toRouteHref (s, c) = CrawlHref $
         unSiteHref (toRouteHref s) <> crawls <> "/" <> fromRouteId c
@@ -37,8 +37,8 @@ instance RouteHref CrawlHref (D.SiteURL, D.SiteV) where
 instance ToJSON CrawlHref where
     toJSON o = toJSON (decodeUtf8 $ unCrawlHref o :: Text)
 
-newtype CrawlsHref = CrawlsHref { unCrawlsHref :: ByteString
-    } deriving (Show)
+newtype CrawlsHref = CrawlsHref { unCrawlsHref :: ByteString }
+  deriving (Show)
 instance RouteHref CrawlsHref D.SiteURL where
     toRouteHref s = CrawlsHref $ unSiteHref (toRouteHref s) <> crawls
     fromRouteHref h = do
@@ -47,8 +47,8 @@ instance RouteHref CrawlsHref D.SiteURL where
 instance ToJSON CrawlsHref where
     toJSON o = toJSON (decodeUtf8 $ unCrawlsHref o :: Text)
 
-newtype ProcessorHref = ProcessorHref { unProcessorHref :: ByteString
-    } deriving (Show)
+newtype ProcessorHref = ProcessorHref { unProcessorHref :: ByteString }
+  deriving (Show)
 instance RouteHref ProcessorHref D.ProcessorId where
     toRouteHref p = ProcessorHref $ processors <> "/" <> fromRouteId p
     fromRouteHref h = do
@@ -59,8 +59,8 @@ instance FromJSON ProcessorHref where
 instance ToJSON ProcessorHref where
     toJSON o = toJSON (decodeUtf8 $ unProcessorHref o :: Text)
 
-newtype ProcessorsHref = ProcessorsHref { unProcessorsHref :: ByteString
-    } deriving (Show)
+newtype ProcessorsHref = ProcessorsHref { unProcessorsHref :: ByteString }
+  deriving (Show)
 instance RouteHref ProcessorsHref () where
     toRouteHref _ = ProcessorsHref processors
     fromRouteHref h = do
@@ -69,8 +69,8 @@ instance RouteHref ProcessorsHref () where
 instance ToJSON ProcessorsHref where
     toJSON o = toJSON (decodeUtf8 $ unProcessorsHref o :: Text)
 
-newtype SiteHref = SiteHref { unSiteHref :: ByteString
-    } deriving (Show)
+newtype SiteHref = SiteHref { unSiteHref :: ByteString }
+  deriving (Show)
 instance RouteHref SiteHref D.SiteURL where
     toRouteHref s = SiteHref $ sites <> "/" <> fromRouteId s
     fromRouteHref h = do
@@ -79,8 +79,8 @@ instance RouteHref SiteHref D.SiteURL where
 instance ToJSON SiteHref where
     toJSON o = toJSON (decodeUtf8 $ unSiteHref o :: Text)
 
-newtype StreamerHref = StreamerHref { unStreamerHref :: ByteString
-    } deriving (Show)
+newtype StreamerHref = StreamerHref { unStreamerHref :: ByteString }
+  deriving (Show)
 instance RouteHref StreamerHref D.StreamerId where
     toRouteHref s = StreamerHref $ streamers <> "/" <> fromRouteId s
     fromRouteHref h = do
@@ -91,8 +91,8 @@ instance FromJSON StreamerHref where
 instance ToJSON StreamerHref where
     toJSON o = toJSON (decodeUtf8 $ unStreamerHref o :: Text)
 
-newtype StreamersHref = StreamersHref { unStreamersHref :: ByteString
-    } deriving (Show)
+newtype StreamersHref = StreamersHref { unStreamersHref :: ByteString }
+  deriving (Show)
 instance RouteHref StreamersHref () where
     toRouteHref _ = StreamersHref streamers
     fromRouteHref h = do

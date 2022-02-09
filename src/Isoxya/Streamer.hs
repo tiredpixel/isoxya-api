@@ -3,4 +3,4 @@ module Isoxya.Streamer (
     ) where
 
 
-import Isoxya.Streamer.Processor
+import           Isoxya.Streamer.Processor

@@ -4,8 +4,8 @@ module Isoxya.DB.Migration (
     ) where
 
 
-import           TiredPixel.Common.SQLite.Query
 import qualified TiredPixel.Common.SQLite.Conn  as D
+import           TiredPixel.Common.SQLite.Query
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 --  Generate id via

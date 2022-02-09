@@ -6,13 +6,13 @@ import           Control.Exception               (try)
 import           Data.Time.Clock
 import           Data.Version                    (showVersion)
 import           Isoxya.API.Href
-import           Paths_isoxya_api                (version)
-import           TiredPixel.Common.Logger
-import           TiredPixel.Common.Snap.CoreUtil
 import qualified Isoxya.DB                       as D
 import qualified Isoxya.Msg                      as M
+import           Paths_isoxya_api                (version)
 import qualified Text.Regex                      as R
+import           TiredPixel.Common.Logger
 import qualified TiredPixel.Common.Net           as N
+import           TiredPixel.Common.Snap.CoreUtil
 
 
 process :: M.ChanProcessor -> N.Conn -> D.Conn -> M.MsgCrawler -> IO ()

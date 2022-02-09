@@ -1,7 +1,7 @@
 module Isoxya.API.Endpoint.ApexSpec (spec) where
 
 
-import Isoxya.API.Test
+import           Isoxya.API.Test
 
 
 spec :: Spec

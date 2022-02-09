@@ -3,4 +3,4 @@ module Isoxya.Crawler (
     ) where
 
 
-import Isoxya.Crawler.Processor
+import           Isoxya.Crawler.Processor

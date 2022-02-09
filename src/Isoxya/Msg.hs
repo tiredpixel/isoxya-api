@@ -4,5 +4,5 @@ module Isoxya.Msg (
     ) where
 
 
-import Isoxya.Msg.Query
-import Isoxya.Msg.Type
+import           Isoxya.Msg.Query
+import           Isoxya.Msg.Type

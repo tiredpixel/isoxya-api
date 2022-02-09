@@ -4,5 +4,5 @@ module Isoxya.API (
     ) where
 
 
-import Isoxya.API.Init
-import Isoxya.API.Type
+import           Isoxya.API.Init
+import           Isoxya.API.Type

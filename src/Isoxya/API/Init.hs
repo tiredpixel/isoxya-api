@@ -4,17 +4,17 @@ module Isoxya.API.Init (
     ) where
 
 
-import           Isoxya.API.Type
-import           Snap.Core
-import           Snap.Snaplet
-import           TiredPixel.Common.Snap.CoreUtil
 import qualified Isoxya.API.Endpoint.Apex        as Apx
 import qualified Isoxya.API.Endpoint.Crawl       as Crl
 import qualified Isoxya.API.Endpoint.Processor   as Pro
 import qualified Isoxya.API.Endpoint.Site        as St
 import qualified Isoxya.API.Endpoint.Streamer    as Str
+import           Isoxya.API.Type
 import qualified Isoxya.Msg                      as M
+import           Snap.Core
+import           Snap.Snaplet
 import qualified TiredPixel.Common.SQLite.Conn   as D
+import           TiredPixel.Common.Snap.CoreUtil
 
 
 initAPI :: M.ChanCrawler -> D.Conn -> SnapletInit b API

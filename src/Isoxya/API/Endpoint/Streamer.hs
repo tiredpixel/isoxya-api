@@ -7,8 +7,8 @@ module Isoxya.API.Endpoint.Streamer (
 
 
 import           Isoxya.API.Core
-import           TiredPixel.Common.URI
 import qualified Isoxya.DB             as D
+import           TiredPixel.Common.URI
 
 
 create :: Handler b API ()

@@ -11,12 +11,12 @@ module Isoxya.Msg.Query (
 
 
 import           Control.Concurrent.Chan
-import           Data.Time.Clock
-import           Isoxya.Msg.Type
 import qualified Data.Aeson                as A
 import qualified Data.CaseInsensitive      as CI
 import qualified Data.Map                  as M
+import           Data.Time.Clock
 import qualified Isoxya.DB                 as D
+import           Isoxya.Msg.Type
 import qualified Network.HTTP.Conduit      as HTTP
 import qualified Network.HTTP.Types.Status as HTTP
 --------------------------------------------------------------------------------

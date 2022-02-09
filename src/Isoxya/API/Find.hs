@@ -10,9 +10,9 @@ module Isoxya.API.Find (
 
 
 import           Isoxya.API.Href
+import qualified Isoxya.DB                       as D
 import           Snap.Core
 import           TiredPixel.Common.Snap.CoreUtil
-import qualified Isoxya.DB                       as D
 
 
 fCrawl :: MonadSnap m => D.Conn -> MaybeT m ((D.Site, D.Crawl), D.CrawlId)

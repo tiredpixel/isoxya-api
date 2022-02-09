@@ -3,15 +3,15 @@ module Isoxya.Streamer.Processor (process) where
 
 import           Data.Aeson
 import           Isoxya.API.Href
-import           TiredPixel.Common.Isoxya.Streamer
-import           TiredPixel.Common.Logger
-import           TiredPixel.Common.Snap.CoreUtil
-import           TiredPixel.Common.URI
 import qualified Isoxya.DB                         as D
 import qualified Isoxya.Msg                        as M
 import qualified Network.HTTP.Conduit              as HTTP
 import qualified Network.HTTP.Types                as HTTP
+import           TiredPixel.Common.Isoxya.Streamer
+import           TiredPixel.Common.Logger
 import qualified TiredPixel.Common.Net             as N
+import           TiredPixel.Common.Snap.CoreUtil
+import           TiredPixel.Common.URI
 
 
 process :: N.Conn -> D.Conn -> M.MsgStreamer -> IO ()

@@ -8,12 +8,14 @@ module Isoxya.API.Test (
 
 import           Control.Concurrent.Chan
 import           Isoxya.API
-import           Isoxya.API.Core                hiding (addHeader, setContentType, setHeader, (.=))
+import           Isoxya.API.Core                hiding (addHeader,
+                                                 setContentType, setHeader,
+                                                 (.=))
 import           Isoxya.DB.Migration
-import           TiredPixel.Common.Snap.Test
 import qualified TiredPixel.Common.SQLite.Conn  as D
 import qualified TiredPixel.Common.SQLite.Meta  as D
 import qualified TiredPixel.Common.SQLite.Query as D
+import           TiredPixel.Common.Snap.Test
 
 
 snapAPI :: SpecWith (SnapHspecState API) -> Spec

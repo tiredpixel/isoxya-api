@@ -9,23 +9,22 @@ import           Control.Concurrent.Chan
 import           Control.Lens                   (makeLenses)
 import           Data.Version                   (showVersion)
 import           Isoxya.API
-import           Isoxya.DB.Migration
-import           Paths_isoxya_api               (version)
-import           Snap.Snaplet
-import           System.IO
-import           TiredPixel.Common.Snap.Main    as S
 import qualified Isoxya.Crawler                 as Crawler
+import           Isoxya.DB.Migration
 import qualified Isoxya.Msg                     as M
 import qualified Isoxya.Processor               as Processor
 import qualified Isoxya.Streamer                as Streamer
+import           Paths_isoxya_api               (version)
+import           Snap.Snaplet
+import           System.IO
 import qualified TiredPixel.Common.Net          as N
 import qualified TiredPixel.Common.SQLite.Conn  as D
 import qualified TiredPixel.Common.SQLite.Meta  as D
 import qualified TiredPixel.Common.SQLite.Query as D
+import           TiredPixel.Common.Snap.Main    as S
 
 
-newtype App = App {
-    _api :: Snaplet API}
+newtype App = App { _api :: Snaplet API }
 
 makeLenses ''App
 

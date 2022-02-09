@@ -6,13 +6,13 @@ module Isoxya.DB.URLPage (
 
 
 import           Control.Exception             (handle)
+import qualified Data.Set                      as S
 import           Isoxya.DB.Query
 import           Isoxya.DB.Type
-import           Network.URI
-import           TiredPixel.Common.URI
-import qualified Data.Set                      as S
 import qualified Network.HTTP.Conduit          as HTTP
+import           Network.URI
 import qualified TiredPixel.Common.SQLite.Conn as D
+import           TiredPixel.Common.URI
 
 
 cEntryURLs :: MonadIO m => Site -> Crawl -> D.Conn -> m [()]

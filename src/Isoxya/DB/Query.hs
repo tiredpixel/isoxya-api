@@ -1,4 +1,4 @@
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase    #-}
 {-# LANGUAGE TupleSections #-}
 
 
@@ -31,15 +31,15 @@ module Isoxya.DB.Query (
     ) where
 
 
+import qualified Crypto.Hash                    as Hash
+import qualified Data.Aeson                     as A
 import           Data.Time.Clock
 import           Isoxya.DB.Type
 import           Network.URI
 import           TiredPixel.Common.Cursor
+import qualified TiredPixel.Common.SQLite.Conn  as D
 import           TiredPixel.Common.SQLite.Query
 import           TiredPixel.Common.UUID
-import qualified Crypto.Hash                    as Hash
-import qualified Data.Aeson                     as A
-import qualified TiredPixel.Common.SQLite.Conn  as D
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 cCrawl :: MonadIO m => SiteId -> A.Value -> [ProcessorId] -> [StreamerId] ->

@@ -1,4 +1,4 @@
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase      #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
@@ -24,35 +24,37 @@ import           Data.Aeson
 import           Data.Fixed                      (Pico)
 import           Data.Time.Clock
 import           Isoxya.API.Href
+import qualified Isoxya.DB                       as D
 import           Network.URI
 import           TiredPixel.Common.Snap.CoreUtil
 import           TiredPixel.Common.URI
-import qualified Isoxya.DB                       as D
 
 
-data Apex = Apex {
-    apexTime    :: UTCTime,
-    apexVersion :: Text
-    } deriving (Show)
+data Apex = Apex
+              { apexTime    :: UTCTime
+              , apexVersion :: Text
+              }
+  deriving (Show)
 instance ToJSON Apex where
     toJSON Apex{..} = object [
         "time"    .= apexTime,
         "version" .= apexVersion]
 
-data Crawl = Crawl {
-    crawlHref            :: CrawlHref,
-    crawlSite            :: Site,
-    crawlStatus          :: D.CrawlStatus,
-    crawlPages           :: Maybe Integer,
-    crawlProgress        :: Maybe Integer,
-    crawlBegan           :: UTCTime,
-    crawlEnded           :: Maybe UTCTime,
-    crawlDuration        :: Maybe Pico,
-    crawlSpeed           :: Maybe Pico,
-    crawlProcessorConfig :: Value,
-    crawlProcessorHrefs  :: [ProcessorHref],
-    crawlStreamerHrefs   :: [StreamerHref]
-    } deriving (Show)
+data Crawl = Crawl
+               { crawlHref            :: CrawlHref
+               , crawlSite            :: Site
+               , crawlStatus          :: D.CrawlStatus
+               , crawlPages           :: Maybe Integer
+               , crawlProgress        :: Maybe Integer
+               , crawlBegan           :: UTCTime
+               , crawlEnded           :: Maybe UTCTime
+               , crawlDuration        :: Maybe Pico
+               , crawlSpeed           :: Maybe Pico
+               , crawlProcessorConfig :: Value
+               , crawlProcessorHrefs  :: [ProcessorHref]
+               , crawlStreamerHrefs   :: [StreamerHref]
+               }
+  deriving (Show)
 instance ToJSON Crawl where
     toJSON Crawl{..} = object [
         "href"             .= crawlHref,
@@ -68,11 +70,12 @@ instance ToJSON Crawl where
         "processors"       .= map (objHref . Just) crawlProcessorHrefs,
         "streamers"        .= map (objHref . Just) crawlStreamerHrefs]
 
-data CrawlC = CrawlC {
-    crawlCProcessorConfig :: Value,
-    crawlCProcessorHrefs  :: [ProcessorHref],
-    crawlCStreamerHrefs   :: [StreamerHref]
-    } deriving (Show)
+data CrawlC = CrawlC
+                { crawlCProcessorConfig :: Value
+                , crawlCProcessorHrefs  :: [ProcessorHref]
+                , crawlCStreamerHrefs   :: [StreamerHref]
+                }
+  deriving (Show)
 instance FromJSON CrawlC where
     parseJSON = withObject "crawl" $ \j -> do
         fProcessors <- j .: "processors"
@@ -83,59 +86,63 @@ instance FromJSON CrawlC where
         return $ CrawlC{..}
 instance ValidateJSON CrawlC
 
-data Processor = Processor {
-    processorHref :: ProcessorHref,
-    processorURL  :: URI,
-    processorTag  :: Text
-    } deriving (Show)
+data Processor = Processor
+                   { processorHref :: ProcessorHref
+                   , processorURL  :: URI
+                   , processorTag  :: Text
+                   }
+  deriving (Show)
 instance ToJSON Processor where
     toJSON Processor{..} = object [
         "href" .= processorHref,
         "url"  .= processorURL,
         "tag"  .= processorTag]
 
-data ProcessorC = ProcessorC {
-    processorCURL :: URIAbsolute,
-    processorCTag :: Text
-    } deriving (Show)
+data ProcessorC = ProcessorC
+                    { processorCURL :: URIAbsolute
+                    , processorCTag :: Text
+                    }
+  deriving (Show)
 instance FromJSON ProcessorC where
     parseJSON = withObject "processor" $ \j -> ProcessorC <$>
         j .: "url" <*>
         j .: "tag"
 instance ValidateJSON ProcessorC
 
-data Site = Site {
-    siteHref :: SiteHref,
-    siteURL  :: URI
-    } deriving (Show)
+data Site = Site
+              { siteHref :: SiteHref
+              , siteURL  :: URI
+              }
+  deriving (Show)
 instance ToJSON Site where
     toJSON Site{..} = object [
         "href" .= siteHref,
         "url"  .= siteURL]
 
-newtype SiteC = SiteC {
-    siteCURL :: URISite
-    } deriving (Show)
+newtype SiteC = SiteC { siteCURL :: URISite }
+  deriving (Show)
 instance FromJSON SiteC where
     parseJSON = withObject "site" $ \j -> SiteC <$>
         j .: "url"
 instance ValidateJSON SiteC
 
-data Streamer = Streamer {
-    streamerHref :: StreamerHref,
-    streamerURL  :: URI,
-    streamerTag  :: Text
-    } deriving (Show)
+data Streamer = Streamer
+                  { streamerHref :: StreamerHref
+                  , streamerURL  :: URI
+                  , streamerTag  :: Text
+                  }
+  deriving (Show)
 instance ToJSON Streamer where
     toJSON Streamer{..} = object [
         "href" .= streamerHref,
         "url"  .= streamerURL,
         "tag"  .= streamerTag]
 
-data StreamerC = StreamerC {
-    streamerCURL :: URIAbsolute,
-    streamerCTag :: Text
-    } deriving (Show)
+data StreamerC = StreamerC
+                   { streamerCURL :: URIAbsolute
+                   , streamerCTag :: Text
+                   }
+  deriving (Show)
 instance FromJSON StreamerC where
     parseJSON = withObject "streamer" $ \j -> StreamerC <$>
         j .: "url" <*>

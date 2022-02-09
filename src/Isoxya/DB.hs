@@ -6,7 +6,7 @@ module Isoxya.DB (
     ) where
 
 
-import Isoxya.DB.Query
-import Isoxya.DB.Type
-import Isoxya.DB.URLPage
-import TiredPixel.Common.SQLite.Conn (Conn)
+import           Isoxya.DB.Query
+import           Isoxya.DB.Type
+import           Isoxya.DB.URLPage
+import           TiredPixel.Common.SQLite.Conn (Conn)

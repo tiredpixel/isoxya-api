@@ -30,50 +30,54 @@ type ChanProcessor = Chan MsgProcessor
 
 type ChanStreamer = Chan MsgStreamer
 
-data CrawlPage = CrawlPage {
-    crawlPageSiteId   :: D.SiteId,
-    crawlPageSiteV    :: D.SiteV,
-    crawlPagePageId   :: D.PageId,
-    crawlPagePageV    :: D.PageV,
-    crawlPageRequest  :: CrawlPageRequest,
-    crawlPageResponse :: Either CrawlPageResponseError CrawlPageResponse,
-    crawlPageBlob     :: Maybe CrawlPageBlob
-    } deriving (Show)
+data CrawlPage = CrawlPage
+                   { crawlPageSiteId :: D.SiteId
+                   , crawlPageSiteV :: D.SiteV
+                   , crawlPagePageId :: D.PageId
+                   , crawlPagePageV :: D.PageV
+                   , crawlPageRequest :: CrawlPageRequest
+                   , crawlPageResponse :: Either CrawlPageResponseError CrawlPageResponse
+                   , crawlPageBlob :: Maybe CrawlPageBlob
+                   }
+  deriving (Show)
 
-data CrawlPageBlob = CrawlPageBlob {
-    crawlPageBlobHeader :: Map Text Text,
-    crawlPageBlobBody   :: LByteString
-    } deriving (Show)
+data CrawlPageBlob = CrawlPageBlob
+                       { crawlPageBlobHeader :: Map Text Text
+                       , crawlPageBlobBody   :: LByteString
+                       }
+  deriving (Show)
 
-data CrawlPageData = CrawlPageData {
-    crawlPageDataSiteId      :: D.SiteId,
-    crawlPageDataSiteV       :: D.SiteV,
-    crawlPageDataPageId      :: D.PageId,
-    crawlPageDataPageV       :: D.PageV,
-    crawlPageDataProcessorId :: D.ProcessorId,
-    crawlPageDataData        :: A.Value
-    } deriving (Show)
+data CrawlPageData = CrawlPageData
+                       { crawlPageDataSiteId      :: D.SiteId
+                       , crawlPageDataSiteV       :: D.SiteV
+                       , crawlPageDataPageId      :: D.PageId
+                       , crawlPageDataPageV       :: D.PageV
+                       , crawlPageDataProcessorId :: D.ProcessorId
+                       , crawlPageDataData        :: A.Value
+                       }
+  deriving (Show)
 
-data CrawlPageId = CrawlPageId {
-    crawlPageIdSiteId :: D.SiteId,
-    crawlPageIdSiteV  :: D.SiteV,
-    crawlPageIdPageId :: D.PageId
-    } deriving (Show)
+data CrawlPageId = CrawlPageId
+                     { crawlPageIdSiteId :: D.SiteId
+                     , crawlPageIdSiteV  :: D.SiteV
+                     , crawlPageIdPageId :: D.PageId
+                     }
+  deriving (Show)
 
-data CrawlPageRequest = CrawlPageRequest {
-    crawlPageRequestMethod  :: HTTP.Method,
-    crawlPageRequestVersion :: HTTP.HttpVersion
-    } deriving (Show)
+data CrawlPageRequest = CrawlPageRequest
+                          { crawlPageRequestMethod  :: HTTP.Method
+                          , crawlPageRequestVersion :: HTTP.HttpVersion
+                          }
+  deriving (Show)
 
-data CrawlPageResponse = CrawlPageResponse {
-    crawlPageResponseStatus   :: Int,
-    crawlPageResponseVersion  :: HTTP.HttpVersion,
-    crawlPageResponseDuration :: Rational
-    } deriving (Show)
+data CrawlPageResponse = CrawlPageResponse
+                           { crawlPageResponseStatus   :: Int
+                           , crawlPageResponseVersion  :: HTTP.HttpVersion
+                           , crawlPageResponseDuration :: Rational
+                           }
+  deriving (Show)
 
-data CrawlPageResponseError =
-    Internal
-    deriving (Show)
+data CrawlPageResponseError = Internal deriving (Show)
 
 type MsgCrawler = (D.SiteId, CrawlPageId)
 

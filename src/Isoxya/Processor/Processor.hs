@@ -4,18 +4,18 @@ module Isoxya.Processor.Processor (process) where
 import           Control.Lens
 import           Data.Aeson
 import           Data.Aeson.Lens
-import           Isoxya.API.Href
-import           TiredPixel.Common.Isoxya.Processor
-import           TiredPixel.Common.Logger
-import           TiredPixel.Common.Snap.CoreUtil
-import           TiredPixel.Common.URI
 import qualified Data.Map                           as M
 import qualified Data.Set                           as S
+import           Isoxya.API.Href
 import qualified Isoxya.DB                          as D
 import qualified Isoxya.Msg                         as M
 import qualified Network.HTTP.Conduit               as HTTP
 import qualified Network.HTTP.Types                 as HTTP
+import           TiredPixel.Common.Isoxya.Processor
+import           TiredPixel.Common.Logger
 import qualified TiredPixel.Common.Net              as N
+import           TiredPixel.Common.Snap.CoreUtil
+import           TiredPixel.Common.URI
 
 
 process :: M.ChanStreamer -> M.ChanCrawler -> N.Conn -> D.Conn ->
@@ -70,8 +70,8 @@ genProcessorI msg pro crl st pg = ProcessorI meta header body
             Right r -> Just $ fromRational $ M.crawlPageResponseDuration r
             _       -> empty
         err = case M.crawlPageResponse msg of
-            Left e  -> Just $ show e
-            _       -> empty
+            Left e -> Just $ show e
+            _      -> empty
         conf = D.crawlProcessorConfig crl ^? key (D.processorTag pro)
         meta = ProcessorIMeta {
             processorIMetaConfig   = conf,

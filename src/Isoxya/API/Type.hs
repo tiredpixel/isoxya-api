@@ -12,8 +12,9 @@ import qualified Isoxya.DB    as D
 import qualified Isoxya.Msg   as M
 
 
-data API = API {
-    _msgCrl :: M.ChanCrawler,
-    _db     :: D.Conn}
+data API = API
+             { _msgCrl :: M.ChanCrawler
+             , _db     :: D.Conn
+             }
 
 makeLenses ''API

@@ -3,4 +3,4 @@ module Isoxya.Processor (
     ) where
 
 
-import Isoxya.Processor.Processor
+import           Isoxya.Processor.Processor
