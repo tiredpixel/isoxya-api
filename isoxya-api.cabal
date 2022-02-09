@@ -172,6 +172,7 @@ test-suite test-isoxya-api
         Isoxya.API.Endpoint.ApexSpec
         Isoxya.API.Test
     build-depends:
+        hlint,
         hspec                           ==  2.*,
         lib-common,
         lib-common-test,
