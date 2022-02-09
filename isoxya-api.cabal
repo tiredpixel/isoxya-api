@@ -172,18 +172,16 @@ test-suite test-isoxya-api
         Isoxya.API.Endpoint.ApexSpec
         Isoxya.API.Test
     build-depends:
-        hlint,
         hspec                           ==  2.*,
         lib-common,
         lib-common-test,
         lib-isoxya-api,
         snap,
-        stylish-haskell,
     default-extensions:
         NoImplicitPrelude
     hs-source-dirs:
         test
-    ghc-options:
-        -Wno-error=unused-packages
     build-tool-depends:
-        hspec-discover:hspec-discover   ==  2.*
+        hlint:hlint,
+        hspec-discover:hspec-discover   ==  2.*,
+        stylish-haskell:stylish-haskell,
