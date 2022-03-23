@@ -3,7 +3,7 @@ set -o pipefail
 
 source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
 #-------------------------------------------------------------------------------
-ask "streamer.href" "/streamer/$(uuidgen)"
+ask "streamer.href" "${STREAMER_HREF:-}"
 echo "$ASK_BUF" > "$STREAMER_HREF_"
 reload_vars
 #-------------------------------------------------------------------------------

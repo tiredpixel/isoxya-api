@@ -3,7 +3,7 @@ set -o pipefail
 
 source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/x-lib.sh"
 #-------------------------------------------------------------------------------
-ask "processor.href" "/processor/$(uuidgen)"
+ask "processor.href" "${PROCESSOR_HREF:-}"
 echo "$ASK_BUF" > "$PROCESSOR_HREF_"
 reload_vars
 #-------------------------------------------------------------------------------
