@@ -13,8 +13,8 @@ import           Isoxya.API.Type
 import qualified Isoxya.Msg                      as M
 import           Snap.Core
 import           Snap.Snaplet
-import qualified TiredPixel.Common.SQLite.Conn   as D
 import           TiredPixel.Common.Snap.CoreUtil
+import qualified TiredPixel.Common.SQLite.Conn   as D
 
 
 initAPI :: M.ChanCrawler -> D.Conn -> SnapletInit b API

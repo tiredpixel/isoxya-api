@@ -18,10 +18,10 @@ import           Paths_isoxya_api               (version)
 import           Snap.Snaplet
 import           System.IO
 import qualified TiredPixel.Common.Net          as N
+import           TiredPixel.Common.Snap.Main    as S
 import qualified TiredPixel.Common.SQLite.Conn  as D
 import qualified TiredPixel.Common.SQLite.Meta  as D
 import qualified TiredPixel.Common.SQLite.Query as D
-import           TiredPixel.Common.Snap.Main    as S
 
 
 newtype App = App { _api :: Snaplet API }
