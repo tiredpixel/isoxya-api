@@ -1,0 +1,10 @@
+#!/bin/bash -eu
+set -o pipefail
+#-------------------------------------------------------------------------------
+cabal run stylish-haskell -- -ir \
+    lib/ src/ test/
+
+cabal run hlint -- \
+    lib/ src/ test/
+
+cabal test --test-show-details=direct

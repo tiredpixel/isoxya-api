@@ -1,11 +1,12 @@
+# vim: set ft=yaml:
 version: "2.4"
 services:
   api:
     image: docker.io/tiredpixel/isoxya-api.build:unstable
     init: true
     volumes:
-      - ./.hlint.yaml:/home/x/repo/.hlint.yaml
       - ./.stylish-haskell.yaml:/home/x/repo/.stylish-haskell.yaml
+      - ./bin:/home/x/repo/bin
       - ./isoxya-api.cabal:/home/x/repo/isoxya-api.cabal
       - ./lib:/home/x/repo/lib
       - ./src:/home/x/repo/src
