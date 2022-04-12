@@ -1,0 +1,9 @@
+#!/bin/bash -eu
+set -o pipefail
+#-------------------------------------------------------------------------------
+cabal freeze
+
+#sed -i '/^index-state:/d' cabal.project.freeze
+sed '/^index-state:/d' cabal.project.freeze >cabal.project.freeze.tmp
+cat cabal.project.freeze.tmp >cabal.project.freeze
+rm cabal.project.freeze.tmp

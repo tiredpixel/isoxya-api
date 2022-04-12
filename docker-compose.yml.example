@@ -2,7 +2,8 @@
 version: "2.4"
 services:
   api:
-    image: docker.io/tiredpixel/isoxya-api.build:unstable
+    build: .
+    #image: docker.io/tiredpixel/isoxya-api.build:unstable
     init: true
     volumes:
       - ./.stylish-haskell.yaml:/home/x/repo/.stylish-haskell.yaml
