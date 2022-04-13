@@ -1,5 +1,5 @@
 # vim: set ft=yaml:
-version: "2.4"
+version: '2.4'
 services:
   api:
     build: .
