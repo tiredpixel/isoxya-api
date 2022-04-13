@@ -10,7 +10,7 @@ services:
     ports:
       - 0.0.0.0:80:80
     restart: on-failure
-  plugin_crawler_html:
+  plugin-crawler-html:
     image: docker.io/isoxya/isoxya-plugin-crawler-html:testing
     init: true
     networks:
@@ -18,7 +18,7 @@ services:
         aliases:
           - isoxya-plugin-crawler-html.localhost
     restart: on-failure
-  plugin_nginx:
+  plugin-nginx:
     image: docker.io/isoxya/isoxya-plugin-nginx:latest
     networks:
       streamer:
