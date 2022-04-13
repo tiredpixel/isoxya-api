@@ -24,8 +24,7 @@ USER ${USER}
 WORKDIR ${HOME}
 
 ENV PATH=${HOME}/bin:$PATH \
-    LANG=C.UTF-8 \
-    LOG_LEVEL=Info
+    LANG=C.UTF-8
 
 CMD ["isoxya-api", "-b", "0.0.0.0", "-p", "80"]
 
