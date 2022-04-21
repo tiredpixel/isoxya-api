@@ -1,40 +1,65 @@
-# FROMFREEZE docker.io/library/haskell:8.10
-FROM docker.io/library/haskell@sha256:bc7488627b02c0593c561e37473b5e969ffd652ff52974dbf1183f665920b69a
+FROM docker.io/library/haskell@sha256:aaa408ad7e7eff6cd76c39feae223db7ba3550b937e833e78958478334fc9afe AS builder
 
-ARG USER=x
-ARG HOME=/home/x
-#-------------------------------------------------------------------------------
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        curl \
-        daemontools \
         jq \
         libpcre3-dev \
         libssl-dev \
         sqlite3 && \
     rm -rf /var/lib/apt/lists/*
 
-RUN useradd ${USER} -d ${HOME} && \
-    mkdir -p ${HOME}/repo && \
-    chown -R ${USER}:${USER} ${HOME}
+RUN useradd x -m && \
+    mkdir /home/x/api && \
+    chown -R x:x /home/x
 #-------------------------------------------------------------------------------
-USER ${USER}
+USER x
 
-WORKDIR ${HOME}/repo
+WORKDIR /home/x/api
 
-COPY --chown=x:x [ \
-    "cabal.project.freeze", \
-    "*.cabal", \
-    "./"]
+COPY --chown=x:x ["*.cabal", "cabal.project.freeze", "./"]
 
 RUN cabal update && \
     cabal build --only-dependencies --enable-tests
+
+COPY --chown=x:x . .
+
+RUN cabal install -O2
 #-------------------------------------------------------------------------------
-ENV PATH=${HOME}/repo/bin:${HOME}/.cabal/bin:$PATH \
+ENV PATH=/home/x/api/bin:/home/x/.cabal/bin:$PATH \
     LANG=C.UTF-8
 
 CMD ["cabal", "run", "isoxya-api", "--", \
     "-b", "0.0.0.0", "-p", "80"]
+
+EXPOSE 80
+
+HEALTHCHECK CMD curl -fs http://localhost || false
+#===============================================================================
+FROM docker.io/library/debian@sha256:ebe4b9831fb22dfa778de4ffcb8ea0ad69b5d782d4e86cab14cc1fded5d8e761
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        libssl-dev \
+        netbase \
+        sqlite3 && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN useradd x -m && \
+    mkdir /home/x/bin && \
+    chown -R x:x /home/x
+#-------------------------------------------------------------------------------
+COPY --from=builder /home/x/.cabal/bin/* /home/x/bin/
+#-------------------------------------------------------------------------------
+USER x
+
+WORKDIR /home/x
+
+ENV PATH=/home/x/bin:$PATH \
+    LANG=C.UTF-8
+
+CMD ["isoxya-api", "-b", "0.0.0.0", "-p", "80"]
 
 EXPOSE 80
 

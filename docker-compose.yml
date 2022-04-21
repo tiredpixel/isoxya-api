@@ -1,0 +1,21 @@
+version: '2.4'
+services:
+  api:
+    build:
+      context: .
+      target: builder
+    init: true
+    volumes:
+      - .:/home/x/api
+      - /home/x/api/dist-newstyle
+    networks:
+      - api
+      - processor
+      - streamer
+    ports:
+      - 0.0.0.0:80:80
+    restart: on-failure
+networks:
+  api: {}
+  processor: {}
+  streamer: {}

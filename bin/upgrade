@@ -1,0 +1,18 @@
+#!/bin/bash -eu
+set -o pipefail
+#-------------------------------------------------------------------------------
+function dockerfile_upgrade () {
+    local f=$1
+    local repo=$2
+    local tag=$3
+    
+    echo "Digesting $repo:$tag"
+    local digest
+    digest=$(docker pull "$repo:$tag" | grep '^Digest: ' | cut -d' ' -f2)
+    echo "  => $digest"
+    
+    sed -i -E "s|^FROM ${repo}[:@]\S+(.*)$|FROM $repo@$digest\1|g" "$f"
+}
+#-------------------------------------------------------------------------------
+dockerfile_upgrade Dockerfile docker.io/library/haskell 8.10
+dockerfile_upgrade Dockerfile docker.io/library/debian 10
