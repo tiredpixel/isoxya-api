@@ -6,8 +6,8 @@ services:
       target: builder
     init: true
     volumes:
-      - .:/home/x/api
-      - /home/x/api/dist-newstyle
+      - .:/home/x/r
+      - /home/x/r/dist-newstyle
     networks:
       - api
       - processor

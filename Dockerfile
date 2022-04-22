@@ -5,16 +5,17 @@ RUN apt-get update && \
         jq \
         libpcre3-dev \
         libssl-dev \
-        sqlite3 && \
+        sqlite3 \
+        && \
     rm -rf /var/lib/apt/lists/*
 
 RUN useradd x -m && \
-    mkdir /home/x/api && \
+    mkdir /home/x/r && \
     chown -R x:x /home/x
 #-------------------------------------------------------------------------------
 USER x
 
-WORKDIR /home/x/api
+WORKDIR /home/x/r
 
 COPY --chown=x:x ["*.cabal", "cabal.project.freeze", "./"]
 
@@ -23,9 +24,13 @@ RUN cabal update && \
 
 COPY --chown=x:x . .
 
-RUN cabal install -O2
+ARG GIT_DESCRIBE
+
+RUN VERSION=$(echo "$GIT_DESCRIBE" | sed 's/-/./') && \
+    sed -i -E "s/(version: *)0.0.0/\1$VERSION/" ./*.cabal && \
+    cabal install -O2
 #-------------------------------------------------------------------------------
-ENV PATH=/home/x/api/bin:/home/x/.cabal/bin:$PATH \
+ENV PATH=/home/x/r/bin:/home/x/.cabal/bin:$PATH \
     LANG=C.UTF-8
 
 CMD ["cabal", "run", "isoxya-api", "--", \
@@ -43,7 +48,8 @@ RUN apt-get update && \
         curl \
         libssl-dev \
         netbase \
-        sqlite3 && \
+        sqlite3 \
+        && \
     rm -rf /var/lib/apt/lists/*
 
 RUN useradd x -m && \
