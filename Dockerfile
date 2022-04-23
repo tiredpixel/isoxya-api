@@ -17,7 +17,7 @@ USER x
 
 WORKDIR /home/x/r
 
-COPY --chown=x:x ["*.cabal", "cabal.project.freeze", "./"]
+COPY --chown=x:x *.cabal cabal.project.freeze ./
 
 RUN cabal update && \
     cabal build --only-dependencies --enable-tests
