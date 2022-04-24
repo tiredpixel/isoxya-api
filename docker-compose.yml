@@ -8,6 +8,7 @@ services:
     volumes:
       - .:/home/x/r
       - api_dist-newstyle:/home/x/r/dist-newstyle
+      - api_sqlite3:/home/x/r/.sqlite3
     networks:
       - api
       - processor
@@ -15,8 +16,11 @@ services:
     ports:
       - 0.0.0.0:80:80
     restart: on-failure
+    environment:
+      SQLITE_FILE: .sqlite3/sqlite3.db
 volumes:
   api_dist-newstyle: {}
+  api_sqlite3: {}
 networks:
   api: {}
   processor: {}
