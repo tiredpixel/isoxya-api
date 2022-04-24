@@ -5,7 +5,6 @@ Dockerfile
 docker-compose*.yml*
 
 .isoxya/
-.sqlite3/
 dist-newstyle/
 misc/
 
