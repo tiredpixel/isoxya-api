@@ -17,7 +17,7 @@ services:
       - processor
       - streamer
     ports:
-      - 0.0.0.0:80:80
+      - 0.0.0.0:11047:80
     restart: on-failure
 networks:
   api: {}
