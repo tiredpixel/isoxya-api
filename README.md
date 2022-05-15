@@ -33,7 +33,7 @@ cd misc/streams/stable/
 Boot the stack:
 
 ```sh
-docker-compose up
+docker compose up
 ```
 
 That's it! Now you've got a powerful web crawler and scraper at your disposal, extensible via plugins.
