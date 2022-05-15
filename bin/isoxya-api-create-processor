@@ -29,7 +29,7 @@ echo "$pro" | jq_
 echo "$pro" | jq_ -r '.href' | grep -v 'null' >> "$PROCESSOR_HREF_"
 reload_vars
 #-------------------------------------------------------------------------------
-if [ -f .env.override.env ]; then
+if [ -f .env.queue ]; then
     queue=$(echo -n "$PROCESSOR_HREF" | cut -d'/' -f3)
-    sed -i "s/^PROCESSOR_QUEUE=.*$/PROCESSOR_QUEUE=$queue/" .env.override.env
+    sed -i "s/^PROCESSOR_QUEUE=.*$/PROCESSOR_QUEUE=$queue/" .env.queue
 fi

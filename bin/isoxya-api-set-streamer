@@ -10,7 +10,7 @@ reload_vars
 "$(dirname "$(
     readlink -f "${BASH_SOURCE[0]}")")/isoxya-api-read" "$STREAMER_HREF"
 #-------------------------------------------------------------------------------
-if [ -f .env.override.env ]; then
+if [ -f .env.queue ]; then
     queue=$(echo -n "$STREAMER_HREF" | cut -d'/' -f3)
-    sed -i "s/^STREAMER_QUEUE=.*$/STREAMER_QUEUE=$queue/" .env.override.env
+    sed -i "s/^STREAMER_QUEUE=.*$/STREAMER_QUEUE=$queue/" .env.queue
 fi

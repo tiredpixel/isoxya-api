@@ -29,7 +29,7 @@ echo "$st" | jq_
 echo "$st" | jq_ -r '.href' | grep -v 'null' >> "$SITE_HREF_"
 reload_vars
 #-------------------------------------------------------------------------------
-if [ -f .env.override.env ]; then
+if [ -f .env.queue ]; then
     queue=$(echo -n "$SITE_HREF" | cut -d'/' -f3)
-    sed -i "s/^CRAWLER_QUEUE=.*$/CRAWLER_QUEUE=$queue/" .env.override.env
+    sed -i "s/^CRAWLER_QUEUE=.*$/CRAWLER_QUEUE=$queue/" .env.queue
 fi

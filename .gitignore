@@ -1,4 +1,4 @@
-/.env.*
+/.env.queue
 /docker-compose.*.yml
 
 /.isoxya/
