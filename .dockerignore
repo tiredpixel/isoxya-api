@@ -1,6 +1,5 @@
 .dockerignore
 .env
-.env.queue*
 .git*
 Dockerfile
 docker-compose*.yml*
