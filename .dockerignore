@@ -6,7 +6,6 @@ docker-compose*.yml*
 
 .isoxya/
 dist-newstyle/
-misc/
 
 cache/
 image/

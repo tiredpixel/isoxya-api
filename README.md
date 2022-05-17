@@ -24,13 +24,7 @@ The API uses REST and JSON, and [documentation](https://github.com/isoxya/isoxya
 
 ## Installation
 
-Choose a stream: `stable` (recommended), `testing`, or `unstable`:
-
-```sh
-cd misc/streams/stable/
-```
-
-Boot the stack:
+Compile and boot locally:
 
 ```sh
 docker compose up
@@ -38,19 +32,14 @@ docker compose up
 
 That's it! Now you've got a powerful web crawler and scraper at your disposal, extensible via plugins.
 
+Images are also published using the `latest` tag (for development), and version-specific tags (for production). Do *not* use a `latest` tag in production!
+
 
 ## Isoxya Pro
 
 Isoxya Pro adds high availability, error recovery, and horizontal scaling. It is available on-premises for installation on your servers, or in the cloud via SaaS subscription. Isoxya Pro is available via commercial licence. The API is able to scale crawlers, processors, and streamers. Support or custom development is available from Isoxya's creator.
 
 https://www.isoxya.com/pro/  
-
-
-## Contact
-
-[tp@tiredpixel.com](mailto:tp@tiredpixel.com) · [www.tiredpixel.com](https://www.tiredpixel.com/) · [www.isoxya.com](https://www.isoxya.com/)
-
-LinkedIn: [in/nic-williams](https://www.linkedin.com/in/nic-williams/) · Twitter: [tiredpixel](https://twitter.com/tiredpixel/) · GitHub: [tiredpixel](https://github.com/tiredpixel)
 
 
 ## Licence
