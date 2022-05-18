@@ -9,7 +9,7 @@ https://github.com/isoxya/isoxya-api
 
 ## Tutorial
 
-To get started, follow the [tutorial](https://github.com/isoxya/isoxya-docs/blob/unstable/Tutorial.md).
+To get started, follow the [tutorial](https://github.com/isoxya/isoxya-docs/blob/latest/Tutorial.md).
 
 
 ## Documentation
