@@ -29,7 +29,7 @@ echo "$str" | jq_
 echo "$str" | jq_ -r '.href' | grep -v 'null' >> "$STREAMER_HREF_"
 reload_vars
 #-------------------------------------------------------------------------------
-if [ -f .env ]; then
+if [ -f .env.queue ]; then
     queue=$(echo -n "$STREAMER_HREF" | cut -d'/' -f3)
-    sed -i "s/^STREAMER_QUEUE=.*$/STREAMER_QUEUE=$queue/" .env
+    sed -i "s/^STREAMER_QUEUE=.*$/STREAMER_QUEUE=$queue/" .env.queue
 fi
