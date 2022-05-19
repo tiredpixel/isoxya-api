@@ -4,17 +4,17 @@ Isoxya is an extensible data processing system for crawling and scraping the int
 
 https://www.isoxya.com/  
 https://hub.docker.com/r/isoxya/isoxya-api  
-https://github.com/isoxya/isoxya-api  
+https://github.com/tiredpixel/isoxya-api  
 
 
 ## Tutorial
 
-To get started, follow the [tutorial](https://github.com/isoxya/isoxya-docs/blob/latest/Tutorial.md).
+To get started, follow the [tutorial](https://github.com/tiredpixel/isoxya-docs/blob/latest/Tutorial.md).
 
 
 ## Documentation
 
-The API uses REST and JSON, and [documentation](https://github.com/isoxya/isoxya-docs) is available as a repo.
+The API uses REST and JSON, and [documentation](https://github.com/tiredpixel/isoxya-docs) is available as a repo.
 
 
 ## Dependencies
