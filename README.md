@@ -3,7 +3,7 @@
 Isoxya is an extensible data processing system for crawling and scraping the internet. It is written in a compiled, statically typed language for speed and reliability. Isoxya is free, open-source, and packaged as a container. The API can be used by CLI scripts or called by another project. Various plugins are available, many also open-source.
 
 https://www.isoxya.com/  
-https://hub.docker.com/r/isoxya/isoxya-api  
+https://hub.docker.com/r/tiredpixel/isoxya-api  
 https://github.com/tiredpixel/isoxya-api  
 
 
