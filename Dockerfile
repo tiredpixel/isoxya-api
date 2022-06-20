@@ -33,8 +33,7 @@ RUN VERSION=$(echo "$GIT_DESCRIBE" | sed 's/-/./') && \
 ENV PATH=/home/x/r/bin:/home/x/.cabal/bin:$PATH \
     LANG=C.UTF-8
 
-CMD ["cabal", "run", "isoxya-api", "--", \
-    "-b", "0.0.0.0", "-p", "80"]
+CMD ["run"]
 
 EXPOSE 80
 

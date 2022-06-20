@@ -8,3 +8,6 @@ cabal run hlint -- \
     lib/ src/ test/
 
 cabal test --test-show-details=direct
+
+exec cabal run isoxya-api -- \
+    -b 0.0.0.0 -p 80
