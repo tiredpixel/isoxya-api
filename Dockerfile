@@ -1,4 +1,4 @@
-FROM docker.io/library/haskell@sha256:daa1aef1af14e83dd96e68ee559b5e614ef856de889989e755ba294c1905de07 AS builder
+FROM docker.io/library/haskell@sha256:e4b7e46adc6b22035a691e886019471f30f60a5d8b8d99a686f36a6068de6c4b AS builder
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -39,7 +39,7 @@ EXPOSE 80
 
 HEALTHCHECK CMD curl -fs http://localhost || false
 #===============================================================================
-FROM docker.io/library/debian@sha256:e5b41ae2b4cf0d04b80cd2f89724e9cfc09e334ac64f188b9808929c748af526
+FROM docker.io/library/debian@sha256:0685c900f6e691bdda6980c0ed0779d20183bc58770059b64adb56cb8a3129f0
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
